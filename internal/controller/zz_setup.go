@@ -9,7 +9,7 @@ import (
 
 	"github.com/upbound/upjet/pkg/controller"
 
-	resource "github.com/aviatrix/provider-aviatrix/internal/controller/null/resource"
+	// resource "github.com/aviatrix/provider-aviatrix/internal/controller/null/resource"
 	providerconfig "github.com/aviatrix/provider-aviatrix/internal/controller/providerconfig"
 )
 
@@ -17,7 +17,7 @@ import (
 // the supplied manager.
 func Setup(mgr ctrl.Manager, o controller.Options) error {
 	for _, setup := range []func(ctrl.Manager, controller.Options) error{
-		resource.Setup,
+		// resource.Setup,
 		providerconfig.Setup,
 	} {
 		if err := setup(mgr, o); err != nil {
