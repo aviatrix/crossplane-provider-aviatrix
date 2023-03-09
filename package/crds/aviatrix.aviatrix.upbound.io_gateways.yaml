@@ -1,0 +1,682 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.8.0
+  creationTimestamp: null
+  name: gateways.aviatrix.aviatrix.upbound.io
+spec:
+  group: aviatrix.aviatrix.upbound.io
+  names:
+    categories:
+    - crossplane
+    - managed
+    - aviatrix
+    kind: Gateway
+    listKind: GatewayList
+    plural: gateways
+    singular: gateway
+  scope: Cluster
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: READY
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Synced')].status
+      name: SYNCED
+      type: string
+    - jsonPath: .metadata.annotations.crossplane\.io/external-name
+      name: EXTERNAL-NAME
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: Gateway is the Schema for the Gateways API. <no value>
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: GatewaySpec defines the desired state of Gateway
+            properties:
+              deletionPolicy:
+                default: Delete
+                description: DeletionPolicy specifies what will happen to the underlying
+                  external when this managed resource is deleted - either "Delete"
+                  or "Orphan" the external resource.
+                enum:
+                - Orphan
+                - Delete
+                type: string
+              forProvider:
+                properties:
+                  accountName:
+                    description: Account name. This account will be used to launch
+                      Aviatrix gateway.
+                    type: string
+                  additionalCidrs:
+                    description: A list of destination CIDR ranges that will also
+                      go through the VPN tunnel when Split Tunnel Mode is enabled.
+                    type: string
+                  additionalCidrsDesignatedGateway:
+                    description: A list of CIDR ranges separated by comma to configure
+                      when 'designated_gateway' feature is enabled.
+                    type: string
+                  allocateNewEip:
+                    description: When value is false, reuse an idle address in Elastic
+                      IP pool for this gateway. Otherwise, allocate a new Elastic
+                      IP and use it for this gateway.
+                    type: boolean
+                  availabilityDomain:
+                    description: Availability domain for OCI.
+                    type: string
+                  azureEipNameResourceGroup:
+                    description: The name of the public IP address and its resource
+                      group in Azure to assign to this Gateway.
+                    type: string
+                  cloudType:
+                    description: Type of cloud service provider.
+                    type: number
+                  customerManagedKeysSecretRef:
+                    description: Customer managed key ID.
+                    properties:
+                      key:
+                        description: The key to select.
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                      namespace:
+                        description: Namespace of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    - namespace
+                    type: object
+                  duoApiHostname:
+                    description: API hostname for DUO auth mode.
+                    type: string
+                  duoIntegrationKey:
+                    description: Integration key for DUO auth mode.
+                    type: string
+                  duoPushMode:
+                    description: Push mode for DUO auth.
+                    type: string
+                  duoSecretKeySecretRef:
+                    description: Secret key for DUO auth mode.
+                    properties:
+                      key:
+                        description: The key to select.
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                      namespace:
+                        description: Namespace of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    - namespace
+                    type: object
+                  eip:
+                    description: Required when allocate_new_eip is false. It uses
+                      specified EIP for this gateway.
+                    type: string
+                  elbName:
+                    description: A name for the ELB that is created.
+                    type: string
+                  enableDesignatedGateway:
+                    description: 'Enable ''designated_gateway'' feature for Gateway.
+                      Valid values: true, false.'
+                    type: boolean
+                  enableElb:
+                    description: Specify whether to enable ELB or not.
+                    type: boolean
+                  enableEncryptVolume:
+                    description: 'Enable encrypt gateway EBS volume. Only supported
+                      for AWS provider. Valid values: true, false. Default value:
+                      false.'
+                    type: boolean
+                  enableJumboFrame:
+                    description: 'Enable jumbo frame support for Gateway. Valid values:
+                      true or false. Default value: true.'
+                    type: boolean
+                  enableLdap:
+                    description: 'Specify whether to enable LDAP or not. Supported
+                      values: ''yes'' and ''no''.'
+                    type: boolean
+                  enableMonitorGatewaySubnets:
+                    description: 'Enable monitor gateway subnets. Valid values: true,
+                      false. Default value: false.'
+                    type: boolean
+                  enablePublicSubnetFiltering:
+                    description: Create a [Public Subnet Filtering gateway](https://docs.aviatrix.com/HowTos/public_subnet_filtering_faq.html).
+                    type: boolean
+                  enableSpotInstance:
+                    description: Enable spot instance. NOT supported for production
+                      deployment.
+                    type: boolean
+                  enableVpcDnsServer:
+                    description: 'Enable vpc_dns_server for Gateway. Valid values:
+                      true, false.'
+                    type: boolean
+                  enableVpnNat:
+                    description: 'This field indicates whether to enable VPN NAT or
+                      not. Only supported for VPN gateway. Valid values: true, false.
+                      Default value: true.'
+                    type: boolean
+                  faultDomain:
+                    description: Fault domain for OCI.
+                    type: string
+                  fqdnLanCidr:
+                    description: FQDN gateway lan interface cidr.
+                    type: string
+                  fqdnLanVpcId:
+                    description: LAN VPC ID. Only used for GCP FQDN Gateway.
+                    type: string
+                  gwName:
+                    description: Aviatrix gateway unique name.
+                    type: string
+                  gwSize:
+                    description: Size of Gateway Instance.
+                    type: string
+                  idleTimeout:
+                    description: Typed value when modifying idle_timeout. If it's
+                      -1, this feature is disabled.
+                    type: number
+                  imageVersion:
+                    description: image_version can be used to set the desired image
+                      version of the gateway. If set, we will attempt to update the
+                      gateway to the specified version.
+                    type: string
+                  insaneMode:
+                    description: 'Enable Insane Mode for Gateway. Valid values: true,
+                      false.'
+                    type: boolean
+                  insaneModeAz:
+                    description: AZ of subnet being created for Insane Mode Gateway.
+                      Required if insane_mode is set.
+                    type: string
+                  ldapBaseDn:
+                    description: 'LDAP base DN. Required: Yes if enable_ldap is ''yes''.'
+                    type: string
+                  ldapBindDn:
+                    description: 'LDAP bind DN. Required: Yes if enable_ldap is ''yes''.'
+                    type: string
+                  ldapPasswordSecretRef:
+                    description: 'LDAP password. Required: Yes if enable_ldap is ''yes''.'
+                    properties:
+                      key:
+                        description: The key to select.
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                      namespace:
+                        description: Namespace of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    - namespace
+                    type: object
+                  ldapServer:
+                    description: 'LDAP server address. Required: Yes if enable_ldap
+                      is ''yes''.'
+                    type: string
+                  ldapUsernameAttribute:
+                    description: 'LDAP user attribute. Required: Yes if enable_ldap
+                      is ''yes''.'
+                    type: string
+                  maxVpnConn:
+                    description: Maximum connection of VPN access.
+                    type: string
+                  monitorExcludeList:
+                    description: A set of monitored instance ids. Only valid when
+                      'enable_monitor_gateway_subnets' = true.
+                    items:
+                      type: string
+                    type: array
+                  nameServers:
+                    description: A list of DNS servers used to resolve domain names
+                      by a connected VPN user when Split Tunnel Mode is enabled.
+                    type: string
+                  oktaTokenSecretRef:
+                    description: Token for Okta auth mode.
+                    properties:
+                      key:
+                        description: The key to select.
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                      namespace:
+                        description: Namespace of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    - namespace
+                    type: object
+                  oktaUrl:
+                    description: URL for Okta auth mode.
+                    type: string
+                  oktaUsernameSuffix:
+                    description: Username suffix for Okta auth mode.
+                    type: string
+                  otpMode:
+                    description: Two step authentication mode.
+                    type: string
+                  peeringHaAvailabilityDomain:
+                    description: Peering HA availability domain for OCI.
+                    type: string
+                  peeringHaAzureEipNameResourceGroup:
+                    description: The name of the public IP address and its resource
+                      group in Azure to assign to the Peering HA Gateway.
+                    type: string
+                  peeringHaEip:
+                    description: Public IP address that you want assigned to the HA
+                      peering instance.
+                    type: string
+                  peeringHaFaultDomain:
+                    description: Peering HA fault domain for OCI.
+                    type: string
+                  peeringHaGwSize:
+                    description: Peering HA Gateway Size.
+                    type: string
+                  peeringHaImageVersion:
+                    description: peering_ha_image_version can be used to set the desired
+                      image version of the HA gateway. If set, we will attempt to
+                      update the gateway to the specified version.
+                    type: string
+                  peeringHaInsaneModeAz:
+                    description: AZ of subnet being created for Insane Mode Peering
+                      HA Gateway. Required if insane_mode is set.
+                    type: string
+                  peeringHaSoftwareVersion:
+                    description: peering_ha_software_version can be used to set the
+                      desired software version of the HA gateway. If set, we will
+                      attempt to update the gateway to the specified version. If left
+                      blank, the gateway software version will continue to be managed
+                      through the aviatrix_controller_config resource.
+                    type: string
+                  peeringHaSubnet:
+                    description: Public Subnet Information while creating Peering
+                      HA Gateway, only subnet is accepted. Required to create peering
+                      ha gateway if cloud_type = 1 or 8 (AWS or Azure). Optional if
+                      cloud_type = 4 (GCP)
+                    type: string
+                  peeringHaZone:
+                    description: Zone information for creating Peering HA Gateway.
+                      Required to create peering ha gateway if cloud_type = 4 (GCP).
+                      Optional for cloud_type = 8 (Azure).
+                    type: string
+                  publicSubnetFilteringGuardDutyEnforced:
+                    description: 'Whether to enforce Guard Duty IP blocking. Required
+                      when `enable_public_subnet_filtering` attribute is true. Valid
+                      values: true or false. Default value: true.'
+                    type: boolean
+                  publicSubnetFilteringHaRouteTables:
+                    description: Route tables whose associated public subnets are
+                      protected for the HA PSF gateway. Required when enable_public_subnet_filtering
+                      and peering_ha_subnet are set.
+                    items:
+                      type: string
+                    type: array
+                  publicSubnetFilteringRouteTables:
+                    description: Route tables whose associated public subnets are
+                      protected. Required when `enable_public_subnet_filtering` attribute
+                      is true.
+                    items:
+                      type: string
+                    type: array
+                  renegotiationInterval:
+                    description: Typed value when modifying renegotiation_interval.
+                      If it's -1, this feature is disabled.
+                    type: number
+                  rxQueueSize:
+                    description: Gateway ethernet interface RX queue size. Supported
+                      for AWS related clouds only. Applies on HA as well if enabled.
+                    type: string
+                  samlEnabled:
+                    description: This field indicates whether to enable SAML or not.
+                    type: boolean
+                  searchDomains:
+                    description: A list of domain names that will use the NameServer
+                      when a specific name is not in the destination when Split Tunnel
+                      Mode is enabled.
+                    type: string
+                  singleAzHa:
+                    description: Set to true if this feature is desired.
+                    type: boolean
+                  singleIpSnat:
+                    description: Enable Source NAT for this container.
+                    type: boolean
+                  softwareVersion:
+                    description: software_version can be used to set the desired software
+                      version of the gateway. If set, we will attempt to update the
+                      gateway to the specified version. If left blank, the gateway
+                      software version will continue to be managed through the aviatrix_controller_config
+                      resource.
+                    type: string
+                  splitTunnel:
+                    description: Specify split tunnel mode.
+                    type: boolean
+                  spotPrice:
+                    description: Price for spot instance. NOT supported for production
+                      deployment.
+                    type: string
+                  subnet:
+                    description: A VPC Network address range selected from one of
+                      the available network ranges.
+                    type: string
+                  tags:
+                    additionalProperties:
+                      type: string
+                    description: A map of tags to assign to the gateway.
+                    type: object
+                  tunnelDetectionTime:
+                    description: The IPSec tunnel down detection time for the Gateway.
+                    type: number
+                  vpcId:
+                    description: ID of legacy VPC/Vnet to be connected.
+                    type: string
+                  vpcReg:
+                    description: Region where this gateway will be launched.
+                    type: string
+                  vpnAccess:
+                    description: Enable user access through VPN to this container.
+                    type: boolean
+                  vpnCidr:
+                    description: VPN CIDR block for the container.
+                    type: string
+                  vpnProtocol:
+                    description: 'Elb protocol for VPN gateway with elb enabled. Only
+                      supports AWS provider. Valid values: ''TCP'', ''UDP''. If not
+                      specified, ''TCP” will be used.'
+                    type: string
+                  zone:
+                    description: Availability Zone. Only available for Azure (8),
+                      Azure GOV (32), Azure CHINA (2048) and Public Subnet Filtering
+                      gateway. Must be in the form 'az-n', for example, 'az-2'.
+                    type: string
+                required:
+                - accountName
+                - cloudType
+                - gwName
+                - gwSize
+                - subnet
+                - vpcId
+                - vpcReg
+                type: object
+              providerConfigRef:
+                default:
+                  name: default
+                description: ProviderConfigReference specifies how the provider that
+                  will be used to create, observe, update, and delete this managed
+                  resource should be configured.
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                  policy:
+                    description: Policies for referencing.
+                    properties:
+                      resolution:
+                        default: Required
+                        description: Resolution specifies whether resolution of this
+                          reference is required. The default is 'Required', which
+                          means the reconcile will fail if the reference cannot be
+                          resolved. 'Optional' means this reference will be a no-op
+                          if it cannot be resolved.
+                        enum:
+                        - Required
+                        - Optional
+                        type: string
+                      resolve:
+                        description: Resolve specifies when this reference should
+                          be resolved. The default is 'IfNotPresent', which will attempt
+                          to resolve the reference only when the corresponding field
+                          is not present. Use 'Always' to resolve the reference on
+                          every reconcile.
+                        enum:
+                        - Always
+                        - IfNotPresent
+                        type: string
+                    type: object
+                required:
+                - name
+                type: object
+              providerRef:
+                description: 'ProviderReference specifies the provider that will be
+                  used to create, observe, update, and delete this managed resource.
+                  Deprecated: Please use ProviderConfigReference, i.e. `providerConfigRef`'
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                  policy:
+                    description: Policies for referencing.
+                    properties:
+                      resolution:
+                        default: Required
+                        description: Resolution specifies whether resolution of this
+                          reference is required. The default is 'Required', which
+                          means the reconcile will fail if the reference cannot be
+                          resolved. 'Optional' means this reference will be a no-op
+                          if it cannot be resolved.
+                        enum:
+                        - Required
+                        - Optional
+                        type: string
+                      resolve:
+                        description: Resolve specifies when this reference should
+                          be resolved. The default is 'IfNotPresent', which will attempt
+                          to resolve the reference only when the corresponding field
+                          is not present. Use 'Always' to resolve the reference on
+                          every reconcile.
+                        enum:
+                        - Always
+                        - IfNotPresent
+                        type: string
+                    type: object
+                required:
+                - name
+                type: object
+              publishConnectionDetailsTo:
+                description: PublishConnectionDetailsTo specifies the connection secret
+                  config which contains a name, metadata and a reference to secret
+                  store config to which any connection details for this managed resource
+                  should be written. Connection details frequently include the endpoint,
+                  username, and password required to connect to the managed resource.
+                properties:
+                  configRef:
+                    default:
+                      name: default
+                    description: SecretStoreConfigRef specifies which secret store
+                      config should be used for this ConnectionSecret.
+                    properties:
+                      name:
+                        description: Name of the referenced object.
+                        type: string
+                      policy:
+                        description: Policies for referencing.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: Resolution specifies whether resolution of
+                              this reference is required. The default is 'Required',
+                              which means the reconcile will fail if the reference
+                              cannot be resolved. 'Optional' means this reference
+                              will be a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: Resolve specifies when this reference should
+                              be resolved. The default is 'IfNotPresent', which will
+                              attempt to resolve the reference only when the corresponding
+                              field is not present. Use 'Always' to resolve the reference
+                              on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    required:
+                    - name
+                    type: object
+                  metadata:
+                    description: Metadata is the metadata for connection secret.
+                    properties:
+                      annotations:
+                        additionalProperties:
+                          type: string
+                        description: Annotations are the annotations to be added to
+                          connection secret. - For Kubernetes secrets, this will be
+                          used as "metadata.annotations". - It is up to Secret Store
+                          implementation for others store types.
+                        type: object
+                      labels:
+                        additionalProperties:
+                          type: string
+                        description: Labels are the labels/tags to be added to connection
+                          secret. - For Kubernetes secrets, this will be used as "metadata.labels".
+                          - It is up to Secret Store implementation for others store
+                          types.
+                        type: object
+                      type:
+                        description: Type is the SecretType for the connection secret.
+                          - Only valid for Kubernetes Secret Stores.
+                        type: string
+                    type: object
+                  name:
+                    description: Name is the name of the connection secret.
+                    type: string
+                required:
+                - name
+                type: object
+              writeConnectionSecretToRef:
+                description: WriteConnectionSecretToReference specifies the namespace
+                  and name of a Secret to which any connection details for this managed
+                  resource should be written. Connection details frequently include
+                  the endpoint, username, and password required to connect to the
+                  managed resource. This field is planned to be replaced in a future
+                  release in favor of PublishConnectionDetailsTo. Currently, both
+                  could be set independently and connection details would be published
+                  to both without affecting each other.
+                properties:
+                  name:
+                    description: Name of the secret.
+                    type: string
+                  namespace:
+                    description: Namespace of the secret.
+                    type: string
+                required:
+                - name
+                - namespace
+                type: object
+            required:
+            - forProvider
+            type: object
+          status:
+            description: GatewayStatus defines the observed state of Gateway.
+            properties:
+              atProvider:
+                properties:
+                  cloudInstanceId:
+                    description: Instance ID of the gateway.
+                    type: string
+                  elbDnsName:
+                    description: ELB DNS Name.
+                    type: string
+                  fqdnLanInterface:
+                    description: FQDN gateway lan interface id.
+                    type: string
+                  id:
+                    type: string
+                  peeringHaCloudInstanceId:
+                    description: Instance ID of the peering HA gateway.
+                    type: string
+                  peeringHaGwName:
+                    description: Aviatrix gateway unique name of HA gateway.
+                    type: string
+                  peeringHaPrivateIp:
+                    description: Private IP address of HA gateway.
+                    type: string
+                  peeringHaSecurityGroupId:
+                    description: Peering HA security group used for the gateway.
+                    type: string
+                  privateIp:
+                    description: Private IP address of the Gateway created.
+                    type: string
+                  publicDnsServer:
+                    description: NS server used by the gateway.
+                    type: string
+                  securityGroupId:
+                    description: Security group used for the gateway.
+                    type: string
+                type: object
+              conditions:
+                description: Conditions of the resource.
+                items:
+                  description: A Condition that may apply to a resource.
+                  properties:
+                    lastTransitionTime:
+                      description: LastTransitionTime is the last time this condition
+                        transitioned from one status to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: A Message containing details about this condition's
+                        last transition from one status to another, if any.
+                      type: string
+                    reason:
+                      description: A Reason for this condition's last transition from
+                        one status to another.
+                      type: string
+                    status:
+                      description: Status of this condition; is it currently True,
+                        False, or Unknown?
+                      type: string
+                    type:
+                      description: Type of this condition. At most one of each condition
+                        type may apply to a resource at any point in time.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

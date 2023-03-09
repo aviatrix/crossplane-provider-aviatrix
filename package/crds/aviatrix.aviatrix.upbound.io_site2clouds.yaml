@@ -1,0 +1,536 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.8.0
+  creationTimestamp: null
+  name: site2clouds.aviatrix.aviatrix.upbound.io
+spec:
+  group: aviatrix.aviatrix.upbound.io
+  names:
+    categories:
+    - crossplane
+    - managed
+    - aviatrix
+    kind: Site2Cloud
+    listKind: Site2CloudList
+    plural: site2clouds
+    singular: site2cloud
+  scope: Cluster
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: READY
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Synced')].status
+      name: SYNCED
+      type: string
+    - jsonPath: .metadata.annotations.crossplane\.io/external-name
+      name: EXTERNAL-NAME
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: Site2Cloud is the Schema for the Site2Clouds API. <no value>
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: Site2CloudSpec defines the desired state of Site2Cloud
+            properties:
+              deletionPolicy:
+                default: Delete
+                description: DeletionPolicy specifies what will happen to the underlying
+                  external when this managed resource is deleted - either "Delete"
+                  or "Orphan" the external resource.
+                enum:
+                - Orphan
+                - Delete
+                type: string
+              forProvider:
+                properties:
+                  authType:
+                    description: 'Authentication Type. Valid values: ''PSK'' and ''Cert''.
+                      Default value: ''PSK''.'
+                    type: string
+                  backupGatewayName:
+                    description: Backup gateway name.
+                    type: string
+                  backupLocalTunnelIp:
+                    description: Backup local tunnel IP address.
+                    type: string
+                  backupPreSharedKeySecretRef:
+                    description: Backup Pre-Shared Key.
+                    properties:
+                      key:
+                        description: The key to select.
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                      namespace:
+                        description: Namespace of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    - namespace
+                    type: object
+                  backupRemoteGatewayIp:
+                    description: Backup remote remote gateway IP.
+                    type: string
+                  backupRemoteGatewayLatitude:
+                    description: Latitude of backup remote gateway.
+                    type: number
+                  backupRemoteGatewayLongitude:
+                    description: Longitude of backup remote gateway.
+                    type: number
+                  backupRemoteIdentifier:
+                    description: Backup remote identifier. Required for Cert based
+                      authentication type with HA enabled.
+                    type: string
+                  backupRemoteTunnelIp:
+                    description: Backup remote tunnel IP address.
+                    type: string
+                  caCertTagName:
+                    description: Name of Remote CA Certificate Tag for creating Site2Cloud
+                      tunnels. Required for Cert based authentication type.
+                    type: string
+                  connectionName:
+                    description: Site2Cloud Connection Name.
+                    type: string
+                  connectionType:
+                    description: 'Connection Type. Valid values: ''mapped'' and ''unmapped''.'
+                    type: string
+                  customAlgorithms:
+                    description: Switch to enable custom/non-default algorithms for
+                      IPSec Authentication/Encryption.
+                    type: boolean
+                  customMapped:
+                    description: Enable custom mapped.
+                    type: boolean
+                  enableActiveActive:
+                    description: Switch to Enable/Disable active_active_ha for an
+                      existing site2cloud connection.
+                    type: boolean
+                  enableDeadPeerDetection:
+                    description: Switch to Enable/Disable Deed Peer Detection for
+                      an existing site2cloud connection.
+                    type: boolean
+                  enableEventTriggeredHa:
+                    description: Enable Event Triggered HA.
+                    type: boolean
+                  enableIkev2:
+                    description: Switch to enable IKEv2 for policy based site2cloud.
+                    type: boolean
+                  enableSingleIpHa:
+                    description: Enable single IP HA on a site2cloud connection.
+                    type: boolean
+                  forwardTrafficToTransit:
+                    description: Enable spoke gateway with mapped site2cloud configurations
+                      to forward traffic from site2cloud connection to Aviatrix Transit
+                      Gateway.
+                    type: boolean
+                  haEnabled:
+                    description: Specify whether enabling HA or not.
+                    type: boolean
+                  localDestinationRealCidrs:
+                    description: Local Initiated Traffic Destination Real CIDRs.
+                    items:
+                      type: string
+                    type: array
+                  localDestinationVirtualCidrs:
+                    description: Local Initiated Traffic Destination Virtual CIDRs.
+                    items:
+                      type: string
+                    type: array
+                  localSourceRealCidrs:
+                    description: Local Initiated Traffic Source Real CIDRs.
+                    items:
+                      type: string
+                    type: array
+                  localSourceVirtualCidrs:
+                    description: Local Initiated Traffic Source Virtual CIDRs.
+                    items:
+                      type: string
+                    type: array
+                  localSubnetCidr:
+                    description: Local Subnet CIDR.
+                    type: string
+                  localSubnetVirtual:
+                    description: Local Subnet CIDR (Virtual).
+                    type: string
+                  localTunnelIp:
+                    description: Local tunnel IP address.
+                    type: string
+                  phase1Authentication:
+                    description: 'Phase one Authentication. Valid values: ''SHA-1'',
+                      ''SHA-256'', ''SHA-384'' and ''SHA-512''.'
+                    type: string
+                  phase1DhGroups:
+                    description: 'Phase one DH Groups. Valid values: ''1'', ''2'',
+                      ''5'', ''14'', ''15'', ''16'', ''17'', ''18'', ''19'', ''20''
+                      and ''21''.'
+                    type: string
+                  phase1Encryption:
+                    description: 'Phase one Encryption. Valid values: ''3DES'', ''AES-128-CBC'',
+                      ''AES-192-CBC'' and ''AES-256-CBC'', ''AES-128-GCM-64'', ''AES-128-GCM-96'',
+                      ''AES-128-GCM-128'', ''AES-256-GCM-64'', ''AES-256-GCM-96'',
+                      and ''AES-256-GCM-128''.'
+                    type: string
+                  phase1RemoteIdentifier:
+                    description: List of phase 1 remote identifier of the IPsec tunnel.
+                      This can be configured as a list of any string, including emtpy
+                      string.
+                    items:
+                      type: string
+                    type: array
+                  phase2Authentication:
+                    description: 'Phase two Authentication. Valid values: ''NO-AUTH'',
+                      ''HMAC-SHA-1'', ''HMAC-SHA-256'', ''HMAC-SHA-384'' and ''HMAC-SHA-512''.'
+                    type: string
+                  phase2DhGroups:
+                    description: 'Phase two DH Groups. Valid values: ''1'', ''2'',
+                      ''5'', ''14'', ''15'', ''16'', ''17'', ''18'', ''19'', ''20''
+                      and ''21''.'
+                    type: string
+                  phase2Encryption:
+                    description: 'Phase two Encryption. Valid values: ''3DES'', ''AES-128-CBC'',
+                      ''AES-192-CBC'', ''AES-256-CBC'', ''AES-128-GCM-64'', ''AES-128-GCM-96'',
+                      ''AES-128-GCM-128'', ''AES-256-GCM-64'', ''AES-256-GCM-96'',
+                      ''AES-256-GCM-128'', and ''NULL-ENCR''.'
+                    type: string
+                  preSharedKeySecretRef:
+                    description: Pre-Shared Key.
+                    properties:
+                      key:
+                        description: The key to select.
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                      namespace:
+                        description: Namespace of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    - namespace
+                    type: object
+                  primaryCloudGatewayName:
+                    description: Primary Cloud Gateway Name.
+                    type: string
+                  privateRouteEncryption:
+                    description: Private route encryption switch.
+                    type: boolean
+                  remoteDestinationRealCidrs:
+                    description: Remote Initiated Traffic Destination Real CIDRs.
+                    items:
+                      type: string
+                    type: array
+                  remoteDestinationVirtualCidrs:
+                    description: Remote Initiated Traffic Destination Virtual CIDRs.
+                    items:
+                      type: string
+                    type: array
+                  remoteGatewayIp:
+                    description: Remote Gateway IP.
+                    type: string
+                  remoteGatewayLatitude:
+                    description: Latitude of remote gateway.
+                    type: number
+                  remoteGatewayLongitude:
+                    description: Longitude of remote gateway.
+                    type: number
+                  remoteGatewayType:
+                    description: 'Remote gateway type. Valid values: ''generic'',
+                      ''avx'', ''aws'', ''azure'', ''sonicwall'' and ''oracle''.'
+                    type: string
+                  remoteIdentifier:
+                    description: Remote identifier. Required for Cert based authentication
+                      type.
+                    type: string
+                  remoteSourceRealCidrs:
+                    description: Remote Initiated Traffic Source Real CIDRs.
+                    items:
+                      type: string
+                    type: array
+                  remoteSourceVirtualCidrs:
+                    description: Remote Initiated Traffic Source Virtual CIDRs.
+                    items:
+                      type: string
+                    type: array
+                  remoteSubnetCidr:
+                    description: Remote Subnet CIDR.
+                    type: string
+                  remoteSubnetVirtual:
+                    description: Remote Subnet CIDR (Virtual).
+                    type: string
+                  remoteTunnelIp:
+                    description: Remote tunnel IP address.
+                    type: string
+                  routeTableList:
+                    description: Route tables to modify.
+                    items:
+                      type: string
+                    type: array
+                  sslServerPool:
+                    description: Specify ssl_server_pool for tunnel_type 'tcp'. Default
+                      value is '192.168.44.0/24'
+                    type: string
+                  tunnelType:
+                    description: 'Site2Cloud Tunnel Type. Valid values: ''policy''
+                      and ''route''.'
+                    type: string
+                  vpcId:
+                    description: VPC Id of the cloud gateway.
+                    type: string
+                required:
+                - connectionName
+                - connectionType
+                - primaryCloudGatewayName
+                - remoteGatewayIp
+                - remoteGatewayType
+                - tunnelType
+                - vpcId
+                type: object
+              providerConfigRef:
+                default:
+                  name: default
+                description: ProviderConfigReference specifies how the provider that
+                  will be used to create, observe, update, and delete this managed
+                  resource should be configured.
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                  policy:
+                    description: Policies for referencing.
+                    properties:
+                      resolution:
+                        default: Required
+                        description: Resolution specifies whether resolution of this
+                          reference is required. The default is 'Required', which
+                          means the reconcile will fail if the reference cannot be
+                          resolved. 'Optional' means this reference will be a no-op
+                          if it cannot be resolved.
+                        enum:
+                        - Required
+                        - Optional
+                        type: string
+                      resolve:
+                        description: Resolve specifies when this reference should
+                          be resolved. The default is 'IfNotPresent', which will attempt
+                          to resolve the reference only when the corresponding field
+                          is not present. Use 'Always' to resolve the reference on
+                          every reconcile.
+                        enum:
+                        - Always
+                        - IfNotPresent
+                        type: string
+                    type: object
+                required:
+                - name
+                type: object
+              providerRef:
+                description: 'ProviderReference specifies the provider that will be
+                  used to create, observe, update, and delete this managed resource.
+                  Deprecated: Please use ProviderConfigReference, i.e. `providerConfigRef`'
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                  policy:
+                    description: Policies for referencing.
+                    properties:
+                      resolution:
+                        default: Required
+                        description: Resolution specifies whether resolution of this
+                          reference is required. The default is 'Required', which
+                          means the reconcile will fail if the reference cannot be
+                          resolved. 'Optional' means this reference will be a no-op
+                          if it cannot be resolved.
+                        enum:
+                        - Required
+                        - Optional
+                        type: string
+                      resolve:
+                        description: Resolve specifies when this reference should
+                          be resolved. The default is 'IfNotPresent', which will attempt
+                          to resolve the reference only when the corresponding field
+                          is not present. Use 'Always' to resolve the reference on
+                          every reconcile.
+                        enum:
+                        - Always
+                        - IfNotPresent
+                        type: string
+                    type: object
+                required:
+                - name
+                type: object
+              publishConnectionDetailsTo:
+                description: PublishConnectionDetailsTo specifies the connection secret
+                  config which contains a name, metadata and a reference to secret
+                  store config to which any connection details for this managed resource
+                  should be written. Connection details frequently include the endpoint,
+                  username, and password required to connect to the managed resource.
+                properties:
+                  configRef:
+                    default:
+                      name: default
+                    description: SecretStoreConfigRef specifies which secret store
+                      config should be used for this ConnectionSecret.
+                    properties:
+                      name:
+                        description: Name of the referenced object.
+                        type: string
+                      policy:
+                        description: Policies for referencing.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: Resolution specifies whether resolution of
+                              this reference is required. The default is 'Required',
+                              which means the reconcile will fail if the reference
+                              cannot be resolved. 'Optional' means this reference
+                              will be a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: Resolve specifies when this reference should
+                              be resolved. The default is 'IfNotPresent', which will
+                              attempt to resolve the reference only when the corresponding
+                              field is not present. Use 'Always' to resolve the reference
+                              on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    required:
+                    - name
+                    type: object
+                  metadata:
+                    description: Metadata is the metadata for connection secret.
+                    properties:
+                      annotations:
+                        additionalProperties:
+                          type: string
+                        description: Annotations are the annotations to be added to
+                          connection secret. - For Kubernetes secrets, this will be
+                          used as "metadata.annotations". - It is up to Secret Store
+                          implementation for others store types.
+                        type: object
+                      labels:
+                        additionalProperties:
+                          type: string
+                        description: Labels are the labels/tags to be added to connection
+                          secret. - For Kubernetes secrets, this will be used as "metadata.labels".
+                          - It is up to Secret Store implementation for others store
+                          types.
+                        type: object
+                      type:
+                        description: Type is the SecretType for the connection secret.
+                          - Only valid for Kubernetes Secret Stores.
+                        type: string
+                    type: object
+                  name:
+                    description: Name is the name of the connection secret.
+                    type: string
+                required:
+                - name
+                type: object
+              writeConnectionSecretToRef:
+                description: WriteConnectionSecretToReference specifies the namespace
+                  and name of a Secret to which any connection details for this managed
+                  resource should be written. Connection details frequently include
+                  the endpoint, username, and password required to connect to the
+                  managed resource. This field is planned to be replaced in a future
+                  release in favor of PublishConnectionDetailsTo. Currently, both
+                  could be set independently and connection details would be published
+                  to both without affecting each other.
+                properties:
+                  name:
+                    description: Name of the secret.
+                    type: string
+                  namespace:
+                    description: Namespace of the secret.
+                    type: string
+                required:
+                - name
+                - namespace
+                type: object
+            required:
+            - forProvider
+            type: object
+          status:
+            description: Site2CloudStatus defines the observed state of Site2Cloud.
+            properties:
+              atProvider:
+                properties:
+                  id:
+                    type: string
+                type: object
+              conditions:
+                description: Conditions of the resource.
+                items:
+                  description: A Condition that may apply to a resource.
+                  properties:
+                    lastTransitionTime:
+                      description: LastTransitionTime is the last time this condition
+                        transitioned from one status to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: A Message containing details about this condition's
+                        last transition from one status to another, if any.
+                      type: string
+                    reason:
+                      description: A Reason for this condition's last transition from
+                        one status to another.
+                      type: string
+                    status:
+                      description: Status of this condition; is it currently True,
+                        False, or Unknown?
+                      type: string
+                    type:
+                      description: Type of this condition. At most one of each condition
+                        type may apply to a resource at any point in time.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

@@ -10,17 +10,71 @@ package apis
 import (
 	"k8s.io/apimachinery/pkg/runtime"
 
-	// v1alpha1 "github.com/aviatrix/provider-aviatrix/apis/null/v1alpha1"
+	v1alpha1 "github.com/aviatrix/provider-aviatrix/apis/account/v1alpha1"
+	v1alpha1aviatrix "github.com/aviatrix/provider-aviatrix/apis/aviatrix/v1alpha1"
+	v1alpha1aws "github.com/aviatrix/provider-aviatrix/apis/aws/v1alpha1"
+	v1alpha1azure "github.com/aviatrix/provider-aviatrix/apis/azure/v1alpha1"
+	v1alpha1centralized "github.com/aviatrix/provider-aviatrix/apis/centralized/v1alpha1"
+	v1alpha1cloudn "github.com/aviatrix/provider-aviatrix/apis/cloudn/v1alpha1"
+	v1alpha1datadog "github.com/aviatrix/provider-aviatrix/apis/datadog/v1alpha1"
+	v1alpha1device "github.com/aviatrix/provider-aviatrix/apis/device/v1alpha1"
+	v1alpha1distributed "github.com/aviatrix/provider-aviatrix/apis/distributed/v1alpha1"
+	v1alpha1edge "github.com/aviatrix/provider-aviatrix/apis/edge/v1alpha1"
+	v1alpha1firewall "github.com/aviatrix/provider-aviatrix/apis/firewall/v1alpha1"
+	v1alpha1fqdn "github.com/aviatrix/provider-aviatrix/apis/fqdn/v1alpha1"
+	v1alpha1gateway "github.com/aviatrix/provider-aviatrix/apis/gateway/v1alpha1"
+	v1alpha1geo "github.com/aviatrix/provider-aviatrix/apis/geo/v1alpha1"
+	v1alpha1periodic "github.com/aviatrix/provider-aviatrix/apis/periodic/v1alpha1"
+	v1alpha1private "github.com/aviatrix/provider-aviatrix/apis/private/v1alpha1"
+	v1alpha1rbac "github.com/aviatrix/provider-aviatrix/apis/rbac/v1alpha1"
+	v1alpha1remote "github.com/aviatrix/provider-aviatrix/apis/remote/v1alpha1"
+	v1alpha1saml "github.com/aviatrix/provider-aviatrix/apis/saml/v1alpha1"
+	v1alpha1segmentation "github.com/aviatrix/provider-aviatrix/apis/segmentation/v1alpha1"
+	v1alpha1site2cloud "github.com/aviatrix/provider-aviatrix/apis/site2cloud/v1alpha1"
+	v1alpha1smart "github.com/aviatrix/provider-aviatrix/apis/smart/v1alpha1"
+	v1alpha1splunk "github.com/aviatrix/provider-aviatrix/apis/splunk/v1alpha1"
+	v1alpha1spoke "github.com/aviatrix/provider-aviatrix/apis/spoke/v1alpha1"
+	v1alpha1trans "github.com/aviatrix/provider-aviatrix/apis/trans/v1alpha1"
+	v1alpha1transit "github.com/aviatrix/provider-aviatrix/apis/transit/v1alpha1"
 	v1alpha1apis "github.com/aviatrix/provider-aviatrix/apis/v1alpha1"
 	v1beta1 "github.com/aviatrix/provider-aviatrix/apis/v1beta1"
+	v1alpha1vgw "github.com/aviatrix/provider-aviatrix/apis/vgw/v1alpha1"
+	v1alpha1vpn "github.com/aviatrix/provider-aviatrix/apis/vpn/v1alpha1"
 )
 
 func init() {
 	// Register the types with the Scheme so the components can map objects to GroupVersionKinds and back
 	AddToSchemes = append(AddToSchemes,
-		// v1alpha1.SchemeBuilder.AddToScheme,
+		v1alpha1.SchemeBuilder.AddToScheme,
+		v1alpha1aviatrix.SchemeBuilder.AddToScheme,
+		v1alpha1aws.SchemeBuilder.AddToScheme,
+		v1alpha1azure.SchemeBuilder.AddToScheme,
+		v1alpha1centralized.SchemeBuilder.AddToScheme,
+		v1alpha1cloudn.SchemeBuilder.AddToScheme,
+		v1alpha1datadog.SchemeBuilder.AddToScheme,
+		v1alpha1device.SchemeBuilder.AddToScheme,
+		v1alpha1distributed.SchemeBuilder.AddToScheme,
+		v1alpha1edge.SchemeBuilder.AddToScheme,
+		v1alpha1firewall.SchemeBuilder.AddToScheme,
+		v1alpha1fqdn.SchemeBuilder.AddToScheme,
+		v1alpha1gateway.SchemeBuilder.AddToScheme,
+		v1alpha1geo.SchemeBuilder.AddToScheme,
+		v1alpha1periodic.SchemeBuilder.AddToScheme,
+		v1alpha1private.SchemeBuilder.AddToScheme,
+		v1alpha1rbac.SchemeBuilder.AddToScheme,
+		v1alpha1remote.SchemeBuilder.AddToScheme,
+		v1alpha1saml.SchemeBuilder.AddToScheme,
+		v1alpha1segmentation.SchemeBuilder.AddToScheme,
+		v1alpha1site2cloud.SchemeBuilder.AddToScheme,
+		v1alpha1smart.SchemeBuilder.AddToScheme,
+		v1alpha1splunk.SchemeBuilder.AddToScheme,
+		v1alpha1spoke.SchemeBuilder.AddToScheme,
+		v1alpha1trans.SchemeBuilder.AddToScheme,
+		v1alpha1transit.SchemeBuilder.AddToScheme,
 		v1alpha1apis.SchemeBuilder.AddToScheme,
 		v1beta1.SchemeBuilder.AddToScheme,
+		v1alpha1vgw.SchemeBuilder.AddToScheme,
+		v1alpha1vpn.SchemeBuilder.AddToScheme,
 	)
 }
 

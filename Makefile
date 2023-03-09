@@ -2,7 +2,7 @@
 # Setup Project
 
 PROJECT_NAME := provider-aviatrix
-PROJECT_REPO := github.com/Aviatrix/$(PROJECT_NAME)
+PROJECT_REPO := github.com/aviatrix/$(PROJECT_NAME)
 
 export TERRAFORM_VERSION := 1.3.3
 

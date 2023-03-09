@@ -5,18 +5,18 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.8.0
   creationTimestamp: null
-  name: resources.null.aviatrix.upbound.io
+  name: dnats.gateway.aviatrix.upbound.io
 spec:
-  group: null.aviatrix.upbound.io
+  group: gateway.aviatrix.upbound.io
   names:
     categories:
     - crossplane
     - managed
     - aviatrix
-    kind: Resource
-    listKind: ResourceList
-    plural: resources
-    singular: resource
+    kind: Dnat
+    listKind: DnatList
+    plural: dnats
+    singular: dnat
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -35,7 +35,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Resource is the Schema for the Resources API. <no value>
+        description: Dnat is the Schema for the Dnats API. <no value>
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -50,7 +50,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: ResourceSpec defines the desired state of Resource
+            description: DnatSpec defines the desired state of Dnat
             properties:
               deletionPolicy:
                 default: Delete
@@ -63,13 +63,81 @@ spec:
                 type: string
               forProvider:
                 properties:
-                  triggers:
-                    additionalProperties:
-                      type: string
-                    description: A map of arbitrary strings that, when changed, will
-                      force the null resource to be replaced, re-running any associated
-                      provisioners.
-                    type: object
+                  dnatPolicy:
+                    description: Policy rule to be applied to gateway.
+                    items:
+                      properties:
+                        applyRouteEntry:
+                          description: 'This is an option to program the route entry
+                            ''DST CIDR pointing to Aviatrix Gateway'' into Cloud platform
+                            routing table. Type: Boolean. Default: True.'
+                          type: boolean
+                        connection:
+                          description: This is a qualifier condition that specifies
+                            output connection where the rule applies. When left blank,
+                            this field is not used.
+                          type: string
+                        dnatIps:
+                          description: This is a rule field that specifies the translated
+                            destination IP address when all specified qualifier conditions
+                            meet. When left blank, this field is not used. One of
+                            the rule field must be specified for this rule to take
+                            effect.
+                          type: string
+                        dnatPort:
+                          description: This is a rule field that specifies the translated
+                            destination port when all specified qualifier conditions
+                            meet. When left blank, this field is not used. One of
+                            the rule field must be specified for this rule to take
+                            effect.
+                          type: string
+                        dstCidr:
+                          description: This is a qualifier condition that specifies
+                            a destination IP address range where the rule applies.
+                            When left blank, this field is not used.
+                          type: string
+                        dstPort:
+                          description: This is a qualifier condition that specifies
+                            a destination port where the rule applies. When left blank,
+                            this field is not used.
+                          type: string
+                        excludeRtb:
+                          description: This field specifies which VPC private route
+                            table will not be programmed with the default route entry.
+                          type: string
+                        interface:
+                          description: This is a qualifier condition that specifies
+                            output interface where the rule applies. When left blank,
+                            this field is not used.
+                          type: string
+                        mark:
+                          description: This is a rule field that specifies a tag or
+                            mark of a TCP session when all qualifier conditions meet.
+                            When left blank, this field is not used.
+                          type: string
+                        protocol:
+                          description: 'This is a qualifier condition that specifies
+                            a destination port protocol where the rule applies. Default:
+                            all.'
+                          type: string
+                        srcCidr:
+                          description: This is a qualifier condition that specifies
+                            a source IP address range where the rule applies. When
+                            left blank, this field is not used.
+                          type: string
+                        srcPort:
+                          description: This is a qualifier condition that specifies
+                            a source port that the rule applies. When left blank,
+                            this field is not used.
+                          type: string
+                      type: object
+                    type: array
+                  gwName:
+                    description: Name of the gateway.
+                    type: string
+                required:
+                - dnatPolicy
+                - gwName
                 type: object
               providerConfigRef:
                 default:
@@ -243,12 +311,74 @@ spec:
             - forProvider
             type: object
           status:
-            description: ResourceStatus defines the observed state of Resource.
+            description: DnatStatus defines the observed state of Dnat.
             properties:
               atProvider:
                 properties:
+                  connectionPolicy:
+                    description: Computed attribute to store the previous connection
+                      policy.
+                    items:
+                      properties:
+                        applyRouteEntry:
+                          type: boolean
+                        connection:
+                          type: string
+                        dnatIps:
+                          type: string
+                        dnatPort:
+                          type: string
+                        dstCidr:
+                          type: string
+                        dstPort:
+                          type: string
+                        excludeRtb:
+                          type: string
+                        interface:
+                          type: string
+                        mark:
+                          type: string
+                        protocol:
+                          type: string
+                        srcCidr:
+                          type: string
+                        srcPort:
+                          type: string
+                      type: object
+                    type: array
                   id:
                     type: string
+                  interfacePolicy:
+                    description: Computed attribute to store the previous interface
+                      policy.
+                    items:
+                      properties:
+                        applyRouteEntry:
+                          type: boolean
+                        connection:
+                          type: string
+                        dnatIps:
+                          type: string
+                        dnatPort:
+                          type: string
+                        dstCidr:
+                          type: string
+                        dstPort:
+                          type: string
+                        excludeRtb:
+                          type: string
+                        interface:
+                          type: string
+                        mark:
+                          type: string
+                        protocol:
+                          type: string
+                        srcCidr:
+                          type: string
+                        srcPort:
+                          type: string
+                      type: object
+                    type: array
                 type: object
               conditions:
                 description: Conditions of the resource.
