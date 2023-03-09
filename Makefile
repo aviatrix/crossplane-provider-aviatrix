@@ -1,17 +1,17 @@
 # ====================================================================================
 # Setup Project
 
-PROJECT_NAME := upjet-provider-template
-PROJECT_REPO := github.com/upbound/$(PROJECT_NAME)
+PROJECT_NAME := provider-aviatrix
+PROJECT_REPO := github.com/Aviatrix/$(PROJECT_NAME)
 
 export TERRAFORM_VERSION := 1.3.3
 
-export TERRAFORM_PROVIDER_SOURCE := hashicorp/null
-export TERRAFORM_PROVIDER_REPO := https://github.com/hashicorp/terraform-provider-null
-export TERRAFORM_PROVIDER_VERSION := 3.1.0
-export TERRAFORM_PROVIDER_DOWNLOAD_NAME := terraform-provider-null
-export TERRAFORM_NATIVE_PROVIDER_BINARY := terraform-provider-null_v3.1.0_x5
-export TERRAFORM_DOCS_PATH := docs/resources
+export TERRAFORM_PROVIDER_SOURCE:=AviatrixSystems/aviatrix
+export TERRAFORM_PROVIDER_REPO:=https://github.com/AviatrixSystems/terraform-provider-aviatrix
+export TERRAFORM_PROVIDER_VERSION:=3.0.1
+export TERRAFORM_PROVIDER_DOWNLOAD_NAME:=terraform-provider-aviatrix
+export TERRAFORM_NATIVE_PROVIDER_BINARY:=terraform-provider-aviatrix_v3.0.1
+export TERRAFORM_DOCS_PATH:=docs
 
 PLATFORMS ?= linux_amd64 linux_arm64
 
@@ -57,23 +57,23 @@ UPTEST_VERSION = v0.2.1
 # ====================================================================================
 # Setup Images
 
-REGISTRY_ORGS ?= xpkg.upbound.io/upbound
+REGISTRY_ORGS ?= docker.io/therealmitchconnors
 IMAGES = $(PROJECT_NAME)
 -include build/makelib/imagelight.mk
 
 # ====================================================================================
 # Setup XPKG
 
-XPKG_REG_ORGS ?= xpkg.upbound.io/upbound
+XPKG_REG_ORGS ?= docker.io/therealmitchconnors
 # NOTE(hasheddan): skip promoting on xpkg.upbound.io as channel tags are
 # inferred.
-XPKG_REG_ORGS_NO_PROMOTE ?= xpkg.upbound.io/upbound
+XPKG_REG_ORGS_NO_PROMOTE ?= docker.io/therealmitchconnors
 XPKGS = $(PROJECT_NAME)
 -include build/makelib/xpkg.mk
 
 # NOTE(hasheddan): we force image building to happen prior to xpkg build so that
 # we ensure image is present in daemon.
-xpkg.build.upjet-provider-template: do.build.images
+xpkg.build.provider-aviatrix: do.build.images
 
 # NOTE(hasheddan): we ensure up is installed prior to running platform-specific
 # build steps in parallel to avoid encountering an installation race condition.

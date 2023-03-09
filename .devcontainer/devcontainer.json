@@ -1,0 +1,36 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/go
+{
+	"name": "Go",
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	"image": "mcr.microsoft.com/devcontainers/go:0-1.19",
+	"features": {
+		"ghcr.io/devcontainers-contrib/features/yamllint:2": {},
+		"ghcr.io/jungaretti/features/make:1": {},
+		"ghcr.io/devcontainers/features/docker-in-docker:1": {
+			"version": "latest"
+		}
+	},
+
+	"remoteUser": "vscode",
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	// "postCreateCommand": "go version",
+
+	// Configure tool-specific properties.
+	// "customizations": {},
+
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+	"containerEnv": {
+		"TERRAFORM_PROVIDER_SOURCE": "AviatrixSystems/aviatrix",
+		"TERRAFORM_PROVIDER_REPO":"https://github.com/AviatrixSystems/terraform-provider-aviatrix",
+		"TERRAFORM_PROVIDER_VERSION":"3.0.1",
+		"TERRAFORM_PROVIDER_DOWNLOAD_NAME":"terraform-provider-aviatrix",
+		"TERRAFORM_NATIVE_PROVIDER_BINARY":"terraform-provider-aviatrix_v3.0.1",
+		"TERRAFORM_DOCS_PATH":"website/docs/r"
+	},
+}
