@@ -69,6 +69,7 @@ func TerraformSetupBuilder(version, providerSource, providerVersion string) terr
 }
 
 func buildConfigFromKeys(creds map[string]string) (result map[string]any) {
+	result = map[string]any{}
 	for k, v := range creds {
 		result[k] = v
 	}
