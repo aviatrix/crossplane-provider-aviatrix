@@ -1,0 +1,1028 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.8.0
+  creationTimestamp: null
+  name: accounts.aviatrix.aviatrix.upbound.io
+spec:
+  group: aviatrix.aviatrix.upbound.io
+  names:
+    categories:
+    - crossplane
+    - managed
+    - aviatrix
+    kind: Account
+    listKind: AccountList
+    plural: accounts
+    singular: account
+  scope: Cluster
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: READY
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Synced')].status
+      name: SYNCED
+      type: string
+    - jsonPath: .metadata.annotations.crossplane\.io/external-name
+      name: EXTERNAL-NAME
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: Account is the Schema for the Accounts API. Creates and manages
+          Aviatrix cloud accounts
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AccountSpec defines the desired state of Account
+            properties:
+              deletionPolicy:
+                default: Delete
+                description: DeletionPolicy specifies what will happen to the underlying
+                  external when this managed resource is deleted - either "Delete"
+                  or "Orphan" the external resource.
+                enum:
+                - Orphan
+                - Delete
+                type: string
+              forProvider:
+                properties:
+                  alicloudAccessKeySecretRef:
+                    description: Alibaba Cloud Access Key. Required when creating
+                      an account for Alibaba Cloud. Alibaba Cloud Access Key.
+                    properties:
+                      key:
+                        description: The key to select.
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                      namespace:
+                        description: Namespace of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    - namespace
+                    type: object
+                  alicloudAccountId:
+                    description: Alibaba Cloud Account number to associate with Aviatrix
+                      account. Required when creating an account for Alibaba Cloud.
+                      Alibaba Cloud Account ID to associate with Aviatrix account.
+                    type: string
+                  alicloudSecretKeySecretRef:
+                    description: Alibaba Cloud Secret Key. Required when creating
+                      an account for Alibaba Cloud. Alibaba Cloud Secret Key.
+                    properties:
+                      key:
+                        description: The key to select.
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                      namespace:
+                        description: Namespace of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    - namespace
+                    type: object
+                  armApplicationIdSecretRef:
+                    description: Azure ARM Application ID. Required when creating
+                      an account for Azure. Azure Application ID.
+                    properties:
+                      key:
+                        description: The key to select.
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                      namespace:
+                        description: Namespace of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    - namespace
+                    type: object
+                  armApplicationKeySecretRef:
+                    description: Azure ARM Application key. Required when creating
+                      an account for Azure. Azure Application Key.
+                    properties:
+                      key:
+                        description: The key to select.
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                      namespace:
+                        description: Namespace of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    - namespace
+                    type: object
+                  armDirectoryIdSecretRef:
+                    description: Azure ARM Directory ID. Required when creating an
+                      account for Azure. Azure Directory ID.
+                    properties:
+                      key:
+                        description: The key to select.
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                      namespace:
+                        description: Namespace of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    - namespace
+                    type: object
+                  armSubscriptionId:
+                    description: Azure ARM Subscription ID. Required when creating
+                      an account for Azure. Azure Subscription ID.
+                    type: string
+                  auditAccount:
+                    description: 'Specify whether to enable the audit account feature.
+                      Changing audit_account to "false" will not prevent the Controller
+                      from performing account audits. Valid values: true, false. Default:
+                      false. Available as of provider version 2.19+. Note: The warning
+                      may still appear for a few hours after fixing the underlying
+                      issue. Enable account audit.'
+                    type: boolean
+                  awsAccessKeySecretRef:
+                    description: AWS Access Key. Required when aws_iam is "false"
+                      and when creating an account for AWS. AWS Access Key.
+                    properties:
+                      key:
+                        description: The key to select.
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                      namespace:
+                        description: Namespace of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    - namespace
+                    type: object
+                  awsAccountNumber:
+                    description: AWS Account number to associate with Aviatrix account.
+                      Required when creating an account for AWS. AWS Account number
+                      to associate with Aviatrix account. Should be 12 digits.
+                    type: string
+                  awsGatewayRoleApp:
+                    description: A separate AWS App role ARN to assign to gateways
+                      created by the controller. Required when aws_gateway_role_ec2
+                      is set. Only allowed when aws_iam, awsgov_iam, or awschina_iam
+                      is "true" when creating an account for AWS, AWSGov or AWSChina,
+                      respectively. Available as of provider version R2.19+. AWS App
+                      role ARN for gateways.
+                    type: string
+                  awsGatewayRoleEc2:
+                    description: A separate AWS EC2 role ARN to assign to gateways
+                      created by the controller. Required when aws_gateway_role_app
+                      is set. Only allowed when aws_iam, awsgov_iam, or awschina_iam
+                      is "true" when creating an account for AWS, AWSGov or AWSChina,
+                      respectively. Available as of provider version R2.19+. AWS EC2
+                      role ARN for gateways.
+                    type: string
+                  awsIam:
+                    description: AWS IAM-role based flag, this option is for UserConnect.
+                      AWS IAM-role based flag.
+                    type: boolean
+                  awsRoleApp:
+                    description: AWS App role ARN, this option is for UserConnect.
+                      Required when aws_iam is "true" and when creating an account
+                      for AWS. AWS App role ARN.
+                    type: string
+                  awsRoleEc2:
+                    description: AWS EC2 role ARN, this option is for UserConnect.
+                      Required when aws_iam is "true" and when creating an account
+                      for AWS. AWS EC2 role ARN.
+                    type: string
+                  awsSecretKeySecretRef:
+                    description: AWS Secret Key. Required when aws_iam is "false"
+                      and when creating an account for AWS. AWS Secret Key.
+                    properties:
+                      key:
+                        description: The key to select.
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                      namespace:
+                        description: Namespace of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    - namespace
+                    type: object
+                  awschinaAccessKeySecretRef:
+                    description: AWSChina Access Key. Required when awschina_iam is
+                      "false" and when creating an account for AWSChina. Available
+                      as of provider version 2.19+. AWS China Access Key.
+                    properties:
+                      key:
+                        description: The key to select.
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                      namespace:
+                        description: Namespace of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    - namespace
+                    type: object
+                  awschinaAccountNumber:
+                    description: AWSChina Account number to associate with Aviatrix
+                      account. Required when creating an account for AWSChina. Available
+                      as of provider version 2.19+. AWS China Account Number.
+                    type: string
+                  awschinaIam:
+                    description: AWSChina IAM-role based flag. Available as of provider
+                      version 2.19+. AWS China IAM-role based flag.
+                    type: boolean
+                  awschinaRoleApp:
+                    description: AWSChina App role ARN. Available when awschina_iam
+                      is "true" and when creating an account for AWSChina. If left
+                      empty, the ARN will be computed. Available as of provider version
+                      2.19+. AWS China App Role ARN.
+                    type: string
+                  awschinaRoleEc2:
+                    description: AWSChina EC2 role ARN. Available when awschina_iam
+                      is "true" and when creating an account for AWSChina. If left
+                      empty, the ARN will be computed. Available as of provider version
+                      2.19+. AWS China EC2 Role ARN.
+                    type: string
+                  awschinaSecretKeySecretRef:
+                    description: AWSChina Secret Key. Required when awschina_iam is
+                      "false" and when creating an account for AWSChina. Available
+                      as of provider version 2.19+. AWS China Secret Key.
+                    properties:
+                      key:
+                        description: The key to select.
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                      namespace:
+                        description: Namespace of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    - namespace
+                    type: object
+                  awsgovAccessKeySecretRef:
+                    description: AWS Access Key. Required when creating an account
+                      for AWSGov. AWS Gov Access Key.
+                    properties:
+                      key:
+                        description: The key to select.
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                      namespace:
+                        description: Namespace of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    - namespace
+                    type: object
+                  awsgovAccountNumber:
+                    description: AWSGov Account number to associate with Aviatrix
+                      account. Required when creating an account for AWSGov. AWS Gov
+                      Account number to associate with Aviatrix account.
+                    type: string
+                  awsgovIam:
+                    description: AWSGov IAM-role based flag. Available as of provider
+                      version 2.19+. AWSGov IAM-role based flag
+                    type: boolean
+                  awsgovRoleApp:
+                    description: AWSGov App role ARN. Available when awsgov_iam is
+                      "true" and when creating an account for AWSGov. If left empty,
+                      the ARN will be computed. Available as of provider version 2.19+.
+                      AWSGov App role ARN
+                    type: string
+                  awsgovRoleEc2:
+                    description: AWSGov EC2 role ARN. Available when awsgov_iam is
+                      "true" and when creating an account for AWSGov. If left empty,
+                      the ARN will be computed. Available as of provider version 2.19+.
+                      AWSGov EC2 role ARN
+                    type: string
+                  awsgovSecretKeySecretRef:
+                    description: AWS Secret Key. Required when creating an account
+                      for AWSGov. AWS Gov Secret Key.
+                    properties:
+                      key:
+                        description: The key to select.
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                      namespace:
+                        description: Namespace of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    - namespace
+                    type: object
+                  awssAccountNumber:
+                    description: AWS Secret Region Account Number. Required when creating
+                      an account in AWS Secret Region. Available as of provider version
+                      R2.19.5+. AWS Secret Region Account Number.
+                    type: string
+                  awssCaChainCertSecretRef:
+                    description: AWS Secret Region Custom Certificate Authority local
+                      file path. Required when creating an account in AWS Secret Region.
+                      Available as of provider version R2.19.5+. AWS Secret Region
+                      Custom Certificate Authority file path.
+                    properties:
+                      key:
+                        description: The key to select.
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                      namespace:
+                        description: Namespace of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    - namespace
+                    type: object
+                  awssCapAccountName:
+                    description: AWS Secret Region Account Name. Required when creating
+                      an account in AWS Secret Region. Available as of provider version
+                      R2.19.5+. AWS Secret Region CAP Account Name.
+                    type: string
+                  awssCapAgency:
+                    description: AWS Secret Region CAP Agency. Required when creating
+                      an account in AWS Secret Region. Available as of provider version
+                      R2.19.5+. AWS Secret Region CAP Agency.
+                    type: string
+                  awssCapCertKeySecretRef:
+                    description: AWS Secret Region CAP Certificate Key local file
+                      path. Required when creating an account in AWS Secret Region.
+                      Available as of provider version R2.19.5+. AWS Secret Region
+                      CAP Certificate Key file path.
+                    properties:
+                      key:
+                        description: The key to select.
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                      namespace:
+                        description: Namespace of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    - namespace
+                    type: object
+                  awssCapCertSecretRef:
+                    description: AWS Secret Region CAP Certificate local file path.
+                      Required when creating an account in AWS Secret Region. Available
+                      as of provider version R2.19.5+. AWS Secret Region CAP Certificate
+                      file path.
+                    properties:
+                      key:
+                        description: The key to select.
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                      namespace:
+                        description: Namespace of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    - namespace
+                    type: object
+                  awssCapRoleName:
+                    description: AWS Secret Region Role Name. Required when creating
+                      an account in AWS Secret Region. Available as of provider version
+                      R2.19.5+. AWS Secret Region CAP Role Name.
+                    type: string
+                  awssCapUrl:
+                    description: AWS Secret Region CAP Url. Required when creating
+                      an account in AWS Secret Region. Available as of provider version
+                      R2.19.5+. AWS Secret Region CAP Endpoint URL.
+                    type: string
+                  awstsAccountNumber:
+                    description: AWS Top Secret Region Account Number. Required when
+                      creating an account in AWS Top Secret Region. Available as of
+                      provider version R2.19.5+. AWS Top Secret Region Account Number.
+                    type: string
+                  awstsCaChainCertSecretRef:
+                    description: AWS Top Secret Region Custom Certificate Authority
+                      local file path. Required when creating an account in AWS Top
+                      Secret Region. Available as of provider version R2.19.5+. AWS
+                      Top Secret Region Custom Certificate Authority file path.
+                    properties:
+                      key:
+                        description: The key to select.
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                      namespace:
+                        description: Namespace of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    - namespace
+                    type: object
+                  awstsCapAgency:
+                    description: AWS Top Secret Region CAP Agency. Required when creating
+                      an account in AWS Top Secret Region. Available as of provider
+                      version R2.19.5+. AWS Top Secret Region CAP Agency.
+                    type: string
+                  awstsCapCertKeySecretRef:
+                    description: AWS Top Secret Region CAP Certificate Key local file
+                      path. Required when creating an account in AWS Top Secret Region.
+                      Available as of provider version R2.19.5+. AWS Top Secret Region
+                      CAP Certificate Key file path.
+                    properties:
+                      key:
+                        description: The key to select.
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                      namespace:
+                        description: Namespace of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    - namespace
+                    type: object
+                  awstsCapCertSecretRef:
+                    description: AWS Top Secret Region CAP Certificate local file
+                      path. Required when creating an account in AWS Top Secret Region.
+                      Available as of provider version R2.19.5+. AWS Top Secret Region
+                      CAP Certificate file path.
+                    properties:
+                      key:
+                        description: The key to select.
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                      namespace:
+                        description: Namespace of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    - namespace
+                    type: object
+                  awstsCapMission:
+                    description: AWS Top Secret Region Mission. Required when creating
+                      an account in AWS Top Secret Region. Available as of provider
+                      version R2.19.5+. AWS Top Secret Region CAP Mission.
+                    type: string
+                  awstsCapRoleName:
+                    description: AWS Top Secret Region Role Name. Required when creating
+                      an account in AWS Top Secret Region. Available as of provider
+                      version R2.19.5+. AWS Top Secret Region CAP Role Name.
+                    type: string
+                  awstsCapUrl:
+                    description: AWS Top Secret Region CAP Url. Required when creating
+                      an account in AWS Top Secret Region. Available as of provider
+                      version R2.19.5+. AWS Top Secret Region CAP Endpoint URL.
+                    type: string
+                  azurechinaApplicationIdSecretRef:
+                    description: AzureChina ARM Application ID. Required when creating
+                      an account for AzureChina. Available as of provider version
+                      2.19+. Azure China Application ID.
+                    properties:
+                      key:
+                        description: The key to select.
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                      namespace:
+                        description: Namespace of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    - namespace
+                    type: object
+                  azurechinaApplicationKeySecretRef:
+                    description: AzureChina ARM Application key. Required when creating
+                      an account for AzureChina. Available as of provider version
+                      2.19+. Azure China Application Key.
+                    properties:
+                      key:
+                        description: The key to select.
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                      namespace:
+                        description: Namespace of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    - namespace
+                    type: object
+                  azurechinaDirectoryIdSecretRef:
+                    description: AzureChina ARM Directory ID. Required when creating
+                      an account for AzureChina. Available as of provider version
+                      2.19+. Azure China Directory ID.
+                    properties:
+                      key:
+                        description: The key to select.
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                      namespace:
+                        description: Namespace of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    - namespace
+                    type: object
+                  azurechinaSubscriptionId:
+                    description: AzureChina ARM Subscription ID. Required when creating
+                      an account for AzureChina. Available as of provider version
+                      2.19+. Azure China Subscription ID.
+                    type: string
+                  azuregovApplicationIdSecretRef:
+                    description: AzureGov ARM Application ID. Required when creating
+                      an account for AzureGov. Available as of provider version R2.19+.
+                      Azure Gov Application ID.
+                    properties:
+                      key:
+                        description: The key to select.
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                      namespace:
+                        description: Namespace of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    - namespace
+                    type: object
+                  azuregovApplicationKeySecretRef:
+                    description: AzureGov ARM Application key. Required when creating
+                      an account for AzureGov. Available as of provider version R2.19+.
+                      Azure Gov Application Key.
+                    properties:
+                      key:
+                        description: The key to select.
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                      namespace:
+                        description: Namespace of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    - namespace
+                    type: object
+                  azuregovDirectoryIdSecretRef:
+                    description: AzureGov ARM Directory ID. Required when creating
+                      an account for AzureGov. Available as of provider version R2.19+.
+                      Azure Gov Directory ID.
+                    properties:
+                      key:
+                        description: The key to select.
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                      namespace:
+                        description: Namespace of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    - namespace
+                    type: object
+                  azuregovSubscriptionId:
+                    description: AzureGov ARM Subscription ID. Required when creating
+                      an account for AzureGov. Available as of provider version R2.19+.
+                      Azure Gov Subscription ID.
+                    type: string
+                  cloudType:
+                    description: Type of cloud service provider. Only AWS, GCP, Azure,
+                      OCI, AzureGov, AWSGov, AWSChina, AzureChina, Alibaba Cloud and
+                      Edge CSP are supported currently. Enter 1 for AWS, 4 for GCP,
+                      8 for Azure, 16 for OCI, 32 for AzureGov, 256 for AWSGov, 1024
+                      for AWSChina or 2048 for AzureChina, 8192 for Alibaba Cloud,
+                      65536 for Edge CSP. Type of cloud service provider.
+                    type: number
+                  edgeCspPasswordSecretRef:
+                    description: Edge CSP password. Required when creating an Edge
+                      CSP account. Edge CSP password.
+                    properties:
+                      key:
+                        description: The key to select.
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                      namespace:
+                        description: Namespace of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    - namespace
+                    type: object
+                  edgeCspUsername:
+                    description: Edge CSP username. Required when creating an Edge
+                      CSP account. Edge CSP username.
+                    type: string
+                  gcloudProjectCredentialsFilepath:
+                    description: GCloud Project Credentials [local filepath].json.
+                      Required when creating an account for GCP. GCloud Project credentials
+                      local file path.
+                    type: string
+                  gcloudProjectId:
+                    description: GCloud Project ID. GCloud Project ID.
+                    type: string
+                  ociApiPrivateKeyFilepathSecretRef:
+                    description: Oracle OCI API Private Key local file path. Required
+                      when creating an account for OCI. OCI API Private Key local
+                      file path.
+                    properties:
+                      key:
+                        description: The key to select.
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                      namespace:
+                        description: Namespace of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    - namespace
+                    type: object
+                  ociCompartmentIdSecretRef:
+                    description: Oracle OCI Compartment ID. Required when creating
+                      an account for OCI. OCI Compartment OCID.
+                    properties:
+                      key:
+                        description: The key to select.
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                      namespace:
+                        description: Namespace of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    - namespace
+                    type: object
+                  ociTenancyIdSecretRef:
+                    description: Oracle OCI Tenancy ID. Required when creating an
+                      account for OCI. OCI Tenancy OCID.
+                    properties:
+                      key:
+                        description: The key to select.
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                      namespace:
+                        description: Namespace of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    - namespace
+                    type: object
+                  ociUserIdSecretRef:
+                    description: Oracle OCI User ID. Required when creating an account
+                      for OCI. OCI User OCID.
+                    properties:
+                      key:
+                        description: The key to select.
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                      namespace:
+                        description: Namespace of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    - namespace
+                    type: object
+                  rbacGroups:
+                    description: A list of existing RBAC group names. This attribute
+                      should only be used when creating an account. Updating this
+                      attribute will have no effect. Available as of provider version
+                      R2.23.0+. List of RBAC permission group names.
+                    items:
+                      type: string
+                    type: array
+                required:
+                - cloudType
+                type: object
+              providerConfigRef:
+                default:
+                  name: default
+                description: ProviderConfigReference specifies how the provider that
+                  will be used to create, observe, update, and delete this managed
+                  resource should be configured.
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                  policy:
+                    description: Policies for referencing.
+                    properties:
+                      resolution:
+                        default: Required
+                        description: Resolution specifies whether resolution of this
+                          reference is required. The default is 'Required', which
+                          means the reconcile will fail if the reference cannot be
+                          resolved. 'Optional' means this reference will be a no-op
+                          if it cannot be resolved.
+                        enum:
+                        - Required
+                        - Optional
+                        type: string
+                      resolve:
+                        description: Resolve specifies when this reference should
+                          be resolved. The default is 'IfNotPresent', which will attempt
+                          to resolve the reference only when the corresponding field
+                          is not present. Use 'Always' to resolve the reference on
+                          every reconcile.
+                        enum:
+                        - Always
+                        - IfNotPresent
+                        type: string
+                    type: object
+                required:
+                - name
+                type: object
+              providerRef:
+                description: 'ProviderReference specifies the provider that will be
+                  used to create, observe, update, and delete this managed resource.
+                  Deprecated: Please use ProviderConfigReference, i.e. `providerConfigRef`'
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                  policy:
+                    description: Policies for referencing.
+                    properties:
+                      resolution:
+                        default: Required
+                        description: Resolution specifies whether resolution of this
+                          reference is required. The default is 'Required', which
+                          means the reconcile will fail if the reference cannot be
+                          resolved. 'Optional' means this reference will be a no-op
+                          if it cannot be resolved.
+                        enum:
+                        - Required
+                        - Optional
+                        type: string
+                      resolve:
+                        description: Resolve specifies when this reference should
+                          be resolved. The default is 'IfNotPresent', which will attempt
+                          to resolve the reference only when the corresponding field
+                          is not present. Use 'Always' to resolve the reference on
+                          every reconcile.
+                        enum:
+                        - Always
+                        - IfNotPresent
+                        type: string
+                    type: object
+                required:
+                - name
+                type: object
+              publishConnectionDetailsTo:
+                description: PublishConnectionDetailsTo specifies the connection secret
+                  config which contains a name, metadata and a reference to secret
+                  store config to which any connection details for this managed resource
+                  should be written. Connection details frequently include the endpoint,
+                  username, and password required to connect to the managed resource.
+                properties:
+                  configRef:
+                    default:
+                      name: default
+                    description: SecretStoreConfigRef specifies which secret store
+                      config should be used for this ConnectionSecret.
+                    properties:
+                      name:
+                        description: Name of the referenced object.
+                        type: string
+                      policy:
+                        description: Policies for referencing.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: Resolution specifies whether resolution of
+                              this reference is required. The default is 'Required',
+                              which means the reconcile will fail if the reference
+                              cannot be resolved. 'Optional' means this reference
+                              will be a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: Resolve specifies when this reference should
+                              be resolved. The default is 'IfNotPresent', which will
+                              attempt to resolve the reference only when the corresponding
+                              field is not present. Use 'Always' to resolve the reference
+                              on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    required:
+                    - name
+                    type: object
+                  metadata:
+                    description: Metadata is the metadata for connection secret.
+                    properties:
+                      annotations:
+                        additionalProperties:
+                          type: string
+                        description: Annotations are the annotations to be added to
+                          connection secret. - For Kubernetes secrets, this will be
+                          used as "metadata.annotations". - It is up to Secret Store
+                          implementation for others store types.
+                        type: object
+                      labels:
+                        additionalProperties:
+                          type: string
+                        description: Labels are the labels/tags to be added to connection
+                          secret. - For Kubernetes secrets, this will be used as "metadata.labels".
+                          - It is up to Secret Store implementation for others store
+                          types.
+                        type: object
+                      type:
+                        description: Type is the SecretType for the connection secret.
+                          - Only valid for Kubernetes Secret Stores.
+                        type: string
+                    type: object
+                  name:
+                    description: Name is the name of the connection secret.
+                    type: string
+                required:
+                - name
+                type: object
+              writeConnectionSecretToRef:
+                description: WriteConnectionSecretToReference specifies the namespace
+                  and name of a Secret to which any connection details for this managed
+                  resource should be written. Connection details frequently include
+                  the endpoint, username, and password required to connect to the
+                  managed resource. This field is planned to be replaced in a future
+                  release in favor of PublishConnectionDetailsTo. Currently, both
+                  could be set independently and connection details would be published
+                  to both without affecting each other.
+                properties:
+                  name:
+                    description: Name of the secret.
+                    type: string
+                  namespace:
+                    description: Namespace of the secret.
+                    type: string
+                required:
+                - name
+                - namespace
+                type: object
+            required:
+            - forProvider
+            type: object
+          status:
+            description: AccountStatus defines the observed state of Account.
+            properties:
+              atProvider:
+                properties:
+                  awsCaCertPath:
+                    description: AWS Top Secret Region or Secret Region Custom Certificate
+                      Authority file name on the controller. Available as of provider
+                      R2.19.5+. AWS Top Secret Region or Secret Region Custom Certificate
+                      Authority file path on the controller.
+                    type: string
+                  awssCapCertKeyPath:
+                    description: AWS Secret Region CAP Certificate Key file name on
+                      the controller. Available as of provider R2.19.5+. AWS Secret
+                      Region CAP Certificate Key file path on the controller.
+                    type: string
+                  awssCapCertPath:
+                    description: AWS Secret Region CAP Certificate file name on the
+                      controller. Available as of provider R2.19.5+. AWS Secret Region
+                      CAP Certificate file path on the controller.
+                    type: string
+                  awstsCapCertKeyPath:
+                    description: AWS Top Secret Region CAP Certificate Key file name
+                      on the controller. Available as of provider R2.19.5+. AWS Top
+                      Secret Region CAP Certificate Key file path on the controller.
+                    type: string
+                  awstsCapCertPath:
+                    description: AWS Top Secret Region CAP Certificate file name on
+                      the controller. Available as of provider R2.19.5+. AWS Top Secret
+                      Region CAP Certificate file path on the controller.
+                    type: string
+                  id:
+                    type: string
+                type: object
+              conditions:
+                description: Conditions of the resource.
+                items:
+                  description: A Condition that may apply to a resource.
+                  properties:
+                    lastTransitionTime:
+                      description: LastTransitionTime is the last time this condition
+                        transitioned from one status to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: A Message containing details about this condition's
+                        last transition from one status to another, if any.
+                      type: string
+                    reason:
+                      description: A Reason for this condition's last transition from
+                        one status to another.
+                      type: string
+                    status:
+                      description: Status of this condition; is it currently True,
+                        False, or Unknown?
+                      type: string
+                    type:
+                      description: Type of this condition. At most one of each condition
+                        type may apply to a resource at any point in time.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

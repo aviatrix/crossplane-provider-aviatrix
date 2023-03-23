@@ -1,0 +1,14 @@
+apiVersion: segmentation.aviatrix.upbound.io/v1alpha1
+kind: NetworkDomainConnectionPolicy
+metadata:
+  annotations:
+    meta.upbound.io/example-id: segmentation/v1alpha1/networkdomainconnectionpolicy
+  labels:
+    testing.upbound.io/example-name: test_segmentation_network_domain_connection_policy
+  name: test-segmentation-network-domain-connection-policy
+spec:
+  forProvider:
+    domainName2: domain-b
+
+---
+

@@ -1,0 +1,21 @@
+apiVersion: aviatrix.aviatrix.upbound.io/v1alpha1
+kind: Gateway
+metadata:
+  annotations:
+    meta.upbound.io/example-id: aviatrix/v1alpha1/gateway
+  labels:
+    testing.upbound.io/example-name: test_gateway_aws
+  name: test-gateway-aws
+spec:
+  forProvider:
+    accountName: devops
+    cloudType: 1
+    gwSize: t2.micro
+    subnet: 10.0.0.0/24
+    tags:
+      name: value
+    vpcId: vpc-abcdef
+    vpcReg: us-west-1
+
+---
+

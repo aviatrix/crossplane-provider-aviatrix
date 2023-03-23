@@ -1,0 +1,18 @@
+apiVersion: aviatrix.aviatrix.upbound.io/v1alpha1
+kind: Account
+metadata:
+  annotations:
+    meta.upbound.io/example-id: aviatrix/v1alpha1/account
+  labels:
+    testing.upbound.io/example-name: temp_acc_aws
+  name: temp-acc-aws
+spec:
+  forProvider:
+    awsAccountNumber: "123456789012"
+    awsIam: true
+    awsRoleApp: arn:aws:iam::123456789012:role/aviatrix-role-app
+    awsRoleEc2: arn:aws:iam::123456789012:role/aviatrix-role-ec2
+    cloudType: 1
+
+---
+

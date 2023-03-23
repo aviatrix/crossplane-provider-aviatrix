@@ -1,0 +1,30 @@
+apiVersion: transit.aviatrix.upbound.io/v1alpha1
+kind: GatewayPeering
+metadata:
+  annotations:
+    meta.upbound.io/example-id: transit/v1alpha1/gatewaypeering
+  labels:
+    testing.upbound.io/example-name: test_transit_gateway_peering
+  name: test-transit-gateway-peering
+spec:
+  forProvider:
+    enableInsaneModeEncryptionOverInternet: false
+    enablePeeringOverPrivateNetwork: false
+    gateway1ExcludedNetworkCidrs:
+    - 10.0.0.48/28
+    gateway1ExcludedTgwConnections:
+    - vpn_connection_a
+    gateway2ExcludedNetworkCidrs:
+    - 10.0.0.48/28
+    gateway2ExcludedTgwConnections:
+    - vpn_connection_b
+    prependAsPath1:
+    - "65001"
+    - "65001"
+    - "65001"
+    prependAsPath2:
+    - "65002"
+    transitGatewayName2: transit-Gw2
+
+---
+

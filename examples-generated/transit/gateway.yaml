@@ -1,0 +1,25 @@
+apiVersion: transit.aviatrix.upbound.io/v1alpha1
+kind: Gateway
+metadata:
+  annotations:
+    meta.upbound.io/example-id: transit/v1alpha1/gateway
+  labels:
+    testing.upbound.io/example-name: test_transit_gateway_aws
+  name: test-transit-gateway-aws
+spec:
+  forProvider:
+    accountName: devops_aws
+    cloudType: 1
+    connectedTransit: true
+    enableHybridConnection: true
+    gwSize: t2.micro
+    haGwSize: t2.micro
+    haSubnet: 10.1.0.0/24
+    subnet: 10.1.0.0/24
+    tags:
+      name: value
+    vpcId: vpc-abcd1234
+    vpcReg: us-east-1
+
+---
+

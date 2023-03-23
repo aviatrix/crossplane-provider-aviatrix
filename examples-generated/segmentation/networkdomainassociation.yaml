@@ -1,0 +1,14 @@
+apiVersion: segmentation.aviatrix.upbound.io/v1alpha1
+kind: NetworkDomainAssociation
+metadata:
+  annotations:
+    meta.upbound.io/example-id: segmentation/v1alpha1/networkdomainassociation
+  labels:
+    testing.upbound.io/example-name: test_segmentation_network_domain_association
+  name: test-segmentation-network-domain-association
+spec:
+  forProvider:
+    attachmentName: attachment-name
+
+---
+

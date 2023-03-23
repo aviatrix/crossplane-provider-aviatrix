@@ -5,18 +5,18 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.8.0
   creationTimestamp: null
-  name: resources.null.aviatrix.upbound.io
+  name: transitattachments.spoke.aviatrix.upbound.io
 spec:
-  group: null.aviatrix.upbound.io
+  group: spoke.aviatrix.upbound.io
   names:
     categories:
     - crossplane
     - managed
     - aviatrix
-    kind: Resource
-    listKind: ResourceList
-    plural: resources
-    singular: resource
+    kind: TransitAttachment
+    listKind: TransitAttachmentList
+    plural: transitattachments
+    singular: transitattachment
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -35,7 +35,8 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Resource is the Schema for the Resources API. <no value>
+        description: TransitAttachment is the Schema for the TransitAttachments API.
+          Creates and manages Aviatrix Spoke-to-Transit attachments
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -50,7 +51,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: ResourceSpec defines the desired state of Resource
+            description: TransitAttachmentSpec defines the desired state of TransitAttachment
             properties:
               deletionPolicy:
                 default: Delete
@@ -63,13 +64,49 @@ spec:
                 type: string
               forProvider:
                 properties:
-                  triggers:
-                    additionalProperties:
+                  enableMaxPerformance:
+                    description: 'Indicates whether the maximum amount of HPE tunnels
+                      will be created. Only valid when transit and spoke gateways
+                      are each launched in Insane Mode and in the same cloud type.
+                      Default value: true. Available as of provider version R2.22.2+.
+                      Indicates whether the maximum amount of HPE tunnels will be
+                      created. Only valid when transit and spoke gateways are each
+                      launched in Insane Mode and in the same cloud type. Available
+                      as of provider version R2.22.2+.'
+                    type: boolean
+                  routeTables:
+                    description: 'Learned routes will be propagated to these route
+                      tables. Example: ["rtb-212ff547","rtb-04539787"]. Learned routes
+                      will be propagated to these route tables.'
+                    items:
                       type: string
-                    description: A map of arbitrary strings that, when changed, will
-                      force the null resource to be replaced, re-running any associated
-                      provisioners.
-                    type: object
+                    type: array
+                  spokePrependAsPath:
+                    description: Connection based AS Path Prepend. Valid only for
+                      BGP connection. Can only use the gateway's own local AS number,
+                      repeated up to 25 times. Applies on spoke_gateway_name. Available
+                      as of provider version R2.23+. AS Path Prepend customized by
+                      specifying AS PATH for a BGP connection. Applies on spoke gateway.
+                    items:
+                      type: string
+                    type: array
+                  transitGwName:
+                    description: Name of the transit gateway to attach the spoke gateway
+                      to. Name of the transit gateway to attach the spoke gateway
+                      to.
+                    type: string
+                  transitPrependAsPath:
+                    description: Connection based AS Path Prepend. Valid only for
+                      BGP connection. Can only use the gateway's own local AS number,
+                      repeated up to 25 times. Applies on transit_gateway_name. Available
+                      as of provider version R2.23+. AS Path Prepend customized by
+                      specifying AS PATH for a BGP connection. Applies on transit
+                      gateway.
+                    items:
+                      type: string
+                    type: array
+                required:
+                - transitGwName
                 type: object
               providerConfigRef:
                 default:
@@ -243,12 +280,17 @@ spec:
             - forProvider
             type: object
           status:
-            description: ResourceStatus defines the observed state of Resource.
+            description: TransitAttachmentStatus defines the observed state of TransitAttachment.
             properties:
               atProvider:
                 properties:
                   id:
                     type: string
+                  spokeBgpEnabled:
+                    description: Indicates whether the spoke gateway is BGP enabled
+                      or not. Indicates whether the spoke gateway is BGP enabled or
+                      not.
+                    type: boolean
                 type: object
               conditions:
                 description: Conditions of the resource.

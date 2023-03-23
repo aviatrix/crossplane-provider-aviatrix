@@ -1,0 +1,23 @@
+apiVersion: spoke.aviatrix.upbound.io/v1alpha1
+kind: Gateway
+metadata:
+  annotations:
+    meta.upbound.io/example-id: spoke/v1alpha1/gateway
+  labels:
+    testing.upbound.io/example-name: test_spoke_gateway_aws
+  name: test-spoke-gateway-aws
+spec:
+  forProvider:
+    accountName: my-aws
+    cloudType: 1
+    gwSize: t2.micro
+    manageHaGateway: false
+    singleIpSnat: false
+    subnet: 10.11.0.0/24
+    tags:
+      name: value
+    vpcId: vpc-abcd123
+    vpcReg: us-west-1
+
+---
+

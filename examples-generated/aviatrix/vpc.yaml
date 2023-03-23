@@ -1,0 +1,19 @@
+apiVersion: aviatrix.aviatrix.upbound.io/v1alpha1
+kind: VPC
+metadata:
+  annotations:
+    meta.upbound.io/example-id: aviatrix/v1alpha1/vpc
+  labels:
+    testing.upbound.io/example-name: aws_vpc
+  name: aws-vpc
+spec:
+  forProvider:
+    accountName: devops
+    aviatrixFirenetVpc: false
+    aviatrixTransitVpc: false
+    cidr: 10.0.0.0/16
+    cloudType: 1
+    region: us-west-1
+
+---
+

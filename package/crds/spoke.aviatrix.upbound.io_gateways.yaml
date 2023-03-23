@@ -1,0 +1,822 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.8.0
+  creationTimestamp: null
+  name: gateways.spoke.aviatrix.upbound.io
+spec:
+  group: spoke.aviatrix.upbound.io
+  names:
+    categories:
+    - crossplane
+    - managed
+    - aviatrix
+    kind: Gateway
+    listKind: GatewayList
+    plural: gateways
+    singular: gateway
+  scope: Cluster
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: READY
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Synced')].status
+      name: SYNCED
+      type: string
+    - jsonPath: .metadata.annotations.crossplane\.io/external-name
+      name: EXTERNAL-NAME
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: Gateway is the Schema for the Gateways API. Creates and manages
+          Aviatrix spoke gateways
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: GatewaySpec defines the desired state of Gateway
+            properties:
+              deletionPolicy:
+                default: Delete
+                description: DeletionPolicy specifies what will happen to the underlying
+                  external when this managed resource is deleted - either "Delete"
+                  or "Orphan" the external resource.
+                enum:
+                - Orphan
+                - Delete
+                type: string
+              forProvider:
+                properties:
+                  accountName:
+                    description: This parameter represents the name of a Cloud-Account
+                      in Aviatrix controller. This parameter represents the name of
+                      a Cloud-Account in Aviatrix controller.
+                    type: string
+                  allocateNewEip:
+                    description: 'When value is false, reuse an idle address in Elastic
+                      IP pool for this gateway. Otherwise, allocate a new Elastic
+                      IP and use it for this gateway. Available in Controller 4.7+.
+                      Valid values: true, false. Default: true. If false, reuse an
+                      idle address in Elastic IP pool for this gateway. Otherwise,
+                      allocate a new Elastic IP and use it for this gateway.'
+                    type: boolean
+                  approvedLearnedCidrs:
+                    description: 'A set of approved learned CIDRs. Only valid when
+                      enable_learned_cidrs_approval is set to true. Example: ["10.250.0.0/16",
+                      "10.251.0.0/16"]. Available as of provider version R2.21+. Approved
+                      learned CIDRs for BGP Spoke Gateway. Available as of provider
+                      version R2.21+.'
+                    items:
+                      type: string
+                    type: array
+                  availabilityDomain:
+                    description: Availability domain. Required and valid only for
+                      OCI. Available as of provider version R2.19.3. Availability
+                      domain for OCI.
+                    type: string
+                  azureEipNameResourceGroup:
+                    description: 'Name of public IP Address resource and its resource
+                      group in Azure to be assigned to the Spoke Gateway instance.
+                      Example: "IP_Name:Resource_Group_Name". Required if allocate_new_eip
+                      is false and cloud_type is Azure, AzureGov or AzureChina. Available
+                      as of provider version 2.20+. The name of the public IP address
+                      and its resource group in Azure to assign to this Spoke Gateway.'
+                    type: string
+                  bgpEcmp:
+                    description: 'Enable Equal Cost Multi Path (ECMP) routing for
+                      the next hop. Default value: false. Enable Equal Cost Multi
+                      Path (ECMP) routing for the next hop for BGP Spoke Gateway.'
+                    type: boolean
+                  bgpHoldTime:
+                    description: 'BGP hold time. Unit is in seconds. Valid values
+                      are between 12 and 360. Default value: 180. BGP Hold Time for
+                      BGP Spoke Gateway. Unit is in seconds. Valid values are between
+                      12 and 360.'
+                    type: number
+                  bgpPollingTime:
+                    description: 'BGP route polling time. Unit is in seconds. Valid
+                      values are between 10 and 50. Default value: "50". BGP route
+                      polling time for BGP Spoke Gateway. Unit is in seconds. Valid
+                      values are between 10 and 50.'
+                    type: number
+                  cloudType:
+                    description: Type of cloud service provider, requires an integer
+                      value. Currently, only AWS(1), GCP(4), Azure(8), OCI(16), AzureGov(32),
+                      AWSGov(256), AWSChina(1024), AzureChina(2048), Alibaba Cloud(8192),
+                      AWS Top Secret(16384) and AWS Secret (32768) are supported.
+                      Type of cloud service provider.
+                    type: number
+                  customerManagedKeysSecretRef:
+                    description: Customer managed key ID. Customer managed key ID.
+                    properties:
+                      key:
+                        description: The key to select.
+                        type: string
+                      name:
+                        description: Name of the secret.
+                        type: string
+                      namespace:
+                        description: Namespace of the secret.
+                        type: string
+                    required:
+                    - key
+                    - name
+                    - namespace
+                    type: object
+                  customizedSpokeVpcRoutes:
+                    description: 'A list of comma separated CIDRs to be customized
+                      for the spoke VPC routes. When configured, it will replace all
+                      learned routes in VPC routing tables, including RFC1918 and
+                      non-RFC1918 CIDRs. It applies to this spoke gateway only. Example:
+                      "10.0.0.0/116,10.2.0.0/16". A list of comma separated CIDRs
+                      to be customized for the spoke VPC routes. When configured,
+                      it will replace all learned routes in VPC routing tables, including
+                      RFC1918 and non-RFC1918 CIDRs. It applies to this spoke gateway
+                      only.'
+                    type: string
+                  disableRoutePropagation:
+                    description: 'Disables route propagation on BGP Spoke to attached
+                      Transit Gateway. Default value: false. Disables route propagation
+                      on BGP Spoke to attached Transit Gateway. Default: false.'
+                    type: boolean
+                  eip:
+                    description: Required when allocate_new_eip is false. It uses
+                      the specified EIP for this gateway. Available in Controller
+                      4.7+. Only available for AWS, GCP, Azure, OCI, AzureGov, AWSGov,
+                      AWSChina, AzureChina, AWS Top Secret and AWS Secret. Required
+                      when allocate_new_eip is false. It uses specified EIP for this
+                      gateway.
+                    type: string
+                  enableActiveStandby:
+                    description: 'Enables Active-Standby Mode. Available only with
+                      HA enabled. Valid values: true, false. Default value: false.
+                      Enables Active-Standby Mode, available only with HA enabled
+                      for BGP Spoke Gateway.'
+                    type: boolean
+                  enableActiveStandbyPreemptive:
+                    description: 'Enables Preemptive Mode for Active-Standby. Available
+                      only with BGP enabled, HA enabled and Active-Standby enabled.
+                      Valid values: true, false. Default value: false. Enables Preemptive
+                      Mode for Active-Standby, available only with Active-Standby
+                      enabled.'
+                    type: boolean
+                  enableAutoAdvertiseS2CCidrs:
+                    description: 'Auto Advertise Spoke Site2Cloud CIDRs. Default:
+                      false. Valid values: true or false. Available as of provider
+                      version R2.19+. Automatically advertise remote CIDR to Aviatrix
+                      Transit Gateway when route based Site2Cloud Tunnel is created.'
+                    type: boolean
+                  enableBgp:
+                    description: 'Enable BGP for this spoke gateway. Only available
+                      for AWS and Azure. Valid values: true, false. Default value:
+                      false. Available in provider R2.21.0+. Enable BGP. Default:
+                      false.'
+                    type: boolean
+                  enableEncryptVolume:
+                    description: 'Enable EBS volume encryption for Gateway. Only supports
+                      AWS, AWSGov, AWSChina, AWS Top Secret and AWS Secret providers.
+                      Valid values: true, false. Default value: false. Enable encrypt
+                      gateway EBS volume. Only supported for AWS provider. Valid values:
+                      true, false. Default value: false.'
+                    type: boolean
+                  enableJumboFrame:
+                    description: 'Enable jumbo frames for this spoke gateway. Default
+                      value is true. Enable jumbo frame support for spoke gateway.
+                      Valid values: true or false. Default value: true.'
+                    type: boolean
+                  enableLearnedCidrsApproval:
+                    description: 'Switch to enable/disable learned CIDR approval for
+                      BGP Spoke Gateway. Valid values: true, false. Default value:
+                      false. Switch to enable/disable learned CIDR approval for BGP
+                      Spoke Gateway. Valid values: true, false.'
+                    type: boolean
+                  enableMonitorGatewaySubnets:
+                    description: 'If set to true, the Monitor Gateway Subnets feature
+                      is enabled. Default value is false. Available in provider version
+                      R2.18+. Enable [monitor gateway subnets](https://docs.aviatrix.com/HowTos/gateway.html#monitor-gateway-subnet).
+                      Only valid for cloud_type = 1 (AWS) or 256 (AWSGov). Valid values:
+                      true, false. Default value: false.'
+                    type: boolean
+                  enablePreserveAsPath:
+                    description: 'Enable preserve as_path when advertising manual
+                      summary cidrs on BGP spoke gateway. Valid values: true, false.
+                      Default value: false. Available as of provider version R.2.22.1+
+                      Enable preserve as_path when advertising manual summary cidrs
+                      on BGP spoke gateway.'
+                    type: boolean
+                  enablePrivateOob:
+                    description: 'Enable Private OOB feature. Only available for AWS,
+                      AWSGov, AWSChina, AWS Top Secret and AWS Secret. Valid values:
+                      true, false. Default value: false. Enable private OOB.'
+                    type: boolean
+                  enablePrivateVpcDefaultRoute:
+                    description: 'Program default route in VPC private route table.
+                      Default: false. Valid values: true or false. Available as of
+                      provider version R2.19+. Config Private VPC Default Route.'
+                    type: boolean
+                  enableSkipPublicRouteTableUpdate:
+                    description: 'Skip programming VPC public route table. Default:
+                      false. Valid values: true or false. Available as of provider
+                      version R2.19+. Skip Public Route Table Update.'
+                    type: boolean
+                  enableSpotInstance:
+                    description: Enable spot instance. NOT supported for production
+                      deployment. Enable spot instance. NOT supported for production
+                      deployment.
+                    type: boolean
+                  enableVpcDnsServer:
+                    description: 'Enable VPC DNS Server for Gateway. Currently only
+                      supported for AWS, Azure, AzureGov, AWSGov, AWSChina, AzureChina,
+                      Alibaba Cloud, AWS Top Secret and AWS Secret gateways. Valid
+                      values: true, false. Default value: false. Enable vpc_dns_server
+                      for Gateway. Valid values: true, false.'
+                    type: boolean
+                  faultDomain:
+                    description: Fault domain. Required and valid only for OCI. Available
+                      as of provider version R2.19.3. Fault domain for OCI.
+                    type: string
+                  filteredSpokeVpcRoutes:
+                    description: 'A list of comma separated CIDRs to be filtered from
+                      the spoke VPC route table. When configured, filtering CIDR(s)
+                      or it’s subnet will be deleted from VPC routing tables as well
+                      as from spoke gateway’s routing table. It applies to this spoke
+                      gateway only. Example: "10.2.0.0/116,10.3.0.0/16". A list of
+                      comma separated CIDRs to be filtered from the spoke VPC route
+                      table. When configured, filtering CIDR(s) or it’s subnet will
+                      be deleted from VPC routing tables as well as from spoke gateway’s
+                      routing table. It applies to this spoke gateway only.'
+                    type: string
+                  gwSize:
+                    description: 'Size of the gateway instance. Example: AWS/AWSGov/AWSChina:
+                      "t2.large", Azure/AzureGov/AzureChina: "Standard_B1s", OCI:
+                      "VM.Standard2.2", GCP: "n1-standard-1". Size of the gateway
+                      instance.'
+                    type: string
+                  haAvailabilityDomain:
+                    description: HA gateway availability domain. Required and valid
+                      only for OCI. Available as of provider version R2.19.3. HA availability
+                      domain for OCI.
+                    type: string
+                  haAzureEipNameResourceGroup:
+                    description: 'Name of public IP Address resource and its resource
+                      group in Azure to be assigned to the HA Spoke Gateway instance.
+                      Example: "IP_Name:Resource_Group_Name". Required if ha_eip is
+                      set and cloud_type is Azure, AzureGov or AzureChina. Available
+                      as of provider version 2.20+. The name of the public IP address
+                      and its resource group in Azure to assign to the HA Spoke Gateway.'
+                    type: string
+                  haEip:
+                    description: Public IP address that you want to assign to the
+                      HA peering instance. If no value is given, a new EIP will automatically
+                      be allocated. Only available for AWS, GCP, Azure, OCI, AzureGov,
+                      AWSGov, AWSChina, AzureChina, AWS Top Secret and AWS Secret.
+                      Public IP address that you want assigned to the HA Spoke Gateway.
+                    type: string
+                  haFaultDomain:
+                    description: HA gateway fault domain. Required and valid only
+                      for OCI. Available as of provider version R2.19.3. HA fault
+                      domain for OCI.
+                    type: string
+                  haGwSize:
+                    description: HA Gateway Size. Mandatory if enabling HA. HA Gateway
+                      Size.
+                    type: string
+                  haImageVersion:
+                    description: 'The image version of the HA gateway. Use aviatrix_gateway_image
+                      data source to programmatically retrieve this value for the
+                      desired ha_software_version. If set, we will attempt to update
+                      the HA gateway to the specified version if current version is
+                      different. If left blank, the gateway upgrades can be managed
+                      with the aviatrix_controller_config resource. Type: String.
+                      Example: "hvm-cloudx-aws-022021". Available as of provider version
+                      R2.20.0. ha_image_version can be used to set the desired image
+                      version of the HA gateway. If set, we will attempt to update
+                      the gateway to the specified version.'
+                    type: string
+                  haInsaneModeAz:
+                    description: west-1a". AZ of subnet being created for Insane Mode
+                      Spoke HA Gateway. Required for AWS if insane_mode is true and
+                      ha_subnet is set.
+                    type: string
+                  haOobAvailabilityZone:
+                    description: 'HA OOB availability zone. Required if enabling Private
+                      OOB and HA. Example: "us-west-1b". OOB HA availability zone.'
+                    type: string
+                  haOobManagementSubnet:
+                    description: 'HA OOB management subnet. Required if enabling Private
+                      OOB and HA. Example: "11.0.0.48/28". OOB HA management subnet.'
+                    type: string
+                  haPrivateModeSubnetZone:
+                    description: Availability Zone of the HA subnet. Required when
+                      Private Mode is enabled on the Controller and cloud_type is
+                      AWS or AWSGov with HA. Available in Provider version R2.23+.
+                      Private Mode HA subnet availability zone.
+                    type: string
+                  haSoftwareVersion:
+                    description: 'The software version of the HA gateway. If set,
+                      we will attempt to update the HA gateway to the specified version
+                      if current version is different. If left blank, the HA gateway
+                      upgrade can be managed with the aviatrix_controller_config resource.
+                      Type: String. Example: "6.5.821". Available as of provider version
+                      R2.20.0. ha_software_version can be used to set the desired
+                      software version of the HA gateway. If set, we will attempt
+                      to update the gateway to the specified version. If left blank,
+                      the gateway software version will continue to be managed through
+                      the aviatrix_controller_config resource.'
+                    type: string
+                  haSubnet:
+                    description: 'HA Subnet. Required if enabling HA for AWS, AWSGov,
+                      AWSChina, Azure, AzureGov, AzureChina, OCI, Alibaba Cloud, AWS
+                      Top Secret or AWS Secret gateways. Optional for GCP. Setting
+                      to empty/unsetting will disable HA. Setting to a valid subnet
+                      CIDR will create an HA gateway on the subnet. Example: "10.12.0.0/24"
+                      HA Subnet. Required if enabling HA for AWS/AWSGov/AWSChina/Azure/AzureChina/OCI/Alibaba
+                      Cloud. Optional if enabling HA for GCP.'
+                    type: string
+                  haZone:
+                    description: 'HA Zone. Required if enabling HA for GCP gateway.
+                      Optional for Azure. For GCP, setting to empty/unsetting will
+                      disable HA and setting to a valid zone will create an HA gateway
+                      in the zone. Example: "us-west1-c". For Azure, this is an optional
+                      parameter to place the HA gateway in a specific availability
+                      zone. Valid values for Azure gateways are in the form "az-n".
+                      Example: "az-2". Available for Azure as of provider version
+                      R2.17+. HA Zone. Required if enabling HA for GCP. Optional for
+                      Azure.'
+                    type: string
+                  imageVersion:
+                    description: 'The image version of the gateway. Use aviatrix_gateway_image
+                      data source to programmatically retrieve this value for the
+                      desired software_version. If set, we will attempt to update
+                      the gateway to the specified version if current version is different.
+                      If left blank, the gateway upgrades can be managed with the
+                      aviatrix_controller_config resource. Type: String. Example:
+                      "hvm-cloudx-aws-022021". Available as of provider version R2.20.0.
+                      image_version can be used to set the desired image version of
+                      the gateway. If set, we will attempt to update the gateway to
+                      the specified version.'
+                    type: string
+                  includedAdvertisedSpokeRoutes:
+                    description: 'A list of comma separated CIDRs to be advertised
+                      to on-prem as ''Included CIDR List''. When configured, it will
+                      replace all advertised routes from this VPC. Example: "10.4.0.0/116,10.5.0.0/16".
+                      A list of comma separated CIDRs to be advertised to on-prem
+                      as ''Included CIDR List''. When configured, it will replace
+                      all advertised routes from this VPC.'
+                    type: string
+                  insaneMode:
+                    description: ', please see notes here. Enable Insane Mode for
+                      Spoke Gateway. Valid values: true, false. Supported for AWS/AWSGov,
+                      GCP, Azure and OCI. If insane mode is enabled, gateway size
+                      has to at least be c5 size for AWS and Standard_D3_v2 size for
+                      Azure.'
+                    type: boolean
+                  insaneModeAz:
+                    description: 'AZ of subnet being created for Insane Mode Spoke
+                      Gateway. Required for AWS, AWSGov, AWS China, AWS Top Secret
+                      or AWS Secret if insane_mode is enabled. Example: AWS: "us-west-1a".
+                      AZ of subnet being created for Insane Mode Spoke Gateway. Required
+                      if insane_mode is enabled for AWS cloud.'
+                    type: string
+                  learnedCidrsApprovalMode:
+                    description: 'Learned CIDRs approval mode. Either "gateway" (approval
+                      on a per-gateway basis) or "connection" (approval on a per-connection
+                      basis). Only "gateway" is supported for BGP SPOKE Gateway. Default
+                      value: "gateway". Available as of provider version R2.21+. Set
+                      the learned CIDRs approval mode for BGP Spoke Gateway. Only
+                      valid when ''enable_learned_cidrs_approval'' is set to true.
+                      Currently, only ''gateway'' is supported: learned CIDR approval
+                      applies to ALL connections. Default value: ''gateway''.'
+                    type: string
+                  localAsNumber:
+                    description: Changes the Aviatrix Spoke Gateway ASN number before
+                      you setup Aviatrix Spoke Gateway connection configurations.
+                      Changes the Aviatrix BGP Spoke Gateway ASN number before you
+                      setup Aviatrix BGP Spoke Gateway connection configurations.
+                    type: string
+                  manageHaGateway:
+                    description: 'Enable to manage Aviatrix spoke HA gateway using
+                      the aviatrix_spoke_gateway resource. If this is set to false,
+                      spoke HA gateways must be managed using the aviatrix_spoke_ha_gateway
+                      resource. Valid values: true, false. Default value: true. Available
+                      in provider R3.0+. This parameter is a switch used to determine
+                      whether or not to manage spoke ha gateway using the aviatrix_spoke_gateway
+                      resource. If this is set to false, managing spoke ha gateway
+                      must be done using the aviatrix_spoke_ha_gateway resource. Valid
+                      values: true, false. Default value: true.'
+                    type: boolean
+                  monitorExcludeList:
+                    description: Set of monitored instance ids. Only valid when 'enable_monitor_gateway_subnets'
+                      = true. Available in provider version R2.18+. A set of monitored
+                      instance ids. Only valid when 'enable_monitor_gateway_subnets'
+                      = true.
+                    items:
+                      type: string
+                    type: array
+                  oobAvailabilityZone:
+                    description: 'OOB availability zone. Required if enabling Private
+                      OOB. Example: "us-west-1a". OOB subnet availability zone.'
+                    type: string
+                  oobManagementSubnet:
+                    description: 'OOB management subnet. Required if enabling Private
+                      OOB. Example: "11.0.2.0/24". OOB management subnet.'
+                    type: string
+                  prependAsPath:
+                    description: List of AS numbers to populate BGP AS_PATH field
+                      when it advertises to VGW or peer devices. List of AS numbers
+                      to populate BGP AP_PATH field when it advertises to VGW or peer
+                      devices. Only valid for BGP Spoke Gateway
+                    items:
+                      type: string
+                    type: array
+                  privateModeLbVpcId:
+                    description: VPC ID of Private Mode load balancer. Required when
+                      Private Mode is enabled on the Controller. Available in provider
+                      version R2.23+. Private Mode controller load balancer vpc_id.  Required
+                      when private mode is enabled for the Controller.
+                    type: string
+                  privateModeSubnetZone:
+                    description: Availability Zone of the subnet. Required when Private
+                      Mode is enabled on the Controller and cloud_type is AWS or AWSGov.
+                      Available in Provider version R2.23+. Subnet availability zone.
+                      Required when Private Mode is enabled on the Controller and
+                      cloud_type is AWS.
+                    type: string
+                  rxQueueSize:
+                    description: Gateway ethernet interface RX queue size. Applies
+                      on HA as well if enabled. Once set, can't be deleted or disabled.
+                      Available for AWS as of provider version R2.22+. Gateway ethernet
+                      interface RX queue size. Supported for AWS related clouds only.
+                      Applies on HA as well if enabled.
+                    type: string
+                  singleAzHa:
+                    description: 'Set to true if this feature is desired. Valid values:
+                      true, false. Set to ''enabled'' if this feature is desired.'
+                    type: boolean
+                  singleIpSnat:
+                    description: 'Specify whether to enable Source NAT feature in
+                      "single_ip" mode on the gateway or not. Please disable AWS NAT
+                      instance before enabling this feature. Currently, only supports
+                      AWS(1) and Azure(8). Valid values: true, false. Specify whether
+                      to enable Source NAT feature in ''single_ip'' mode on the gateway
+                      or not.'
+                    type: boolean
+                  softwareVersion:
+                    description: 'The software version of the gateway. If set, we
+                      will attempt to update the gateway to the specified version
+                      if current version is different. If left blank, the gateway
+                      upgrade can be managed with the aviatrix_controller_config resource.
+                      Type: String. Example: "6.5.821". Available as of provider version
+                      R2.20.0. software_version can be used to set the desired software
+                      version of the gateway. If set, we will attempt to update the
+                      gateway to the specified version. If left blank, the gateway
+                      software version will continue to be managed through the aviatrix_controller_config
+                      resource.'
+                    type: string
+                  spokeBgpManualAdvertiseCidrs:
+                    description: 'Intended CIDR list to be advertised to external
+                      BGP router. Empty list is not valid. Example: ["10.2.0.0/16",
+                      "10.4.0.0/16"]. Intended CIDR list to be advertised to external
+                      BGP router.'
+                    items:
+                      type: string
+                    type: array
+                  spotPrice:
+                    description: Price for spot instance. NOT supported for production
+                      deployment. Price for spot instance. NOT supported for production
+                      deployment.
+                    type: string
+                  subnet:
+                    description: 'A VPC Network address range selected from one of
+                      the available network ranges. Example: "172.31.0.0/20". NOTE:
+                      If using Public Subnet Info.'
+                    type: string
+                  tags:
+                    additionalProperties:
+                      type: string
+                    description: 'Map of tags to assign to the gateway. Only available
+                      for AWS, Azure, AzureGov, AWSGov, AWSChina, AzureChina, AWS
+                      Top Secret and AWS Secret gateways. Allowed characters vary
+                      by cloud type but always include: letters, spaces, and numbers.
+                      AWS, AWSGov, AWSChina, AWS Top Secret and AWS Secret allow the
+                      use of any character. Azure, AzureGov and AzureChina allows
+                      the following special characters: + - = . _ : @. Example: {"key1"
+                      = "value1", "key2" = "value2"}. A map of tags to assign to the
+                      spoke gateway.'
+                    type: object
+                  tunnelDetectionTime:
+                    description: 'The IPsec tunnel down detection time for the Spoke
+                      Gateway in seconds. Must be a number in the range [20-600].
+                      The default value is set by the controller (60 seconds if nothing
+                      has been changed). NOTE: The controller UI has an option to
+                      set the tunnel detection time for all gateways. Available in
+                      provider R2.19+. The IPSec tunnel down detection time for the
+                      Spoke Gateway.'
+                    type: number
+                  vpcId:
+                    description: 'VPC-ID/VNet-Name of cloud provider. Example: AWS/AWSGov/AWSChina:
+                      "vpc-abcd1234", GCP: "vpc-gcp-test~-~project-id", Azure/AzureGov/AzureChina:
+                      "vnet_name:rg_name:resource_guid", OCI: "ocid1.vcn.oc1.iad.aaaaaaaaba3pv6wkcr4jqae5f44n2b2m2yt2j6rx32uzr4h25vqstifsfdsq".
+                      VPC-ID/VNet-Name of cloud provider.'
+                    type: string
+                  vpcReg:
+                    description: 'Region of cloud provider. Example: AWS: "us-east-1",
+                      GCP: "us-west2-a", Azure: "East US 2", OCI: "us-ashburn-1",
+                      AzureGov: "USGov Arizona", AWSGov: "us-gov-west-1, AWSChina:
+                      "cn-north-1", AzureChina: "China North", AWS Top Secret: "us-iso-east-1",
+                      AWS Secret: "us-isob-east-1". Region of cloud provider.'
+                    type: string
+                  zone:
+                    description: Availability Zone. Only available for Azure (8),
+                      Azure GOV (32) and Azure CHINA (2048). Must be in the form 'az-n',
+                      for example, 'az-2'. Available in provider version R2.17+. Availability
+                      Zone. Only available for Azure (8), Azure GOV (32) and Azure
+                      CHINA (2048). Must be in the form 'az-n', for example, 'az-2'.
+                    type: string
+                required:
+                - accountName
+                - cloudType
+                - gwSize
+                - subnet
+                - vpcId
+                - vpcReg
+                type: object
+              providerConfigRef:
+                default:
+                  name: default
+                description: ProviderConfigReference specifies how the provider that
+                  will be used to create, observe, update, and delete this managed
+                  resource should be configured.
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                  policy:
+                    description: Policies for referencing.
+                    properties:
+                      resolution:
+                        default: Required
+                        description: Resolution specifies whether resolution of this
+                          reference is required. The default is 'Required', which
+                          means the reconcile will fail if the reference cannot be
+                          resolved. 'Optional' means this reference will be a no-op
+                          if it cannot be resolved.
+                        enum:
+                        - Required
+                        - Optional
+                        type: string
+                      resolve:
+                        description: Resolve specifies when this reference should
+                          be resolved. The default is 'IfNotPresent', which will attempt
+                          to resolve the reference only when the corresponding field
+                          is not present. Use 'Always' to resolve the reference on
+                          every reconcile.
+                        enum:
+                        - Always
+                        - IfNotPresent
+                        type: string
+                    type: object
+                required:
+                - name
+                type: object
+              providerRef:
+                description: 'ProviderReference specifies the provider that will be
+                  used to create, observe, update, and delete this managed resource.
+                  Deprecated: Please use ProviderConfigReference, i.e. `providerConfigRef`'
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                  policy:
+                    description: Policies for referencing.
+                    properties:
+                      resolution:
+                        default: Required
+                        description: Resolution specifies whether resolution of this
+                          reference is required. The default is 'Required', which
+                          means the reconcile will fail if the reference cannot be
+                          resolved. 'Optional' means this reference will be a no-op
+                          if it cannot be resolved.
+                        enum:
+                        - Required
+                        - Optional
+                        type: string
+                      resolve:
+                        description: Resolve specifies when this reference should
+                          be resolved. The default is 'IfNotPresent', which will attempt
+                          to resolve the reference only when the corresponding field
+                          is not present. Use 'Always' to resolve the reference on
+                          every reconcile.
+                        enum:
+                        - Always
+                        - IfNotPresent
+                        type: string
+                    type: object
+                required:
+                - name
+                type: object
+              publishConnectionDetailsTo:
+                description: PublishConnectionDetailsTo specifies the connection secret
+                  config which contains a name, metadata and a reference to secret
+                  store config to which any connection details for this managed resource
+                  should be written. Connection details frequently include the endpoint,
+                  username, and password required to connect to the managed resource.
+                properties:
+                  configRef:
+                    default:
+                      name: default
+                    description: SecretStoreConfigRef specifies which secret store
+                      config should be used for this ConnectionSecret.
+                    properties:
+                      name:
+                        description: Name of the referenced object.
+                        type: string
+                      policy:
+                        description: Policies for referencing.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: Resolution specifies whether resolution of
+                              this reference is required. The default is 'Required',
+                              which means the reconcile will fail if the reference
+                              cannot be resolved. 'Optional' means this reference
+                              will be a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: Resolve specifies when this reference should
+                              be resolved. The default is 'IfNotPresent', which will
+                              attempt to resolve the reference only when the corresponding
+                              field is not present. Use 'Always' to resolve the reference
+                              on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    required:
+                    - name
+                    type: object
+                  metadata:
+                    description: Metadata is the metadata for connection secret.
+                    properties:
+                      annotations:
+                        additionalProperties:
+                          type: string
+                        description: Annotations are the annotations to be added to
+                          connection secret. - For Kubernetes secrets, this will be
+                          used as "metadata.annotations". - It is up to Secret Store
+                          implementation for others store types.
+                        type: object
+                      labels:
+                        additionalProperties:
+                          type: string
+                        description: Labels are the labels/tags to be added to connection
+                          secret. - For Kubernetes secrets, this will be used as "metadata.labels".
+                          - It is up to Secret Store implementation for others store
+                          types.
+                        type: object
+                      type:
+                        description: Type is the SecretType for the connection secret.
+                          - Only valid for Kubernetes Secret Stores.
+                        type: string
+                    type: object
+                  name:
+                    description: Name is the name of the connection secret.
+                    type: string
+                required:
+                - name
+                type: object
+              writeConnectionSecretToRef:
+                description: WriteConnectionSecretToReference specifies the namespace
+                  and name of a Secret to which any connection details for this managed
+                  resource should be written. Connection details frequently include
+                  the endpoint, username, and password required to connect to the
+                  managed resource. This field is planned to be replaced in a future
+                  release in favor of PublishConnectionDetailsTo. Currently, both
+                  could be set independently and connection details would be published
+                  to both without affecting each other.
+                properties:
+                  name:
+                    description: Name of the secret.
+                    type: string
+                  namespace:
+                    description: Namespace of the secret.
+                    type: string
+                required:
+                - name
+                - namespace
+                type: object
+            required:
+            - forProvider
+            type: object
+          status:
+            description: GatewayStatus defines the observed state of Gateway.
+            properties:
+              atProvider:
+                properties:
+                  cloudInstanceId:
+                    description: Cloud instance ID of the spoke gateway. Cloud instance
+                      ID.
+                    type: string
+                  haCloudInstanceId:
+                    description: Cloud instance ID of the HA spoke gateway. Cloud
+                      instance ID of HA spoke gateway.
+                    type: string
+                  haGwName:
+                    description: Aviatrix spoke gateway unique name of HA spoke gateway.
+                      Aviatrix spoke gateway unique name of HA spoke gateway.
+                    type: string
+                  haPrivateIp:
+                    description: Private IP address of HA spoke gateway. Private IP
+                      address of the spoke gateway created.
+                    type: string
+                  haPublicIp:
+                    description: Public IP address of the HA Spoke Gateway. Public
+                      IP address of the HA Spoke Gateway.
+                    type: string
+                  haSecurityGroupId:
+                    description: HA security group used for the spoke gateway. HA
+                      security group used for the spoke gateway.
+                    type: string
+                  id:
+                    type: string
+                  privateIp:
+                    description: Private IP address of the spoke gateway created.
+                      Private IP address of the spoke gateway created.
+                    type: string
+                  publicIp:
+                    description: Public IP address of the Spoke Gateway created. Public
+                      IP address of the Spoke Gateway created.
+                    type: string
+                  securityGroupId:
+                    description: Security group used for the spoke gateway. Security
+                      group used for the spoke gateway.
+                    type: string
+                type: object
+              conditions:
+                description: Conditions of the resource.
+                items:
+                  description: A Condition that may apply to a resource.
+                  properties:
+                    lastTransitionTime:
+                      description: LastTransitionTime is the last time this condition
+                        transitioned from one status to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: A Message containing details about this condition's
+                        last transition from one status to another, if any.
+                      type: string
+                    reason:
+                      description: A Reason for this condition's last transition from
+                        one status to another.
+                      type: string
+                    status:
+                      description: Status of this condition; is it currently True,
+                        False, or Unknown?
+                      type: string
+                    type:
+                      description: Type of this condition. At most one of each condition
+                        type may apply to a resource at any point in time.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

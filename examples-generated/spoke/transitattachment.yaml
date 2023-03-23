@@ -1,0 +1,17 @@
+apiVersion: spoke.aviatrix.upbound.io/v1alpha1
+kind: TransitAttachment
+metadata:
+  annotations:
+    meta.upbound.io/example-id: spoke/v1alpha1/transitattachment
+  labels:
+    testing.upbound.io/example-name: test_attachment
+  name: test-attachment
+spec:
+  forProvider:
+    routeTables:
+    - rtb-737d540c
+    - rtb-626d045c
+    transitGwName: transit-gw
+
+---
+
