@@ -1,11 +1,18 @@
 # Provider Aviatrix
 
+This repository is a work in progress.  In the future, it will be the site 
+of a fully supported crossplane provider for configuring Aviatrix Controllers.
+It is not currently ready for production use, and should be considered to be
+a pre-alpha level quality.
+
 `provider-aviatrix` is a [Crossplane](https://crossplane.io/) provider that
 is built using [Upjet](https://github.com/upbound/upjet) code
 generation tools and exposes XRM-conformant managed resources for the
 Aviatrix API.
 
 ## Getting Started
+
+This section is under construction, and not yet functional.
 
 Install the provider by using the following command after changing the image tag
 to the [latest release](https://marketplace.upbound.io/providers/aviatrix/provider-aviatrix):
