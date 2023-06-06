@@ -258,18 +258,6 @@ spec:
                       R2.17.1+. Typed value when modifying idle_timeout. If it's -1,
                       this feature is disabled.
                     type: number
-                  imageVersion:
-                    description: 'The image version of the gateway. Use aviatrix_gateway_image
-                      data source to programmatically retrieve this value for the
-                      desired software_version. If set, we will attempt to update
-                      the gateway to the specified version if current version is different.
-                      If left blank, the gateway upgrades can be managed with the
-                      aviatrix_controller_config resource. Type: String. Example:
-                      "hvm-cloudx-aws-022021". Available as of provider version R2.20.0.
-                      image_version can be used to set the desired image version of
-                      the gateway. If set, we will attempt to update the gateway to
-                      the specified version.'
-                    type: string
                   insaneMode:
                     description: ', please see notes here. Enable Insane Mode for
                       Gateway. Valid values: true, false.'
@@ -512,18 +500,6 @@ spec:
                       SNAT for FQDN use-case, please see notes Enable Source NAT for
                       this container.'
                     type: boolean
-                  softwareVersion:
-                    description: 'The software version of the gateway. If set, we
-                      will attempt to update the gateway to the specified version
-                      if current version is different. If left blank, the gateway
-                      upgrade can be managed with the aviatrix_controller_config resource.
-                      Type: String. Example: "6.5.821". Available as of provider version
-                      R2.20.0. software_version can be used to set the desired software
-                      version of the gateway. If set, we will attempt to update the
-                      gateway to the specified version. If left blank, the gateway
-                      software version will continue to be managed through the aviatrix_controller_config
-                      resource.'
-                    type: string
                   splitTunnel:
                     description: 'Enable/disable Split Tunnel Mode. Valid values:
                       true, false. Default value: true. Please see here for more information
@@ -800,6 +776,18 @@ spec:
                     type: string
                   id:
                     type: string
+                  imageVersion:
+                    description: 'The image version of the gateway. Use aviatrix_gateway_image
+                      data source to programmatically retrieve this value for the
+                      desired software_version. If set, we will attempt to update
+                      the gateway to the specified version if current version is different.
+                      If left blank, the gateway upgrades can be managed with the
+                      aviatrix_controller_config resource. Type: String. Example:
+                      "hvm-cloudx-aws-022021". Available as of provider version R2.20.0.
+                      image_version can be used to set the desired image version of
+                      the gateway. If set, we will attempt to update the gateway to
+                      the specified version.'
+                    type: string
                   peeringHaCloudInstanceId:
                     description: Cloud instance ID of the HA gateway. Instance ID
                       of the peering HA gateway.
@@ -828,6 +816,18 @@ spec:
                   securityGroupId:
                     description: Security group used for the gateway. Security group
                       used for the gateway.
+                    type: string
+                  softwareVersion:
+                    description: 'The software version of the gateway. If set, we
+                      will attempt to update the gateway to the specified version
+                      if current version is different. If left blank, the gateway
+                      upgrade can be managed with the aviatrix_controller_config resource.
+                      Type: String. Example: "6.5.821". Available as of provider version
+                      R2.20.0. software_version can be used to set the desired software
+                      version of the gateway. If set, we will attempt to update the
+                      gateway to the specified version. If left blank, the gateway
+                      software version will continue to be managed through the aviatrix_controller_config
+                      resource.'
                     type: string
                 type: object
               conditions:

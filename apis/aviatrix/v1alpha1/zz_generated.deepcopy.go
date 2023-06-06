@@ -565,6 +565,11 @@ func (in *GatewayObservation) DeepCopyInto(out *GatewayObservation) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.ImageVersion != nil {
+		in, out := &in.ImageVersion, &out.ImageVersion
+		*out = new(string)
+		**out = **in
+	}
 	if in.PeeringHaCloudInstanceID != nil {
 		in, out := &in.PeeringHaCloudInstanceID, &out.PeeringHaCloudInstanceID
 		*out = new(string)
@@ -597,6 +602,11 @@ func (in *GatewayObservation) DeepCopyInto(out *GatewayObservation) {
 	}
 	if in.SecurityGroupID != nil {
 		in, out := &in.SecurityGroupID, &out.SecurityGroupID
+		*out = new(string)
+		**out = **in
+	}
+	if in.SoftwareVersion != nil {
+		in, out := &in.SoftwareVersion, &out.SoftwareVersion
 		*out = new(string)
 		**out = **in
 	}
@@ -758,11 +768,6 @@ func (in *GatewayParameters) DeepCopyInto(out *GatewayParameters) {
 	if in.IdleTimeout != nil {
 		in, out := &in.IdleTimeout, &out.IdleTimeout
 		*out = new(float64)
-		**out = **in
-	}
-	if in.ImageVersion != nil {
-		in, out := &in.ImageVersion, &out.ImageVersion
-		*out = new(string)
 		**out = **in
 	}
 	if in.InsaneMode != nil {
@@ -946,11 +951,6 @@ func (in *GatewayParameters) DeepCopyInto(out *GatewayParameters) {
 	if in.SingleIPSnat != nil {
 		in, out := &in.SingleIPSnat, &out.SingleIPSnat
 		*out = new(bool)
-		**out = **in
-	}
-	if in.SoftwareVersion != nil {
-		in, out := &in.SoftwareVersion, &out.SoftwareVersion
-		*out = new(string)
 		**out = **in
 	}
 	if in.SplitTunnel != nil {

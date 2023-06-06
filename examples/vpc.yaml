@@ -1,0 +1,56 @@
+apiVersion: aviatrix.aviatrix.upbound.io/v1alpha1
+kind: VPC
+metadata:
+  annotations:
+    crossplane.io/external-create-pending: "2023-06-05T21:56:22Z"
+    crossplane.io/external-create-succeeded: "2023-06-05T21:56:22Z"
+    crossplane.io/external-name: gcloud-vpc
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"aviatrix.aviatrix.upbound.io/v1alpha1","kind":"VPC","metadata":{"annotations":{"meta.upbound.io/example-id":"aviatrix/v1alpha1/vpc"},"labels":{"testing.upbound.io/example-name":"gcloud_vpc"},"name":"gcloud-vpc"},"spec":{"forProvider":{"accountName":"aviatrix","aviatrixFirenetVpc":false,"aviatrixTransitVpc":false,"cloudType":4,"subnets":[{"cidr":"10.10.0.0/24","name":"subnet-1","region":"us-west1"}]}}}
+    meta.upbound.io/example-id: aviatrix/v1alpha1/vpc
+    upjet.crossplane.io/provider-meta: '{"schema_version":"1"}'
+  creationTimestamp: "2023-06-05T21:19:10Z"
+  finalizers:
+  - finalizer.managedresource.crossplane.io
+  generation: 3
+  labels:
+    testing.upbound.io/example-name: gcloud_vpc
+  name: gcloud-vpc
+  resourceVersion: "71149105"
+  uid: 5769a2ef-daf0-4a7d-bfd2-efca4fcb6887
+spec:
+  deletionPolicy: Delete
+  forProvider:
+    accountName: aviatrix
+    aviatrixFirenetVpc: false
+    aviatrixTransitVpc: false
+    cloudType: 4
+    subnets:
+    - cidr: 10.10.0.0/24
+      name: subnet-1
+      region: us-west1
+  providerConfigRef:
+    name: default
+status:
+  atProvider:
+    id: gcloud-vpc
+    subnets:
+    - subnetId: ""
+    vpcId: gcloud-vpc~-~mconnors-01
+  conditions:
+  - lastTransitionTime: "2023-06-05T21:57:03Z"
+    reason: Available
+    status: "True"
+    type: Ready
+  - lastTransitionTime: "2023-06-05T21:44:27Z"
+    reason: ReconcileSuccess
+    status: "True"
+    type: Synced
+  - lastTransitionTime: "2023-06-05T21:56:57Z"
+    reason: Finished
+    status: "True"
+    type: AsyncOperation
+  - lastTransitionTime: "2023-06-05T21:56:57Z"
+    reason: Success
+    status: "True"
+    type: LastAsyncOperation
