@@ -29,6 +29,10 @@ type GatewayObservation struct {
 
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
 
+	// The image version of the gateway. Use aviatrix_gateway_image data source to programmatically retrieve this value for the desired software_version. If set, we will attempt to update the gateway to the specified version if current version is different. If left blank, the gateway upgrades can be managed with the aviatrix_controller_config resource. Type: String. Example: "hvm-cloudx-aws-022021". Available as of provider version R2.20.0.
+	// image_version can be used to set the desired image version of the gateway. If set, we will attempt to update the gateway to the specified version.
+	ImageVersion *string `json:"imageVersion,omitempty" tf:"image_version,omitempty"`
+
 	// Cloud instance ID of the HA gateway.
 	// Instance ID of the peering HA gateway.
 	PeeringHaCloudInstanceID *string `json:"peeringHaCloudInstanceId,omitempty" tf:"peering_ha_cloud_instance_id,omitempty"`
@@ -56,6 +60,10 @@ type GatewayObservation struct {
 	// Security group used for the gateway.
 	// Security group used for the gateway.
 	SecurityGroupID *string `json:"securityGroupId,omitempty" tf:"security_group_id,omitempty"`
+
+	// The software version of the gateway. If set, we will attempt to update the gateway to the specified version if current version is different. If left blank, the gateway upgrade can be managed with the aviatrix_controller_config resource. Type: String. Example: "6.5.821". Available as of provider version R2.20.0.
+	// software_version can be used to set the desired software version of the gateway. If set, we will attempt to update the gateway to the specified version. If left blank, the gateway software version will continue to be managed through the aviatrix_controller_config resource.
+	SoftwareVersion *string `json:"softwareVersion,omitempty" tf:"software_version,omitempty"`
 }
 
 type GatewayParameters struct {
@@ -204,11 +212,6 @@ type GatewayParameters struct {
 	// Typed value when modifying idle_timeout. If it's -1, this feature is disabled.
 	// +kubebuilder:validation:Optional
 	IdleTimeout *float64 `json:"idleTimeout,omitempty" tf:"idle_timeout,omitempty"`
-
-	// The image version of the gateway. Use aviatrix_gateway_image data source to programmatically retrieve this value for the desired software_version. If set, we will attempt to update the gateway to the specified version if current version is different. If left blank, the gateway upgrades can be managed with the aviatrix_controller_config resource. Type: String. Example: "hvm-cloudx-aws-022021". Available as of provider version R2.20.0.
-	// image_version can be used to set the desired image version of the gateway. If set, we will attempt to update the gateway to the specified version.
-	// +kubebuilder:validation:Optional
-	ImageVersion *string `json:"imageVersion,omitempty" tf:"image_version,omitempty"`
 
 	// , please see notes here.
 	// Enable Insane Mode for Gateway. Valid values: true, false.
@@ -374,11 +377,6 @@ type GatewayParameters struct {
 	// Enable Source NAT for this container.
 	// +kubebuilder:validation:Optional
 	SingleIPSnat *bool `json:"singleIpSnat,omitempty" tf:"single_ip_snat,omitempty"`
-
-	// The software version of the gateway. If set, we will attempt to update the gateway to the specified version if current version is different. If left blank, the gateway upgrade can be managed with the aviatrix_controller_config resource. Type: String. Example: "6.5.821". Available as of provider version R2.20.0.
-	// software_version can be used to set the desired software version of the gateway. If set, we will attempt to update the gateway to the specified version. If left blank, the gateway software version will continue to be managed through the aviatrix_controller_config resource.
-	// +kubebuilder:validation:Optional
-	SoftwareVersion *string `json:"softwareVersion,omitempty" tf:"software_version,omitempty"`
 
 	// Enable/disable Split Tunnel Mode. Valid values: true, false. Default value: true. Please see here for more information on split tunnel.
 	// Specify split tunnel mode.
