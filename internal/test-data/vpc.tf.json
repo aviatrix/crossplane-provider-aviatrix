@@ -1,0 +1,31 @@
+{
+    "resource": {
+        "aviatrix_vpc": {
+            "gcloud-vpc": {
+                "account_name": "aviatrix",
+                "aviatrix_firenet_vpc": false,
+                "aviatrix_transit_vpc": false,
+                "cloud_type": 4,
+                "lifecycle": {
+                    "prevent_destroy": true
+                },
+                "name": "gcloud-vpc",
+                "subnets": [
+                    {
+                        "cidr": "10.10.0.0/24",
+                        "name": "subnet-1",
+                        "region": "us-west1"
+                    }
+                ]
+            }
+        }
+    },
+    "terraform": {
+        "required_providers": {
+            "aviatrix": {
+                "source": "AviatrixSystems/aviatrix",
+                "version": "3.0.1"
+            }
+        }
+    }
+}

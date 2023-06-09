@@ -13,8 +13,11 @@
 		"ghcr.io/devcontainers/features/docker-in-docker:2": {},
 		"ghcr.io/dhoeric/features/google-cloud-cli:1": {},
 		"ghcr.io/mpriscella/features/kind:1": {},
-		"ghcr.io/eitsupi/devcontainer-features/jq-likes:1": {}
+		"ghcr.io/eitsupi/devcontainer-features/jq-likes:1": {},
+		"ghcr.io/dhoeric/features/google-cloud-cli": {},
+		"ghcr.io/devcontainers/features/kubectl-helm-minikube": {}
 	},
+	"postStartCommand": "./.devcontainer/install-auth.sh",
 
 	"remoteUser": "vscode",
 
