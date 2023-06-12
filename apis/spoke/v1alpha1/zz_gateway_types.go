@@ -15,9 +15,15 @@ import (
 
 type GatewayObservation struct {
 
+	// List of available BGP LAN interface IPs for spoke external device connection creation. Only supports 8 (Azure), 32 (AzureGov) or AzureChina (2048). Available as of provider version R3.0.2+.
+	BGPLanIPList []*string `json:"bgpLanIpList,omitempty" tf:"bgp_lan_ip_list,omitempty"`
+
 	// Cloud instance ID of the spoke gateway.
 	// Cloud instance ID.
 	CloudInstanceID *string `json:"cloudInstanceId,omitempty" tf:"cloud_instance_id,omitempty"`
+
+	// List of available BGP LAN interface IPs for spoke external device HA connection creation. Only supports 8 (Azure), 32 (AzureGov) or AzureChina (2048). Available as of provider version R3.0.2+.
+	HaBGPLanIPList []*string `json:"haBgpLanIpList,omitempty" tf:"ha_bgp_lan_ip_list,omitempty"`
 
 	// Cloud instance ID of the HA spoke gateway.
 	// Cloud instance ID of HA spoke gateway.
@@ -91,6 +97,10 @@ type GatewayParameters struct {
 	// +kubebuilder:validation:Optional
 	BGPHoldTime *float64 `json:"bgpHoldTime,omitempty" tf:"bgp_hold_time,omitempty"`
 
+	// Number of interfaces that will be created for BGP over LAN enabled Azure spoke. Only valid for 8 (Azure), 32 (AzureGov) or AzureChina (2048). Default value: 1. Available as of provider version R3.0.2+.
+	// +kubebuilder:validation:Optional
+	BGPLanInterfacesCount *float64 `json:"bgpLanInterfacesCount,omitempty" tf:"bgp_lan_interfaces_count,omitempty"`
+
 	// BGP route polling time. Unit is in seconds. Valid values are between 10 and 50. Default value: "50".
 	// BGP route polling time for BGP Spoke Gateway. Unit is in seconds. Valid values are between 10 and 50.
 	// +kubebuilder:validation:Optional
@@ -141,10 +151,22 @@ type GatewayParameters struct {
 	// +kubebuilder:validation:Optional
 	EnableBGP *bool `json:"enableBgp,omitempty" tf:"enable_bgp,omitempty"`
 
+	// Pre-allocate a network interface(eth4) for "BGP over LAN" functionality. Only valid for 8 (Azure), 32 (AzureGov) or AzureChina (2048). Valid values: true or false. Default value: false. Available as of provider version R3.0.2+.
+	// +kubebuilder:validation:Optional
+	EnableBGPOverLan *bool `json:"enableBgpOverLan,omitempty" tf:"enable_bgp_over_lan,omitempty"`
+
 	// Enable EBS volume encryption for Gateway. Only supports AWS, AWSGov, AWSChina, AWS Top Secret and AWS Secret providers. Valid values: true, false. Default value: false.
 	// Enable encrypt gateway EBS volume. Only supported for AWS provider. Valid values: true, false. Default value: false.
 	// +kubebuilder:validation:Optional
 	EnableEncryptVolume *bool `json:"enableEncryptVolume,omitempty" tf:"enable_encrypt_volume,omitempty"`
+
+	// Set to true to enable global VPC. Only supported for GCP.
+	// +kubebuilder:validation:Optional
+	EnableGlobalVPC *bool `json:"enableGlobalVpc,omitempty" tf:"enable_global_vpc,omitempty"`
+
+	// Specify whether to disable GRO/GSO or not.
+	// +kubebuilder:validation:Optional
+	EnableGroGso *bool `json:"enableGroGso,omitempty" tf:"enable_gro_gso,omitempty"`
 
 	// Enable jumbo frames for this spoke gateway. Default value is true.
 	// Enable jumbo frame support for spoke gateway. Valid values: true or false. Default value: true.

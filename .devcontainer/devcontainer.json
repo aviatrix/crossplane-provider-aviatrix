@@ -35,9 +35,9 @@
 	"containerEnv": {
 		"TERRAFORM_PROVIDER_SOURCE": "AviatrixSystems/aviatrix",
 		"TERRAFORM_PROVIDER_REPO":"https://github.com/AviatrixSystems/terraform-provider-aviatrix",
-		"TERRAFORM_PROVIDER_VERSION":"3.0.1",
+		"TERRAFORM_PROVIDER_VERSION":"3.1.0",
 		"TERRAFORM_PROVIDER_DOWNLOAD_NAME":"terraform-provider-aviatrix",
-		"TERRAFORM_NATIVE_PROVIDER_BINARY":"terraform-provider-aviatrix_v3.0.1",
+		"TERRAFORM_NATIVE_PROVIDER_BINARY":"terraform-provider-aviatrix_v3.1.0",
 		"TERRAFORM_DOCS_PATH":"website/docs/r"
 	},
 }

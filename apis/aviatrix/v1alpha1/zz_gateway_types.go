@@ -153,13 +153,17 @@ type GatewayParameters struct {
 	// +kubebuilder:validation:Optional
 	EnableEncryptVolume *bool `json:"enableEncryptVolume,omitempty" tf:"enable_encrypt_volume,omitempty"`
 
+	// Specify whether to disable GRO/GSO or not.
+	// +kubebuilder:validation:Optional
+	EnableGroGso *bool `json:"enableGroGso,omitempty" tf:"enable_gro_gso,omitempty"`
+
 	// Enable jumbo frames for this gateway. Default value is true.
 	// Enable jumbo frame support for Gateway. Valid values: true or false. Default value: true.
 	// +kubebuilder:validation:Optional
 	EnableJumboFrame *bool `json:"enableJumboFrame,omitempty" tf:"enable_jumbo_frame,omitempty"`
 
 	// Enable/disable LDAP. Valid values: true, false. Default value: false.
-	// Specify whether to enable LDAP or not. Supported values: 'yes' and 'no'.
+	// Specify whether to enable LDAP or not.
 	// +kubebuilder:validation:Optional
 	EnableLdap *bool `json:"enableLdap,omitempty" tf:"enable_ldap,omitempty"`
 
@@ -249,7 +253,7 @@ type GatewayParameters struct {
 	LdapUsernameAttribute *string `json:"ldapUsernameAttribute,omitempty" tf:"ldap_username_attribute,omitempty"`
 
 	// Maximum number of active VPN users allowed to be connected to this gateway. Required if vpn_access is true. Make sure the number is smaller than the VPN CIDR block. Example: 100. NOTE: Please see notes
-	// Maximum connection of VPN access.
+	// Maximum connection of VPN access. Valid for VPN gateway only. If not set, '100' will be default value.
 	// +kubebuilder:validation:Optional
 	MaxVPNConn *string `json:"maxVpnConn,omitempty" tf:"max_vpn_conn,omitempty"`
 

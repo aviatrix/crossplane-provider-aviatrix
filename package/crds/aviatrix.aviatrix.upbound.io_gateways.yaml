@@ -190,6 +190,9 @@ spec:
                       Enable encrypt gateway EBS volume. Only supported for AWS provider.
                       Valid values: true, false. Default value: false.'
                     type: boolean
+                  enableGroGso:
+                    description: Specify whether to disable GRO/GSO or not.
+                    type: boolean
                   enableJumboFrame:
                     description: 'Enable jumbo frames for this gateway. Default value
                       is true. Enable jumbo frame support for Gateway. Valid values:
@@ -197,8 +200,7 @@ spec:
                     type: boolean
                   enableLdap:
                     description: 'Enable/disable LDAP. Valid values: true, false.
-                      Default value: false. Specify whether to enable LDAP or not.
-                      Supported values: ''yes'' and ''no''.'
+                      Default value: false. Specify whether to enable LDAP or not.'
                     type: boolean
                   enableMonitorGatewaySubnets:
                     description: 'If set to true, the Monitor Gateway Subnets feature
@@ -307,7 +309,9 @@ spec:
                     description: 'Maximum number of active VPN users allowed to be
                       connected to this gateway. Required if vpn_access is true. Make
                       sure the number is smaller than the VPN CIDR block. Example:
-                      100. NOTE: Please see notes Maximum connection of VPN access.'
+                      100. NOTE: Please see notes Maximum connection of VPN access.
+                      Valid for VPN gateway only. If not set, ''100'' will be default
+                      value.'
                     type: string
                   monitorExcludeList:
                     description: Set of monitored instance ids. Only valid when 'enable_monitor_gateway_subnets'

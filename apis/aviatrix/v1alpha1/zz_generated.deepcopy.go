@@ -710,6 +710,11 @@ func (in *GatewayParameters) DeepCopyInto(out *GatewayParameters) {
 		*out = new(bool)
 		**out = **in
 	}
+	if in.EnableGroGso != nil {
+		in, out := &in.EnableGroGso, &out.EnableGroGso
+		*out = new(bool)
+		**out = **in
+	}
 	if in.EnableJumboFrame != nil {
 		in, out := &in.EnableJumboFrame, &out.EnableJumboFrame
 		*out = new(bool)

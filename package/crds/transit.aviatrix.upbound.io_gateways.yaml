@@ -138,7 +138,9 @@ spec:
                       over LAN enabled Azure transit. Valid value: 1~5 for FireNet
                       case, 1~7 for Non-FireNet case. Default value: 1. Available
                       as of provider version R2.22+. Number of interfaces that will
-                      be created for BGP over LAN enabled Azure transit.'
+                      be created for BGP over LAN enabled Azure transit. Applies on
+                      HA Transit as well if enabled. Updatable as of provider version
+                      3.0.3+.'
                     type: number
                   bgpManualSpokeAdvertiseCidrs:
                     description: 'Intended CIDR list to be advertised to external
@@ -248,7 +250,7 @@ spec:
                       a network interface(eth4) for "BGP over LAN" functionality.
                       Only valid for cloud_type = 4 (GCP) and 8 (Azure). Valid values:
                       true or false. Default value: false. Available as of provider
-                      version R2.18+'
+                      version R2.18+. Updatable as of provider version 3.0.3+.'
                     type: boolean
                   enableEgressTransitFirenet:
                     description: 'Enable Egress Transit FireNet. Valid values: true,
@@ -282,6 +284,9 @@ spec:
                       are set to true and `cloud_type` = 1 (AWS). Currently AWS Gateway
                       Load Balancer is only supported in AWS regions us-west-2 and
                       us-east-1. Valid values: true or false. Default value: false.'
+                    type: boolean
+                  enableGroGso:
+                    description: Specify whether to disable GRO/GSO or not.
                     type: boolean
                   enableHybridConnection:
                     description: 'Sign of readiness for AWS TGW connection. Only supported

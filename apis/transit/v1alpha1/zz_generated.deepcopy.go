@@ -352,6 +352,11 @@ func (in *GatewayParameters) DeepCopyInto(out *GatewayParameters) {
 		*out = new(bool)
 		**out = **in
 	}
+	if in.EnableGroGso != nil {
+		in, out := &in.EnableGroGso, &out.EnableGroGso
+		*out = new(bool)
+		**out = **in
+	}
 	if in.EnableHybridConnection != nil {
 		in, out := &in.EnableHybridConnection, &out.EnableHybridConnection
 		*out = new(bool)

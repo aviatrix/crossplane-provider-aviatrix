@@ -110,6 +110,12 @@ spec:
                       BGP Spoke Gateway. Unit is in seconds. Valid values are between
                       12 and 360.'
                     type: number
+                  bgpLanInterfacesCount:
+                    description: 'Number of interfaces that will be created for BGP
+                      over LAN enabled Azure spoke. Only valid for 8 (Azure), 32 (AzureGov)
+                      or AzureChina (2048). Default value: 1. Available as of provider
+                      version R3.0.2+.'
+                    type: number
                   bgpPollingTime:
                     description: 'BGP route polling time. Unit is in seconds. Valid
                       values are between 10 and 50. Default value: "50". BGP route
@@ -189,12 +195,25 @@ spec:
                       false. Available in provider R2.21.0+. Enable BGP. Default:
                       false.'
                     type: boolean
+                  enableBgpOverLan:
+                    description: 'Pre-allocate a network interface(eth4) for "BGP
+                      over LAN" functionality. Only valid for 8 (Azure), 32 (AzureGov)
+                      or AzureChina (2048). Valid values: true or false. Default value:
+                      false. Available as of provider version R3.0.2+.'
+                    type: boolean
                   enableEncryptVolume:
                     description: 'Enable EBS volume encryption for Gateway. Only supports
                       AWS, AWSGov, AWSChina, AWS Top Secret and AWS Secret providers.
                       Valid values: true, false. Default value: false. Enable encrypt
                       gateway EBS volume. Only supported for AWS provider. Valid values:
                       true, false. Default value: false.'
+                    type: boolean
+                  enableGlobalVpc:
+                    description: Set to true to enable global VPC. Only supported
+                      for GCP.
+                    type: boolean
+                  enableGroGso:
+                    description: Specify whether to disable GRO/GSO or not.
                     type: boolean
                   enableJumboFrame:
                     description: 'Enable jumbo frames for this spoke gateway. Default
@@ -734,10 +753,26 @@ spec:
             properties:
               atProvider:
                 properties:
+                  bgpLanIpList:
+                    description: List of available BGP LAN interface IPs for spoke
+                      external device connection creation. Only supports 8 (Azure),
+                      32 (AzureGov) or AzureChina (2048). Available as of provider
+                      version R3.0.2+.
+                    items:
+                      type: string
+                    type: array
                   cloudInstanceId:
                     description: Cloud instance ID of the spoke gateway. Cloud instance
                       ID.
                     type: string
+                  haBgpLanIpList:
+                    description: List of available BGP LAN interface IPs for spoke
+                      external device HA connection creation. Only supports 8 (Azure),
+                      32 (AzureGov) or AzureChina (2048). Available as of provider
+                      version R3.0.2+.
+                    items:
+                      type: string
+                    type: array
                   haCloudInstanceId:
                     description: Cloud instance ID of the HA spoke gateway. Cloud
                       instance ID of HA spoke gateway.

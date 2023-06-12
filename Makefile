@@ -8,9 +8,9 @@ export TERRAFORM_VERSION := 1.3.3
 
 export TERRAFORM_PROVIDER_SOURCE:=AviatrixSystems/aviatrix
 export TERRAFORM_PROVIDER_REPO:=https://github.com/AviatrixSystems/terraform-provider-aviatrix
-export TERRAFORM_PROVIDER_VERSION:=3.0.1
+export TERRAFORM_PROVIDER_VERSION:=3.1.0
 export TERRAFORM_PROVIDER_DOWNLOAD_NAME:=terraform-provider-aviatrix
-export TERRAFORM_NATIVE_PROVIDER_BINARY:=terraform-provider-aviatrix_v3.0.1
+export TERRAFORM_NATIVE_PROVIDER_BINARY:=terraform-provider-aviatrix_v3.1.0
 export TERRAFORM_DOCS_PATH:=docs
 
 PLATFORMS ?= linux_amd64 linux_arm64
