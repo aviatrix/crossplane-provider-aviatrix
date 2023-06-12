@@ -11,6 +11,7 @@ spec:
     routeTables:
     - rtb-737d540c
     - rtb-626d045c
+    spokeGwName: spoke-gw
     transitGwName: transit-gw
 
 ---

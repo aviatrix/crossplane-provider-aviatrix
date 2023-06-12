@@ -1,0 +1,20 @@
+{
+ "resource": {
+  "aviatrix_transit_gateway": {
+   "test-transit-gateway-aws": {
+    "account_name": "aviatrix",
+    "cloud_type": 4,
+    "connected_transit": true,
+    "enable_hybrid_connection": true,
+    "gw_size": "n1-standard-1",
+    "lifecycle": {
+     "prevent_destroy": true
+    },
+    "gw_name": "test-transit-gateway-aws",
+    "subnet": "10.10.0.0/24",
+    "vpc_id": "gcloud-vpc~-~mconnors-01",
+    "vpc_reg": "us-west1-a"
+   }
+  }
+ }
+}

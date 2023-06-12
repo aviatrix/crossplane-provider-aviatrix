@@ -15,7 +15,7 @@ spec:
     singleIpSnat: false
     subnet: 10.10.1.0/24
     vpcId: gcloud-vpc-spoke~-~mconnors-01
-    vpcReg: us-west-1
+    vpcReg: us-west1-a
 
 ---
 

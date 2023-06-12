@@ -9,18 +9,18 @@ import "github.com/upbound/upjet/pkg/config"
 // ExternalNameConfigs contains all external name configurations for this
 // provider.
 var ExternalNameConfigs = map[string]config.ExternalName{
-	"aviatrix_account":               config.ParameterAsIdentifier("account_name"),
-	"aviatrix_spoke_transit_attachment":        config.TemplatedStringAsIdentifier("spoke_gw_name", "{{.externalName}}~{{.parameters.transit_gw_name}}"),
-	"aviatrix_gateway_dnat":                  config.ParameterAsIdentifier("gw_name"),
-	"aviatrix_gateway_snat":                  config.ParameterAsIdentifier("gw_name"),
-	"aviatrix_gateway":                       config.ParameterAsIdentifier("gw_name"),
+	"aviatrix_account":                                       config.ParameterAsIdentifier("account_name"),
+	"aviatrix_spoke_transit_attachment":                      config.TemplatedStringAsIdentifier("", "{{.parameters.spoke_gw_name}}~{{.parameters.transit_gw_name}}"),
+	"aviatrix_gateway_dnat":                                  config.ParameterAsIdentifier("gw_name"),
+	"aviatrix_gateway_snat":                                  config.ParameterAsIdentifier("gw_name"),
+	"aviatrix_gateway":                                       config.ParameterAsIdentifier("gw_name"),
 	"aviatrix_segmentation_network_domain_association":       config.TemplatedStringAsIdentifier("network_domain_name", "{{.externalName}}~{{.parameters.attachment_name}}"),
 	"aviatrix_segmentation_network_domain_connection_policy": config.TemplatedStringAsIdentifier("domain_name_1", "{{.externalName}}~{{.parameters.domain_name_2}}"),
 	"aviatrix_segmentation_network_domain":                   config.ParameterAsIdentifier("domain_name"),
-	"aviatrix_spoke_gateway":                                          config.ParameterAsIdentifier("gw_name"),
-	"aviatrix_transit_gateway_peering":                                config.TemplatedStringAsIdentifier("transit_gateway_name1", "{{.externalName}}~{{.parameters.transit_gateway_name2}}"),
-	"aviatrix_transit_gateway":                                        config.ParameterAsIdentifier("gw_name"),
-	"aviatrix_vpc":                                                    config.NameAsIdentifier,
+	"aviatrix_spoke_gateway":                                 config.ParameterAsIdentifier("gw_name"),
+	"aviatrix_transit_gateway_peering":                       config.TemplatedStringAsIdentifier("transit_gateway_name1", "{{.externalName}}~{{.parameters.transit_gateway_name2}}"),
+	"aviatrix_transit_gateway":                               config.ParameterAsIdentifier("gw_name"),
+	"aviatrix_vpc":                                           config.NameAsIdentifier,
 }
 
 // ExternalNameConfigurations applies all external name configs listed in the

@@ -81,6 +81,10 @@ spec:
                     items:
                       type: string
                     type: array
+                  spokeGwName:
+                    description: Name of the spoke gateway to attach to transit network.
+                      Name of the spoke gateway to attach to transit network.
+                    type: string
                   spokePrependAsPath:
                     description: Connection based AS Path Prepend. Valid only for
                       BGP connection. Can only use the gateway's own local AS number,
@@ -106,6 +110,7 @@ spec:
                       type: string
                     type: array
                 required:
+                - spokeGwName
                 - transitGwName
                 type: object
               providerConfigRef:

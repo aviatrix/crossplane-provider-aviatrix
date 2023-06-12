@@ -1,0 +1,20 @@
+{
+ "resource": {
+  "aviatrix_spoke_gateway": {
+   "test-spoke-gateway-aws": {
+    "account_name": "aviatrix",
+    "cloud_type": 4,
+    "gw_size": "n1-highcpu-16",
+    "lifecycle": {
+     "prevent_destroy": true
+    },
+    "manage_ha_gateway": false,
+    "gw_name": "test-spoke-gateway-aws",
+    "single_ip_snat": false,
+    "subnet": "10.10.1.0/24",
+    "vpc_id": "gcloud-vpc-spoke~-~mconnors-01",
+    "vpc_reg": "us-west1-a"
+   }
+  }
+ }
+}

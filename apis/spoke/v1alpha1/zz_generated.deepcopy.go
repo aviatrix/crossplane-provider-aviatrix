@@ -706,6 +706,11 @@ func (in *TransitAttachmentParameters) DeepCopyInto(out *TransitAttachmentParame
 			}
 		}
 	}
+	if in.SpokeGwName != nil {
+		in, out := &in.SpokeGwName, &out.SpokeGwName
+		*out = new(string)
+		**out = **in
+	}
 	if in.SpokePrependAsPath != nil {
 		in, out := &in.SpokePrependAsPath, &out.SpokePrependAsPath
 		*out = make([]*string, len(*in))

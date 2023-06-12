@@ -1,0 +1,21 @@
+{
+    "resource": {
+        "aviatrix_spoke_transit_attachment": {
+            "attachmentname": {
+                "lifecycle": {
+                    "prevent_destroy": true
+                },
+                "spoke_gw_name": "test-spoke-gateway-aws",
+                "transit_gw_name": "test-transit-gateway-aws"
+            }
+        }
+    },
+    "terraform": {
+        "required_providers": {
+            "aviatrix": {
+                "source": "AviatrixSystems/aviatrix",
+                "version": "3.1.0"
+            }
+        }
+    }
+}

@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/aviatrix/provider-aviatrix/apis"
+	"github.com/aviatrix/provider-aviatrix/config"
 	"github.com/crossplane/crossplane-runtime/pkg/meta"
 	"github.com/onsi/gomega"
 	"github.com/upbound/upjet/pkg/resource"
@@ -36,6 +37,24 @@ func TestProviderGoldenFiles(t *testing.T) {
 				tfJsonFile: "./test-data/vpc.tf.json",
 				yamlFile:   "../examples/vpc.yaml",
 			},
+		}, {
+			name: "transit",
+			args: args{
+				tfJsonFile: "./test-data/transit-gateway.tf.json",
+				yamlFile:   "../examples/transit-gateway.yaml",
+			},
+		}, {
+			name: "spoke",
+			args: args{
+				tfJsonFile: "./test-data/spoke-gateway.tf.json",
+				yamlFile:   "../examples/spoke-gateway.yaml",
+			},
+		}, {
+			name: "attachment",
+			args: args{
+				tfJsonFile: "./test-data/transitattachment.tf.json",
+				yamlFile:   "../examples/transitattachment.yaml",
+			},
 		},
 	}
 	for _, tt := range tests {
@@ -57,6 +76,7 @@ func TestProviderGoldenFiles(t *testing.T) {
 			g.Expect(resources).To(gomega.Equal(x["resource"]))
 		})
 	}
+
 }
 
 // this function reproduces the private logic in upjet/pkg/terraform/files.go
@@ -66,7 +86,8 @@ func writeResourceBlock(res resource.Terraformed) map[string]any {
 	parms["lifecycle"] = map[string]interface{}{
 		"prevent_destroy": !meta.WasDeleted(res),
 	}
-	parms["name"] = meta.GetExternalName(res)
+	config.ExternalNameConfigs[res.GetTerraformResourceType()].SetIdentifierArgumentFn(parms, res.GetName())
+	// parms["name"] = meta.GetExternalName(res)
 	return map[string]any{
 		res.GetTerraformResourceType(): map[string]any{
 			res.GetName(): parms,
