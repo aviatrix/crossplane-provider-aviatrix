@@ -73,6 +73,18 @@ func TestProviderGoldenFiles(t *testing.T) {
 				tfJsonFile: "./test-data/networkdomainconnectionpolicy.tf.json",
 				yamlFile:   "../examples/networkdomainconnectionpolicy.yaml",
 			},
+		}, {
+			name: "snat",
+			args: args{
+				tfJsonFile: "./test-data/snat.tf.json",
+				yamlFile:   "../examples/snat.yaml",
+			},
+		}, {
+			name: "dnat",
+			args: args{
+				tfJsonFile: "./test-data/dnat.tf.json",
+				yamlFile:   "../examples/dnat.yaml",
+			},
 		},
 	}
 	for _, tt := range tests {

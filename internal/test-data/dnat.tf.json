@@ -1,0 +1,27 @@
+{
+    "resource": {
+        "aviatrix_gateway_dnat": {
+            "test-spoke-gateway-aws": {
+                "dnat_policy": [
+                    {
+                        "connection": "None",
+                        "dnat_ips": "175.32.12.12",
+                        "dnat_port": "12",
+                        "dst_cidr": "14.0.0.0/16",
+                        "dst_port": "222",
+                        "exclude_rtb": "",
+                        "interface": "eth0",
+                        "mark": "65536",
+                        "protocol": "tcp",
+                        "src_cidr": "13.0.0.0/16",
+                        "src_port": "22"
+                    }
+                ],
+                "gw_name": "test-spoke-gateway-aws",
+                "lifecycle": {
+                    "prevent_destroy": true
+                }
+            }
+        }
+    }
+}

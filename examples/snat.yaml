@@ -1,0 +1,26 @@
+apiVersion: gateway.aviatrix.upbound.io/v1alpha1
+kind: Snat
+metadata:
+  annotations:
+    meta.upbound.io/example-id: gateway/v1alpha1/snat
+  labels:
+    testing.upbound.io/example-name: test_snat
+  name: test-spoke-gateway-aws
+spec:
+  forProvider:
+    snatMode: customized_snat
+    snatPolicy:
+    - connection: None
+      dstCidr: 14.0.0.0/16
+      dstPort: "222"
+      excludeRtb: ""
+      interface: eth0
+      mark: "65536"
+      protocol: tcp
+      snatIps: 175.32.12.12
+      snatPort: "12"
+      srcCidr: 13.0.0.0/16
+      srcPort: "22"
+
+---
+

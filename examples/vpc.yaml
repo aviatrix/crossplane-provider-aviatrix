@@ -6,7 +6,7 @@ spec:
   forProvider:
     accountName: aviatrix
     aviatrixFirenetVpc: false
-    aviatrixTransitVpc: false
+    aviatrixTransitVpc: true
     cloudType: 4
     subnets:
     - cidr: 10.10.0.0/24

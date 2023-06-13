@@ -1,0 +1,25 @@
+apiVersion: gateway.aviatrix.upbound.io/v1alpha1
+kind: Dnat
+metadata:
+  annotations:
+    meta.upbound.io/example-id: gateway/v1alpha1/dnat
+  labels:
+    testing.upbound.io/example-name: test_dnat
+  name: test-spoke-gateway-aws
+spec:
+  forProvider:
+    dnatPolicy:
+    - connection: None
+      dnatIps: 175.32.12.12
+      dnatPort: "12"
+      dstCidr: 14.0.0.0/16
+      dstPort: "222"
+      excludeRtb: ""
+      interface: eth0
+      mark: "65536"
+      protocol: tcp
+      srcCidr: 13.0.0.0/16
+      srcPort: "22"
+
+---
+
