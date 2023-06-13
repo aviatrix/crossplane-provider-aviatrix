@@ -1,0 +1,9 @@
+apiVersion: segmentation.aviatrix.upbound.io/v1alpha1
+kind: NetworkDomain
+metadata:
+  name: test-seg-network-domain2
+spec:
+  forProvider: {}
+
+---
+

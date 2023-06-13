@@ -1,0 +1,18 @@
+
+apiVersion: aviatrix.aviatrix.upbound.io/v1alpha1
+kind: VPC
+metadata:
+  name: gcloud-vpc-spoke2
+spec:
+  forProvider:
+    accountName: aviatrix
+    aviatrixFirenetVpc: false
+    aviatrixTransitVpc: false
+    cloudType: 4
+    subnets:
+    - cidr: 10.10.2.0/24
+      name: subnet-3
+      region: us-west1
+  providerConfigRef:
+    name: default
+

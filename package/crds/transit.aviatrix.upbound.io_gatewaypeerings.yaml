@@ -162,6 +162,10 @@ spec:
                     items:
                       type: string
                     type: array
+                  transitGatewayName1:
+                    description: The first transit gateway name to make a peer pair.
+                      The first transit gateway name to make a peer pair.
+                    type: string
                   transitGatewayName2:
                     description: The second transit gateway name to make a peer pair.
                       The second transit gateway name to make a peer pair.
@@ -178,6 +182,7 @@ spec:
                       R2.19+.'
                     type: number
                 required:
+                - transitGatewayName1
                 - transitGatewayName2
                 type: object
               providerConfigRef:

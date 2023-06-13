@@ -12,6 +12,8 @@ spec:
     vpcId: gcloud-vpc~-~mconnors-01
     subnet: 10.10.0.0/24
     vpcReg: us-west1-a
+    enableSegmentation: true
+    enableHybridConnection: false
 
 ---
 

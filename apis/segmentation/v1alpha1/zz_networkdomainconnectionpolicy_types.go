@@ -19,6 +19,11 @@ type NetworkDomainConnectionPolicyObservation struct {
 
 type NetworkDomainConnectionPolicyParameters struct {
 
+	// Name of the Network Domain to connect to Domain 2.
+	// Name of network domain that will be connected to domain 2.
+	// +kubebuilder:validation:Required
+	DomainName1 *string `json:"domainName1" tf:"domain_name_1,omitempty"`
+
 	// Name of the Network Domain to connect to Domain 1.
 	// Name of network domain that will be connected to domain 1.
 	// +kubebuilder:validation:Required

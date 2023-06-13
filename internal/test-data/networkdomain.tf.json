@@ -1,0 +1,20 @@
+{
+    "resource": {
+        "aviatrix_segmentation_network_domain": {
+            "test-seg-network-domain": {
+                "domain_name": "test-seg-network-domain",
+                "lifecycle": {
+                    "prevent_destroy": true
+                }
+            }
+        }
+    },
+    "terraform": {
+        "required_providers": {
+            "aviatrix": {
+                "source": "AviatrixSystems/aviatrix",
+                "version": "3.1.0"
+            }
+        }
+    }
+}

@@ -4,8 +4,8 @@ metadata:
   annotations:
     meta.upbound.io/example-id: spoke/v1alpha1/gateway
   labels:
-    testing.upbound.io/example-name: test_spoke_gateway_aws
-  name: test-spoke-gateway-aws
+    testing.upbound.io/example-name: test_spoke2_gateway_aws
+  name: test-spoke2-gateway-aws
 spec:
   forProvider:
     accountName: aviatrix
@@ -13,6 +13,7 @@ spec:
     gwSize: n1-highcpu-16
     manageHaGateway: false
     singleIpSnat: false
-    subnet: 10.10.1.0/24
-    vpcId: gcloud-vpc-spoke~-~mconnors-01
+    subnet: 10.10.2.0/24
+    vpcId: gcloud-vpc-spoke2~-~mconnors-01
     vpcReg: us-west1-a
+

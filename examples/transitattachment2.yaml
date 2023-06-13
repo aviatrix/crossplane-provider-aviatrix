@@ -1,0 +1,11 @@
+apiVersion: spoke.aviatrix.upbound.io/v1alpha1
+kind: TransitAttachment
+metadata:
+  name: attachmentname2
+spec:
+  forProvider:
+    transitGwName: test-transit-gateway-aws
+    spokeGwName: test-spoke2-gateway-aws
+
+---
+

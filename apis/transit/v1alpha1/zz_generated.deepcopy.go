@@ -836,6 +836,11 @@ func (in *GatewayPeeringParameters) DeepCopyInto(out *GatewayPeeringParameters) 
 			}
 		}
 	}
+	if in.TransitGatewayName1 != nil {
+		in, out := &in.TransitGatewayName1, &out.TransitGatewayName1
+		*out = new(string)
+		**out = **in
+	}
 	if in.TransitGatewayName2 != nil {
 		in, out := &in.TransitGatewayName2, &out.TransitGatewayName2
 		*out = new(string)

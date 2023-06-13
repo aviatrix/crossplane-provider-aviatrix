@@ -70,11 +70,16 @@ spec:
                       Edge, to associate with the network domain. Attachment name,
                       either Spoke or Edge.
                     type: string
+                  networkDomainName:
+                    description: Name of the Segmentation Network Domain. Network
+                      Domain name.
+                    type: string
                   transitGatewayName:
                     description: Name of the Transit Gateway. Transit Gateway name.
                     type: string
                 required:
                 - attachmentName
+                - networkDomainName
                 type: object
               providerConfigRef:
                 default:
