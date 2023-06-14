@@ -1,7 +1,7 @@
 apiVersion: aviatrix.aviatrix.upbound.io/v1alpha1
 kind: VPC
 metadata:
-  name: gcloud-vpc
+  name: gcloud-vpc-transit2
 spec:
   forProvider:
     accountName: aviatrix
@@ -9,8 +9,8 @@ spec:
     aviatrixTransitVpc: false
     cloudType: 4
     subnets:
-    - cidr: 10.10.0.0/24
-      name: subnet-1
+    - cidr: 10.10.3.0/24
+      name: subnet-4
       region: us-west1
   providerConfigRef:
     name: default

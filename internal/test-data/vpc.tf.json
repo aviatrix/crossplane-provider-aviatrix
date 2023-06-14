@@ -4,7 +4,7 @@
             "gcloud-vpc": {
                 "account_name": "aviatrix",
                 "aviatrix_firenet_vpc": false,
-                "aviatrix_transit_vpc": true,
+                "aviatrix_transit_vpc": false,
                 "cloud_type": 4,
                 "lifecycle": {
                     "prevent_destroy": true

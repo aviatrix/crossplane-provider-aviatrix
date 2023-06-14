@@ -85,6 +85,12 @@ func TestProviderGoldenFiles(t *testing.T) {
 				tfJsonFile: "./test-data/dnat.tf.json",
 				yamlFile:   "../examples/dnat.yaml",
 			},
+		}, {
+			name: "peering",
+			args: args{
+				tfJsonFile: "./test-data/gatewaypeering.tf.json",
+				yamlFile:   "../examples/gatewaypeering.yaml",
+			},
 		},
 	}
 	for _, tt := range tests {

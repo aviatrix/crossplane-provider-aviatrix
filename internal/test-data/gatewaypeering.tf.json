@@ -1,0 +1,13 @@
+{
+    "resource": {
+        "aviatrix_transit_gateway_peering": {
+            "test-transit-gateway-peering": {
+                "lifecycle": {
+                    "prevent_destroy": true
+                },
+                "transit_gateway_name1": "test-transit-gateway-aws",
+                "transit_gateway_name2": "test-transit-gateway2"
+            }
+        }
+    }
+}

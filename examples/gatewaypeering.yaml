@@ -8,10 +8,6 @@ metadata:
   name: test-transit-gateway-peering
 spec:
   forProvider:
-    enableInsaneModeEncryptionOverInternet: false
-    enablePeeringOverPrivateNetwork: false
-    gateway1ExcludedNetworkCidrs:
-    - 10.0.0.48/28
     transitGatewayName1: test-transit-gateway-aws
     transitGatewayName2: test-transit-gateway2
 
