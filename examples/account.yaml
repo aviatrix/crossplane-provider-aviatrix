@@ -1,0 +1,24 @@
+apiVersion: aviatrix.aviatrix.upbound.io/v1alpha1
+kind: Account
+metadata:
+  annotations:
+    meta.upbound.io/example-id: aviatrix/v1alpha1/account
+  labels:
+    testing.upbound.io/example-name: temp_acc_aws
+  name: myaws2
+spec:
+  forProvider:
+    awsAccountNumber: "306003302784"
+    cloudType: 1
+    awsIam: false
+    awsAccessKeySecretRef: 
+      key: accessKeyID 
+      name: aws-creds
+      namespace: crossplane-system
+    awsSecretKeySecretRef:
+      key: secretKey 
+      name: aws-creds
+      namespace: crossplane-system
+
+---
+

@@ -1,0 +1,15 @@
+{
+    "resource": {
+        "aviatrix_account": {
+            "myaws2": {
+                "account_name": "myaws2",
+                "aws_account_number": "306003302784",
+                "aws_iam": false,
+                "cloud_type": 1,
+                "lifecycle": {
+                    "prevent_destroy": true
+                }
+            }
+        }
+    }
+}
