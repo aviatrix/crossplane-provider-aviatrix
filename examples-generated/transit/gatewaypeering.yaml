@@ -12,8 +12,20 @@ spec:
     enablePeeringOverPrivateNetwork: false
     gateway1ExcludedNetworkCidrs:
     - 10.0.0.48/28
-    transitGatewayName1: test-transit-gateway-aws
-    transitGatewayName2: test-transit-gateway2
+    gateway1ExcludedTgwConnections:
+    - vpn_connection_a
+    gateway2ExcludedNetworkCidrs:
+    - 10.0.0.48/28
+    gateway2ExcludedTgwConnections:
+    - vpn_connection_b
+    prependAsPath1:
+    - "65001"
+    - "65001"
+    - "65001"
+    prependAsPath2:
+    - "65002"
+    transitGatewayName1: transit-Gw1
+    transitGatewayName2: transit-Gw2
 
 ---
 

@@ -13,7 +13,6 @@ var ExternalNameConfigs = map[string]config.ExternalName{
 	"aviatrix_spoke_transit_attachment":                      config.TemplatedStringAsIdentifier("", "{{.parameters.spoke_gw_name}}~{{.parameters.transit_gw_name}}"),
 	"aviatrix_gateway_dnat":                                  config.ParameterAsIdentifier("gw_name"),
 	"aviatrix_gateway_snat":                                  config.ParameterAsIdentifier("gw_name"),
-	"aviatrix_gateway":                                       config.ParameterAsIdentifier("gw_name"),
 	"aviatrix_segmentation_network_domain_association":       config.TemplatedStringAsIdentifier("", "{{.parameters.network_domain_name}}~{{.parameters.attachment_name}}"),
 	"aviatrix_segmentation_network_domain_connection_policy": config.TemplatedStringAsIdentifier("", "{{.parameters.domain_name_1}}~{{.parameters.domain_name_2}}"),
 	"aviatrix_segmentation_network_domain":                   config.ParameterAsIdentifier("domain_name"),
