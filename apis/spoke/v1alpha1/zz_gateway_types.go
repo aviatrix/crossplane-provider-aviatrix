@@ -47,6 +47,10 @@ type GatewayObservation struct {
 
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
 
+	// The image version of the gateway. Use aviatrix_gateway_image data source to programmatically retrieve this value for the desired software_version. If set, we will attempt to update the gateway to the specified version if current version is different. If left blank, the gateway upgrades can be managed with the aviatrix_controller_config resource. Type: String. Example: "hvm-cloudx-aws-022021". Available as of provider version R2.20.0.
+	// image_version can be used to set the desired image version of the gateway. If set, we will attempt to update the gateway to the specified version.
+	ImageVersion *string `json:"imageVersion,omitempty" tf:"image_version,omitempty"`
+
 	// Private IP address of the spoke gateway created.
 	// Private IP address of the spoke gateway created.
 	PrivateIP *string `json:"privateIp,omitempty" tf:"private_ip,omitempty"`
@@ -58,6 +62,10 @@ type GatewayObservation struct {
 	// Security group used for the spoke gateway.
 	// Security group used for the spoke gateway.
 	SecurityGroupID *string `json:"securityGroupId,omitempty" tf:"security_group_id,omitempty"`
+
+	// The software version of the gateway. If set, we will attempt to update the gateway to the specified version if current version is different. If left blank, the gateway upgrade can be managed with the aviatrix_controller_config resource. Type: String. Example: "6.5.821". Available as of provider version R2.20.0.
+	// software_version can be used to set the desired software version of the gateway. If set, we will attempt to update the gateway to the specified version. If left blank, the gateway software version will continue to be managed through the aviatrix_controller_config resource.
+	SoftwareVersion *string `json:"softwareVersion,omitempty" tf:"software_version,omitempty"`
 }
 
 type GatewayParameters struct {
@@ -293,11 +301,6 @@ type GatewayParameters struct {
 	// +kubebuilder:validation:Optional
 	HaZone *string `json:"haZone,omitempty" tf:"ha_zone,omitempty"`
 
-	// The image version of the gateway. Use aviatrix_gateway_image data source to programmatically retrieve this value for the desired software_version. If set, we will attempt to update the gateway to the specified version if current version is different. If left blank, the gateway upgrades can be managed with the aviatrix_controller_config resource. Type: String. Example: "hvm-cloudx-aws-022021". Available as of provider version R2.20.0.
-	// image_version can be used to set the desired image version of the gateway. If set, we will attempt to update the gateway to the specified version.
-	// +kubebuilder:validation:Optional
-	ImageVersion *string `json:"imageVersion,omitempty" tf:"image_version,omitempty"`
-
 	// A list of comma separated CIDRs to be advertised to on-prem as 'Included CIDR List'. When configured, it will replace all advertised routes from this VPC. Example: "10.4.0.0/116,10.5.0.0/16".
 	// A list of comma separated CIDRs to be advertised to on-prem as 'Included CIDR List'. When configured, it will replace all advertised routes from this VPC.
 	// +kubebuilder:validation:Optional
@@ -372,11 +375,6 @@ type GatewayParameters struct {
 	// Specify whether to enable Source NAT feature in 'single_ip' mode on the gateway or not.
 	// +kubebuilder:validation:Optional
 	SingleIPSnat *bool `json:"singleIpSnat,omitempty" tf:"single_ip_snat,omitempty"`
-
-	// The software version of the gateway. If set, we will attempt to update the gateway to the specified version if current version is different. If left blank, the gateway upgrade can be managed with the aviatrix_controller_config resource. Type: String. Example: "6.5.821". Available as of provider version R2.20.0.
-	// software_version can be used to set the desired software version of the gateway. If set, we will attempt to update the gateway to the specified version. If left blank, the gateway software version will continue to be managed through the aviatrix_controller_config resource.
-	// +kubebuilder:validation:Optional
-	SoftwareVersion *string `json:"softwareVersion,omitempty" tf:"software_version,omitempty"`
 
 	// Intended CIDR list to be advertised to external BGP router. Empty list is not valid. Example: ["10.2.0.0/16", "10.4.0.0/16"].
 	// Intended CIDR list to be advertised to external BGP router.

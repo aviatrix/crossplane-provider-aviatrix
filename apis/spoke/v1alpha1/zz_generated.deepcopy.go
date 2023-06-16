@@ -133,6 +133,11 @@ func (in *GatewayObservation) DeepCopyInto(out *GatewayObservation) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.ImageVersion != nil {
+		in, out := &in.ImageVersion, &out.ImageVersion
+		*out = new(string)
+		**out = **in
+	}
 	if in.PrivateIP != nil {
 		in, out := &in.PrivateIP, &out.PrivateIP
 		*out = new(string)
@@ -145,6 +150,11 @@ func (in *GatewayObservation) DeepCopyInto(out *GatewayObservation) {
 	}
 	if in.SecurityGroupID != nil {
 		in, out := &in.SecurityGroupID, &out.SecurityGroupID
+		*out = new(string)
+		**out = **in
+	}
+	if in.SoftwareVersion != nil {
+		in, out := &in.SoftwareVersion, &out.SoftwareVersion
 		*out = new(string)
 		**out = **in
 	}
@@ -404,11 +414,6 @@ func (in *GatewayParameters) DeepCopyInto(out *GatewayParameters) {
 		*out = new(string)
 		**out = **in
 	}
-	if in.ImageVersion != nil {
-		in, out := &in.ImageVersion, &out.ImageVersion
-		*out = new(string)
-		**out = **in
-	}
 	if in.IncludedAdvertisedSpokeRoutes != nil {
 		in, out := &in.IncludedAdvertisedSpokeRoutes, &out.IncludedAdvertisedSpokeRoutes
 		*out = new(string)
@@ -494,11 +499,6 @@ func (in *GatewayParameters) DeepCopyInto(out *GatewayParameters) {
 	if in.SingleIPSnat != nil {
 		in, out := &in.SingleIPSnat, &out.SingleIPSnat
 		*out = new(bool)
-		**out = **in
-	}
-	if in.SoftwareVersion != nil {
-		in, out := &in.SoftwareVersion, &out.SoftwareVersion
-		*out = new(string)
 		**out = **in
 	}
 	if in.SpokeBGPManualAdvertiseCidrs != nil {

@@ -69,6 +69,10 @@ type GatewayObservation struct {
 
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
 
+	// The image version of the gateway. Use aviatrix_gateway_image data source to programmatically retrieve this value for the desired software_version. If set, we will attempt to update the gateway to the specified version if current version is different. If left blank, the gateway upgrades can be managed with the aviatrix_controller_config resource. Type: String. Example: "hvm-cloudx-aws-022021". Available as of provider version R2.20.0.
+	// image_version can be used to set the desired image version of the gateway. If set, we will attempt to update the gateway to the specified version.
+	ImageVersion *string `json:"imageVersion,omitempty" tf:"image_version,omitempty"`
+
 	// LAN interface CIDR of the transit gateway created (will be used when enabling FQDN Firenet in Azure). Available in provider version R2.17.1+.
 	// Transit gateway lan interface cidr.
 	LanInterfaceCidr *string `json:"lanInterfaceCidr,omitempty" tf:"lan_interface_cidr,omitempty"`
@@ -84,6 +88,10 @@ type GatewayObservation struct {
 	// Security group used for the transit gateway.
 	// Security group used for the transit gateway.
 	SecurityGroupID *string `json:"securityGroupId,omitempty" tf:"security_group_id,omitempty"`
+
+	// The software version of the gateway. If set, we will attempt to update the gateway to the specified version if current version is different. If left blank, the gateway upgrade can be managed with the aviatrix_controller_config resource. Type: String. Example: "6.5.821". Available as of provider version R2.20.0.
+	// software_version can be used to set the desired software version of the gateway. If set, we will attempt to update the gateway to the specified version. If left blank, the gateway software version will continue to be managed through the aviatrix_controller_config resource.
+	SoftwareVersion *string `json:"softwareVersion,omitempty" tf:"software_version,omitempty"`
 }
 
 type GatewayParameters struct {
@@ -373,11 +381,6 @@ type GatewayParameters struct {
 	// +kubebuilder:validation:Optional
 	HaZone *string `json:"haZone,omitempty" tf:"ha_zone,omitempty"`
 
-	// The image version of the gateway. Use aviatrix_gateway_image data source to programmatically retrieve this value for the desired software_version. If set, we will attempt to update the gateway to the specified version if current version is different. If left blank, the gateway upgrades can be managed with the aviatrix_controller_config resource. Type: String. Example: "hvm-cloudx-aws-022021". Available as of provider version R2.20.0.
-	// image_version can be used to set the desired image version of the gateway. If set, we will attempt to update the gateway to the specified version.
-	// +kubebuilder:validation:Optional
-	ImageVersion *string `json:"imageVersion,omitempty" tf:"image_version,omitempty"`
-
 	// , please see notes here.
 	// Enable Insane Mode for Transit. Valid values: true, false. Supported for AWS/AWSGov, GCP, Azure and OCI. If insane mode is enabled, gateway size has to at least be c5 size for AWS and Standard_D3_v2 size for Azure.
 	// +kubebuilder:validation:Optional
@@ -452,11 +455,6 @@ type GatewayParameters struct {
 	// Enable or disable Source NAT feature in 'single_ip' mode for this container.
 	// +kubebuilder:validation:Optional
 	SingleIPSnat *bool `json:"singleIpSnat,omitempty" tf:"single_ip_snat,omitempty"`
-
-	// The software version of the gateway. If set, we will attempt to update the gateway to the specified version if current version is different. If left blank, the gateway upgrade can be managed with the aviatrix_controller_config resource. Type: String. Example: "6.5.821". Available as of provider version R2.20.0.
-	// software_version can be used to set the desired software version of the gateway. If set, we will attempt to update the gateway to the specified version. If left blank, the gateway software version will continue to be managed through the aviatrix_controller_config resource.
-	// +kubebuilder:validation:Optional
-	SoftwareVersion *string `json:"softwareVersion,omitempty" tf:"software_version,omitempty"`
 
 	// Price for spot instance. NOT supported for production deployment.
 	// Price for spot instance. NOT supported for production deployment.

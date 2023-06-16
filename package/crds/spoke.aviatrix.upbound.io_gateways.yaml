@@ -380,18 +380,6 @@ spec:
                       R2.17+. HA Zone. Required if enabling HA for GCP. Optional for
                       Azure.'
                     type: string
-                  imageVersion:
-                    description: 'The image version of the gateway. Use aviatrix_gateway_image
-                      data source to programmatically retrieve this value for the
-                      desired software_version. If set, we will attempt to update
-                      the gateway to the specified version if current version is different.
-                      If left blank, the gateway upgrades can be managed with the
-                      aviatrix_controller_config resource. Type: String. Example:
-                      "hvm-cloudx-aws-022021". Available as of provider version R2.20.0.
-                      image_version can be used to set the desired image version of
-                      the gateway. If set, we will attempt to update the gateway to
-                      the specified version.'
-                    type: string
                   includedAdvertisedSpokeRoutes:
                     description: 'A list of comma separated CIDRs to be advertised
                       to on-prem as ''Included CIDR List''. When configured, it will
@@ -497,18 +485,6 @@ spec:
                       to enable Source NAT feature in ''single_ip'' mode on the gateway
                       or not.'
                     type: boolean
-                  softwareVersion:
-                    description: 'The software version of the gateway. If set, we
-                      will attempt to update the gateway to the specified version
-                      if current version is different. If left blank, the gateway
-                      upgrade can be managed with the aviatrix_controller_config resource.
-                      Type: String. Example: "6.5.821". Available as of provider version
-                      R2.20.0. software_version can be used to set the desired software
-                      version of the gateway. If set, we will attempt to update the
-                      gateway to the specified version. If left blank, the gateway
-                      software version will continue to be managed through the aviatrix_controller_config
-                      resource.'
-                    type: string
                   spokeBgpManualAdvertiseCidrs:
                     description: 'Intended CIDR list to be advertised to external
                       BGP router. Empty list is not valid. Example: ["10.2.0.0/16",
@@ -795,6 +771,18 @@ spec:
                     type: string
                   id:
                     type: string
+                  imageVersion:
+                    description: 'The image version of the gateway. Use aviatrix_gateway_image
+                      data source to programmatically retrieve this value for the
+                      desired software_version. If set, we will attempt to update
+                      the gateway to the specified version if current version is different.
+                      If left blank, the gateway upgrades can be managed with the
+                      aviatrix_controller_config resource. Type: String. Example:
+                      "hvm-cloudx-aws-022021". Available as of provider version R2.20.0.
+                      image_version can be used to set the desired image version of
+                      the gateway. If set, we will attempt to update the gateway to
+                      the specified version.'
+                    type: string
                   privateIp:
                     description: Private IP address of the spoke gateway created.
                       Private IP address of the spoke gateway created.
@@ -806,6 +794,18 @@ spec:
                   securityGroupId:
                     description: Security group used for the spoke gateway. Security
                       group used for the spoke gateway.
+                    type: string
+                  softwareVersion:
+                    description: 'The software version of the gateway. If set, we
+                      will attempt to update the gateway to the specified version
+                      if current version is different. If left blank, the gateway
+                      upgrade can be managed with the aviatrix_controller_config resource.
+                      Type: String. Example: "6.5.821". Available as of provider version
+                      R2.20.0. software_version can be used to set the desired software
+                      version of the gateway. If set, we will attempt to update the
+                      gateway to the specified version. If left blank, the gateway
+                      software version will continue to be managed through the aviatrix_controller_config
+                      resource.'
                     type: string
                 type: object
               conditions:
