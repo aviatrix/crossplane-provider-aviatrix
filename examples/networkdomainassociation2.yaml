@@ -7,5 +7,5 @@ spec:
     attachmentName: test-spoke2-gateway-aws
     networkDomainName: test-seg-network-domain2
 
----
+
 

@@ -11,5 +11,5 @@ spec:
     transitGatewayName1: test-transit-gateway-aws
     transitGatewayName2: test-transit-gateway2
 
----
+
 

@@ -7,5 +7,5 @@ spec:
     transitGwName: test-transit-gateway-aws
     spokeGwName: test-spoke-gateway-aws
 
----
+
 
