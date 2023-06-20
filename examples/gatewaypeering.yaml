@@ -1,0 +1,15 @@
+apiVersion: transit.aviatrix.upbound.io/v1alpha1
+kind: GatewayPeering
+metadata:
+  annotations:
+    meta.upbound.io/example-id: transit/v1alpha1/gatewaypeering
+  labels:
+    testing.upbound.io/example-name: test_transit_gateway_peering
+  name: test-transit-gateway-peering
+spec:
+  forProvider:
+    transitGatewayName1: test-transit-gateway-aws
+    transitGatewayName2: test-transit-gateway2
+
+
+

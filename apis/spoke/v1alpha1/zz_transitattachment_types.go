@@ -33,6 +33,11 @@ type TransitAttachmentParameters struct {
 	// +kubebuilder:validation:Optional
 	RouteTables []*string `json:"routeTables,omitempty" tf:"route_tables,omitempty"`
 
+	// Name of the spoke gateway to attach to transit network.
+	// Name of the spoke gateway to attach to transit network.
+	// +kubebuilder:validation:Required
+	SpokeGwName *string `json:"spokeGwName" tf:"spoke_gw_name,omitempty"`
+
 	// Connection based AS Path Prepend. Valid only for BGP connection. Can only use the gateway's own local AS number, repeated up to 25 times. Applies on spoke_gateway_name. Available as of provider version R2.23+.
 	// AS Path Prepend customized by specifying AS PATH for a BGP connection. Applies on spoke gateway.
 	// +kubebuilder:validation:Optional

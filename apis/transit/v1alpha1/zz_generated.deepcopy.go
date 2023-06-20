@@ -178,6 +178,11 @@ func (in *GatewayObservation) DeepCopyInto(out *GatewayObservation) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.ImageVersion != nil {
+		in, out := &in.ImageVersion, &out.ImageVersion
+		*out = new(string)
+		**out = **in
+	}
 	if in.LanInterfaceCidr != nil {
 		in, out := &in.LanInterfaceCidr, &out.LanInterfaceCidr
 		*out = new(string)
@@ -195,6 +200,11 @@ func (in *GatewayObservation) DeepCopyInto(out *GatewayObservation) {
 	}
 	if in.SecurityGroupID != nil {
 		in, out := &in.SecurityGroupID, &out.SecurityGroupID
+		*out = new(string)
+		**out = **in
+	}
+	if in.SoftwareVersion != nil {
+		in, out := &in.SoftwareVersion, &out.SoftwareVersion
 		*out = new(string)
 		**out = **in
 	}
@@ -349,6 +359,11 @@ func (in *GatewayParameters) DeepCopyInto(out *GatewayParameters) {
 	}
 	if in.EnableGatewayLoadBalancer != nil {
 		in, out := &in.EnableGatewayLoadBalancer, &out.EnableGatewayLoadBalancer
+		*out = new(bool)
+		**out = **in
+	}
+	if in.EnableGroGso != nil {
+		in, out := &in.EnableGroGso, &out.EnableGroGso
 		*out = new(bool)
 		**out = **in
 	}
@@ -509,11 +524,6 @@ func (in *GatewayParameters) DeepCopyInto(out *GatewayParameters) {
 		*out = new(string)
 		**out = **in
 	}
-	if in.ImageVersion != nil {
-		in, out := &in.ImageVersion, &out.ImageVersion
-		*out = new(string)
-		**out = **in
-	}
 	if in.InsaneMode != nil {
 		in, out := &in.InsaneMode, &out.InsaneMode
 		*out = new(bool)
@@ -599,11 +609,6 @@ func (in *GatewayParameters) DeepCopyInto(out *GatewayParameters) {
 	if in.SingleIPSnat != nil {
 		in, out := &in.SingleIPSnat, &out.SingleIPSnat
 		*out = new(bool)
-		**out = **in
-	}
-	if in.SoftwareVersion != nil {
-		in, out := &in.SoftwareVersion, &out.SoftwareVersion
-		*out = new(string)
 		**out = **in
 	}
 	if in.SpotPrice != nil {
@@ -830,6 +835,11 @@ func (in *GatewayPeeringParameters) DeepCopyInto(out *GatewayPeeringParameters) 
 				**out = **in
 			}
 		}
+	}
+	if in.TransitGatewayName1 != nil {
+		in, out := &in.TransitGatewayName1, &out.TransitGatewayName1
+		*out = new(string)
+		**out = **in
 	}
 	if in.TransitGatewayName2 != nil {
 		in, out := &in.TransitGatewayName2, &out.TransitGatewayName2

@@ -1,0 +1,11 @@
+apiVersion: segmentation.aviatrix.upbound.io/v1alpha1
+kind: NetworkDomainAssociation
+metadata:
+  name: test-segmentation-network-domain-association
+spec:
+  forProvider:
+    attachmentName: test-spoke-gateway-aws
+    networkDomainName: test-seg-network-domain
+
+
+

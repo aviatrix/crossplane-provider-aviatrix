@@ -24,6 +24,7 @@ spec:
     - "65001"
     prependAsPath2:
     - "65002"
+    transitGatewayName1: transit-Gw1
     transitGatewayName2: transit-Gw2
 
 ---

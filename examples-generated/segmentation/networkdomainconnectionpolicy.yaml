@@ -8,6 +8,7 @@ metadata:
   name: test-segmentation-network-domain-connection-policy
 spec:
   forProvider:
+    domainName1: domain-a
     domainName2: domain-b
 
 ---

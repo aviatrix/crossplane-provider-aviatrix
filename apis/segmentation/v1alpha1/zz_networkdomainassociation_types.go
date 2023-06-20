@@ -24,6 +24,11 @@ type NetworkDomainAssociationParameters struct {
 	// +kubebuilder:validation:Required
 	AttachmentName *string `json:"attachmentName" tf:"attachment_name,omitempty"`
 
+	// Name of the Segmentation Network Domain.
+	// Network Domain name.
+	// +kubebuilder:validation:Required
+	NetworkDomainName *string `json:"networkDomainName" tf:"network_domain_name,omitempty"`
+
 	// Name of the Transit Gateway.
 	// Transit Gateway name.
 	// +kubebuilder:validation:Optional

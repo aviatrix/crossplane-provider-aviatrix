@@ -1,0 +1,21 @@
+{
+    "resource": {
+        "aviatrix_segmentation_network_domain_association": {
+            "test-segmentation-network-domain-association": {
+                "attachment_name": "test-spoke-gateway-aws",
+                "lifecycle": {
+                    "prevent_destroy": true
+                },
+                "network_domain_name": "test-seg-network-domain"
+            }
+        }
+    },
+    "terraform": {
+        "required_providers": {
+            "aviatrix": {
+                "source": "AviatrixSystems/aviatrix",
+                "version": "3.1.0"
+            }
+        }
+    }
+}

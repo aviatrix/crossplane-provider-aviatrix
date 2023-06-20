@@ -15,9 +15,15 @@ import (
 
 type GatewayObservation struct {
 
+	// List of available BGP LAN interface IPs for spoke external device connection creation. Only supports 8 (Azure), 32 (AzureGov) or AzureChina (2048). Available as of provider version R3.0.2+.
+	BGPLanIPList []*string `json:"bgpLanIpList,omitempty" tf:"bgp_lan_ip_list,omitempty"`
+
 	// Cloud instance ID of the spoke gateway.
 	// Cloud instance ID.
 	CloudInstanceID *string `json:"cloudInstanceId,omitempty" tf:"cloud_instance_id,omitempty"`
+
+	// List of available BGP LAN interface IPs for spoke external device HA connection creation. Only supports 8 (Azure), 32 (AzureGov) or AzureChina (2048). Available as of provider version R3.0.2+.
+	HaBGPLanIPList []*string `json:"haBgpLanIpList,omitempty" tf:"ha_bgp_lan_ip_list,omitempty"`
 
 	// Cloud instance ID of the HA spoke gateway.
 	// Cloud instance ID of HA spoke gateway.
@@ -41,6 +47,10 @@ type GatewayObservation struct {
 
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
 
+	// The image version of the gateway. Use aviatrix_gateway_image data source to programmatically retrieve this value for the desired software_version. If set, we will attempt to update the gateway to the specified version if current version is different. If left blank, the gateway upgrades can be managed with the aviatrix_controller_config resource. Type: String. Example: "hvm-cloudx-aws-022021". Available as of provider version R2.20.0.
+	// image_version can be used to set the desired image version of the gateway. If set, we will attempt to update the gateway to the specified version.
+	ImageVersion *string `json:"imageVersion,omitempty" tf:"image_version,omitempty"`
+
 	// Private IP address of the spoke gateway created.
 	// Private IP address of the spoke gateway created.
 	PrivateIP *string `json:"privateIp,omitempty" tf:"private_ip,omitempty"`
@@ -52,6 +62,10 @@ type GatewayObservation struct {
 	// Security group used for the spoke gateway.
 	// Security group used for the spoke gateway.
 	SecurityGroupID *string `json:"securityGroupId,omitempty" tf:"security_group_id,omitempty"`
+
+	// The software version of the gateway. If set, we will attempt to update the gateway to the specified version if current version is different. If left blank, the gateway upgrade can be managed with the aviatrix_controller_config resource. Type: String. Example: "6.5.821". Available as of provider version R2.20.0.
+	// software_version can be used to set the desired software version of the gateway. If set, we will attempt to update the gateway to the specified version. If left blank, the gateway software version will continue to be managed through the aviatrix_controller_config resource.
+	SoftwareVersion *string `json:"softwareVersion,omitempty" tf:"software_version,omitempty"`
 }
 
 type GatewayParameters struct {
@@ -90,6 +104,10 @@ type GatewayParameters struct {
 	// BGP Hold Time for BGP Spoke Gateway. Unit is in seconds. Valid values are between 12 and 360.
 	// +kubebuilder:validation:Optional
 	BGPHoldTime *float64 `json:"bgpHoldTime,omitempty" tf:"bgp_hold_time,omitempty"`
+
+	// Number of interfaces that will be created for BGP over LAN enabled Azure spoke. Only valid for 8 (Azure), 32 (AzureGov) or AzureChina (2048). Default value: 1. Available as of provider version R3.0.2+.
+	// +kubebuilder:validation:Optional
+	BGPLanInterfacesCount *float64 `json:"bgpLanInterfacesCount,omitempty" tf:"bgp_lan_interfaces_count,omitempty"`
 
 	// BGP route polling time. Unit is in seconds. Valid values are between 10 and 50. Default value: "50".
 	// BGP route polling time for BGP Spoke Gateway. Unit is in seconds. Valid values are between 10 and 50.
@@ -141,10 +159,22 @@ type GatewayParameters struct {
 	// +kubebuilder:validation:Optional
 	EnableBGP *bool `json:"enableBgp,omitempty" tf:"enable_bgp,omitempty"`
 
+	// Pre-allocate a network interface(eth4) for "BGP over LAN" functionality. Only valid for 8 (Azure), 32 (AzureGov) or AzureChina (2048). Valid values: true or false. Default value: false. Available as of provider version R3.0.2+.
+	// +kubebuilder:validation:Optional
+	EnableBGPOverLan *bool `json:"enableBgpOverLan,omitempty" tf:"enable_bgp_over_lan,omitempty"`
+
 	// Enable EBS volume encryption for Gateway. Only supports AWS, AWSGov, AWSChina, AWS Top Secret and AWS Secret providers. Valid values: true, false. Default value: false.
 	// Enable encrypt gateway EBS volume. Only supported for AWS provider. Valid values: true, false. Default value: false.
 	// +kubebuilder:validation:Optional
 	EnableEncryptVolume *bool `json:"enableEncryptVolume,omitempty" tf:"enable_encrypt_volume,omitempty"`
+
+	// Set to true to enable global VPC. Only supported for GCP.
+	// +kubebuilder:validation:Optional
+	EnableGlobalVPC *bool `json:"enableGlobalVpc,omitempty" tf:"enable_global_vpc,omitempty"`
+
+	// Specify whether to disable GRO/GSO or not.
+	// +kubebuilder:validation:Optional
+	EnableGroGso *bool `json:"enableGroGso,omitempty" tf:"enable_gro_gso,omitempty"`
 
 	// Enable jumbo frames for this spoke gateway. Default value is true.
 	// Enable jumbo frame support for spoke gateway. Valid values: true or false. Default value: true.
@@ -271,11 +301,6 @@ type GatewayParameters struct {
 	// +kubebuilder:validation:Optional
 	HaZone *string `json:"haZone,omitempty" tf:"ha_zone,omitempty"`
 
-	// The image version of the gateway. Use aviatrix_gateway_image data source to programmatically retrieve this value for the desired software_version. If set, we will attempt to update the gateway to the specified version if current version is different. If left blank, the gateway upgrades can be managed with the aviatrix_controller_config resource. Type: String. Example: "hvm-cloudx-aws-022021". Available as of provider version R2.20.0.
-	// image_version can be used to set the desired image version of the gateway. If set, we will attempt to update the gateway to the specified version.
-	// +kubebuilder:validation:Optional
-	ImageVersion *string `json:"imageVersion,omitempty" tf:"image_version,omitempty"`
-
 	// A list of comma separated CIDRs to be advertised to on-prem as 'Included CIDR List'. When configured, it will replace all advertised routes from this VPC. Example: "10.4.0.0/116,10.5.0.0/16".
 	// A list of comma separated CIDRs to be advertised to on-prem as 'Included CIDR List'. When configured, it will replace all advertised routes from this VPC.
 	// +kubebuilder:validation:Optional
@@ -350,11 +375,6 @@ type GatewayParameters struct {
 	// Specify whether to enable Source NAT feature in 'single_ip' mode on the gateway or not.
 	// +kubebuilder:validation:Optional
 	SingleIPSnat *bool `json:"singleIpSnat,omitempty" tf:"single_ip_snat,omitempty"`
-
-	// The software version of the gateway. If set, we will attempt to update the gateway to the specified version if current version is different. If left blank, the gateway upgrade can be managed with the aviatrix_controller_config resource. Type: String. Example: "6.5.821". Available as of provider version R2.20.0.
-	// software_version can be used to set the desired software version of the gateway. If set, we will attempt to update the gateway to the specified version. If left blank, the gateway software version will continue to be managed through the aviatrix_controller_config resource.
-	// +kubebuilder:validation:Optional
-	SoftwareVersion *string `json:"softwareVersion,omitempty" tf:"software_version,omitempty"`
 
 	// Intended CIDR list to be advertised to external BGP router. Empty list is not valid. Example: ["10.2.0.0/16", "10.4.0.0/16"].
 	// Intended CIDR list to be advertised to external BGP router.

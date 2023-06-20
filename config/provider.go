@@ -10,7 +10,7 @@ import (
 
 	ujconfig "github.com/upbound/upjet/pkg/config"
 
-	"github.com/aviatrix/provider-aviatrix/config/null"
+	gateway "github.com/aviatrix/provider-aviatrix/config/gateway"
 )
 
 const (
@@ -34,7 +34,7 @@ func GetProvider() *ujconfig.Provider {
 
 	for _, configure := range []func(provider *ujconfig.Provider){
 		// add custom config functions
-		null.Configure,
+		gateway.Configure,
 	} {
 		configure(pc)
 	}

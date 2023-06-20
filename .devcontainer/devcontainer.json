@@ -13,8 +13,11 @@
 		"ghcr.io/devcontainers/features/docker-in-docker:2": {},
 		"ghcr.io/dhoeric/features/google-cloud-cli:1": {},
 		"ghcr.io/mpriscella/features/kind:1": {},
-		"ghcr.io/eitsupi/devcontainer-features/jq-likes:1": {}
+		"ghcr.io/eitsupi/devcontainer-features/jq-likes:1": {},
+		"ghcr.io/dhoeric/features/google-cloud-cli": {},
+		"ghcr.io/devcontainers/features/kubectl-helm-minikube": {}
 	},
+	"postStartCommand": "./.devcontainer/install-auth.sh",
 
 	"remoteUser": "vscode",
 
@@ -32,9 +35,9 @@
 	"containerEnv": {
 		"TERRAFORM_PROVIDER_SOURCE": "AviatrixSystems/aviatrix",
 		"TERRAFORM_PROVIDER_REPO":"https://github.com/AviatrixSystems/terraform-provider-aviatrix",
-		"TERRAFORM_PROVIDER_VERSION":"3.0.1",
+		"TERRAFORM_PROVIDER_VERSION":"3.1.0",
 		"TERRAFORM_PROVIDER_DOWNLOAD_NAME":"terraform-provider-aviatrix",
-		"TERRAFORM_NATIVE_PROVIDER_BINARY":"terraform-provider-aviatrix_v3.0.1",
+		"TERRAFORM_NATIVE_PROVIDER_BINARY":"terraform-provider-aviatrix_v3.1.0",
 		"TERRAFORM_DOCS_PATH":"website/docs/r"
 	},
 }

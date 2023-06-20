@@ -1,0 +1,28 @@
+{
+    "resource": {
+        "aviatrix_gateway_snat": {
+            "test-spoke-gateway-aws": {
+                "gw_name": "test-spoke-gateway-aws",
+                "lifecycle": {
+                    "prevent_destroy": true
+                },
+                "snat_mode": "customized_snat",
+                "snat_policy": [
+                    {
+                        "connection": "None",
+                        "dst_cidr": "14.0.0.0/16",
+                        "dst_port": "222",
+                        "exclude_rtb": "",
+                        "interface": "eth0",
+                        "mark": "65536",
+                        "protocol": "tcp",
+                        "snat_ips": "175.32.12.12",
+                        "snat_port": "12",
+                        "src_cidr": "13.0.0.0/16",
+                        "src_port": "22"
+                    }
+                ]
+            }
+        }
+    }
+}

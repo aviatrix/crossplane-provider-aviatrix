@@ -69,6 +69,11 @@ type GatewayPeeringParameters struct {
 	// +kubebuilder:validation:Optional
 	PrependAsPath2 []*string `json:"prependAsPath2,omitempty" tf:"prepend_as_path2,omitempty"`
 
+	// The first transit gateway name to make a peer pair.
+	// The first transit gateway name to make a peer pair.
+	// +kubebuilder:validation:Required
+	TransitGatewayName1 *string `json:"transitGatewayName1" tf:"transit_gateway_name1,omitempty"`
+
 	// The second transit gateway name to make a peer pair.
 	// The second transit gateway name to make a peer pair.
 	// +kubebuilder:validation:Required

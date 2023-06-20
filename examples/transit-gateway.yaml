@@ -1,0 +1,19 @@
+apiVersion: transit.aviatrix.upbound.io/v1alpha1
+kind: Gateway
+metadata:
+  name: test-transit-gateway-aws
+spec:
+  forProvider:
+    accountName: aviatrix
+    cloudType: 4
+    connectedTransit: true
+    enableHybridConnection: true
+    gwSize: n1-standard-1
+    vpcId: gcloud-vpc~-~mconnors-01
+    subnet: 10.10.0.0/24
+    vpcReg: us-west1-a
+    enableSegmentation: true
+    enableHybridConnection: false
+
+
+

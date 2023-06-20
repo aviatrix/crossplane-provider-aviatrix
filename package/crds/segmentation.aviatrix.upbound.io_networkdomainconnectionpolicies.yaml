@@ -66,11 +66,16 @@ spec:
                 type: string
               forProvider:
                 properties:
+                  domainName1:
+                    description: Name of the Network Domain to connect to Domain 2.
+                      Name of network domain that will be connected to domain 2.
+                    type: string
                   domainName2:
                     description: Name of the Network Domain to connect to Domain 1.
                       Name of network domain that will be connected to domain 1.
                     type: string
                 required:
+                - domainName1
                 - domainName2
                 type: object
               providerConfigRef:
