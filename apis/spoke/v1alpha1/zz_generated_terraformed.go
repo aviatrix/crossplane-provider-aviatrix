@@ -84,7 +84,7 @@ func (tr *Gateway) LateInitialize(attrs []byte) (bool, error) {
 
 // GetTerraformSchemaVersion returns the associated Terraform schema version
 func (tr *Gateway) GetTerraformSchemaVersion() int {
-	return 2
+	return 1
 }
 
 // GetTerraformResourceType returns Terraform resource type for this TransitAttachment

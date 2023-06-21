@@ -72,6 +72,10 @@ type DnatParameters struct {
 	// Policy rule to be applied to gateway.
 	// +kubebuilder:validation:Required
 	DnatPolicy []DnatPolicyParameters `json:"dnatPolicy" tf:"dnat_policy,omitempty"`
+
+	// Whether to sync the policies to the HA gateway.
+	// +kubebuilder:validation:Optional
+	SyncToHa *bool `json:"syncToHa,omitempty" tf:"sync_to_ha,omitempty"`
 }
 
 type DnatPolicyObservation struct {

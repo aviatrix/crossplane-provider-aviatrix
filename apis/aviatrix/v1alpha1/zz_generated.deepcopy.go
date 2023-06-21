@@ -386,16 +386,6 @@ func (in *AccountParameters) DeepCopyInto(out *AccountParameters) {
 		*out = new(float64)
 		**out = **in
 	}
-	if in.EdgeCspPasswordSecretRef != nil {
-		in, out := &in.EdgeCspPasswordSecretRef, &out.EdgeCspPasswordSecretRef
-		*out = new(v1.SecretKeySelector)
-		**out = **in
-	}
-	if in.EdgeCspUsername != nil {
-		in, out := &in.EdgeCspUsername, &out.EdgeCspUsername
-		*out = new(string)
-		**out = **in
-	}
 	if in.GcloudProjectCredentialsFilepath != nil {
 		in, out := &in.GcloudProjectCredentialsFilepath, &out.GcloudProjectCredentialsFilepath
 		*out = new(string)

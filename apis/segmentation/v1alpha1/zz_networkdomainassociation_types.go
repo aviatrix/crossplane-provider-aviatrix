@@ -31,8 +31,8 @@ type NetworkDomainAssociationParameters struct {
 
 	// Name of the Transit Gateway.
 	// Transit Gateway name.
-	// +kubebuilder:validation:Optional
-	TransitGatewayName *string `json:"transitGatewayName,omitempty" tf:"transit_gateway_name,omitempty"`
+	// +kubebuilder:validation:Required
+	TransitGatewayName *string `json:"transitGatewayName" tf:"transit_gateway_name,omitempty"`
 }
 
 // NetworkDomainAssociationSpec defines the desired state of NetworkDomainAssociation

@@ -138,9 +138,7 @@ spec:
                       over LAN enabled Azure transit. Valid value: 1~5 for FireNet
                       case, 1~7 for Non-FireNet case. Default value: 1. Available
                       as of provider version R2.22+. Number of interfaces that will
-                      be created for BGP over LAN enabled Azure transit. Applies on
-                      HA Transit as well if enabled. Updatable as of provider version
-                      3.0.3+.'
+                      be created for BGP over LAN enabled Azure transit.'
                     type: number
                   bgpManualSpokeAdvertiseCidrs:
                     description: 'Intended CIDR list to be advertised to external
@@ -250,7 +248,7 @@ spec:
                       a network interface(eth4) for "BGP over LAN" functionality.
                       Only valid for cloud_type = 4 (GCP) and 8 (Azure). Valid values:
                       true or false. Default value: false. Available as of provider
-                      version R2.18+. Updatable as of provider version 3.0.3+.'
+                      version R2.18+'
                     type: boolean
                   enableEgressTransitFirenet:
                     description: 'Enable Egress Transit FireNet. Valid values: true,
@@ -284,9 +282,6 @@ spec:
                       are set to true and `cloud_type` = 1 (AWS). Currently AWS Gateway
                       Load Balancer is only supported in AWS regions us-west-2 and
                       us-east-1. Valid values: true or false. Default value: false.'
-                    type: boolean
-                  enableGroGso:
-                    description: Specify whether to disable GRO/GSO or not.
                     type: boolean
                   enableHybridConnection:
                     description: 'Sign of readiness for AWS TGW connection. Only supported
@@ -603,7 +598,6 @@ spec:
                       on HA as well if enabled. Once set, can't be deleted or disabled.
                       Available for AWS as of provider version R2.22+. Gateway ethernet
                       interface RX queue size. Supported for AWS related clouds only.
-                      Applies on HA as well if enabled.
                     type: string
                   singleAzHa:
                     description: 'Set to true if this feature is desired. Valid values:
@@ -624,6 +618,13 @@ spec:
                       the available network ranges. Example: "172.31.0.0/20". NOTE:
                       If using Public Subnet Name.'
                     type: string
+                  tagList:
+                    description: 'Instance tag of cloud provider. Only supported for
+                      AWS, Azure, AzureGov, AWSGov, AWSChina, AzureChina. Example:
+                      ["key1:value1","key2:value2"]. Instance tag of cloud provider.'
+                    items:
+                      type: string
+                    type: array
                   tags:
                     additionalProperties:
                       type: string
@@ -663,8 +664,8 @@ spec:
                     description: Availability Zone. Only available Azure (8), Azure
                       GOV (32) and Azure CHINA (2048). Must be in the form 'az-n',
                       for example, 'az-2'. Available in provider version R2.17+. Availability
-                      Zone. Only available for Azure (8), Azure GOV (32) and Azure
-                      CHINA (2048). Must be in the form 'az-n', for example, 'az-2'.
+                      Zone. Only available for cloud_type = 8 (Azure). Must be in
+                      the form 'az-n', for example, 'az-2'.
                     type: string
                 required:
                 - accountName
