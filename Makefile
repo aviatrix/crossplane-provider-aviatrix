@@ -13,7 +13,7 @@ export TERRAFORM_PROVIDER_DOWNLOAD_NAME:=terraform-provider-aviatrix
 export TERRAFORM_NATIVE_PROVIDER_BINARY:=terraform-provider-aviatrix_v3.1.0
 export TERRAFORM_DOCS_PATH:=docs
 
-PLATFORMS ?= linux_amd64 linux_arm64
+PLATFORMS ?= linux_amd64
 
 # -include will silently skip missing files, which allows us
 # to load those files with a target in the Makefile. If only
@@ -57,17 +57,17 @@ UPTEST_VERSION = v0.2.1
 # ====================================================================================
 # Setup Images
 
-REGISTRY_ORGS ?= docker.io/therealmitchconnors
+REGISTRY_ORGS ?= xpkg.upbound.io/upbound
 IMAGES = $(PROJECT_NAME)
 -include build/makelib/imagelight.mk
 
 # ====================================================================================
 # Setup XPKG
 
-XPKG_REG_ORGS ?= docker.io/therealmitchconnors
+XPKG_REG_ORGS ?= xpkg.upbound.io/aviatrix
 # NOTE(hasheddan): skip promoting on xpkg.upbound.io as channel tags are
 # inferred.
-XPKG_REG_ORGS_NO_PROMOTE ?= docker.io/therealmitchconnors
+XPKG_REG_ORGS_NO_PROMOTE ?= xpkg.upbound.io/upbound
 XPKGS = $(PROJECT_NAME)
 -include build/makelib/xpkg.mk
 
