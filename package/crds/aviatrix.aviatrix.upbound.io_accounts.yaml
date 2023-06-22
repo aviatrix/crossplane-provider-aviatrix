@@ -660,28 +660,6 @@ spec:
                       for AWSChina or 2048 for AzureChina, 8192 for Alibaba Cloud,
                       65536 for Edge CSP. Type of cloud service provider.
                     type: number
-                  edgeCspPasswordSecretRef:
-                    description: Edge CSP password. Required when creating an Edge
-                      CSP account. Edge CSP password.
-                    properties:
-                      key:
-                        description: The key to select.
-                        type: string
-                      name:
-                        description: Name of the secret.
-                        type: string
-                      namespace:
-                        description: Namespace of the secret.
-                        type: string
-                    required:
-                    - key
-                    - name
-                    - namespace
-                    type: object
-                  edgeCspUsername:
-                    description: Edge CSP username. Required when creating an Edge
-                      CSP account. Edge CSP username.
-                    type: string
                   gcloudProjectCredentialsFilepath:
                     description: GCloud Project Credentials [local filepath].json.
                       Required when creating an account for GCP. GCloud Project credentials

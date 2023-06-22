@@ -8,7 +8,6 @@
     "lifecycle": {
      "prevent_destroy": true
     },
-    "manage_ha_gateway": false,
     "gw_name": "test-spoke-gateway-aws",
     "single_ip_snat": false,
     "subnet": "10.10.1.0/24",

@@ -362,11 +362,6 @@ func (in *GatewayParameters) DeepCopyInto(out *GatewayParameters) {
 		*out = new(bool)
 		**out = **in
 	}
-	if in.EnableGroGso != nil {
-		in, out := &in.EnableGroGso, &out.EnableGroGso
-		*out = new(bool)
-		**out = **in
-	}
 	if in.EnableHybridConnection != nil {
 		in, out := &in.EnableHybridConnection, &out.EnableHybridConnection
 		*out = new(bool)
@@ -620,6 +615,17 @@ func (in *GatewayParameters) DeepCopyInto(out *GatewayParameters) {
 		in, out := &in.Subnet, &out.Subnet
 		*out = new(string)
 		**out = **in
+	}
+	if in.TagList != nil {
+		in, out := &in.TagList, &out.TagList
+		*out = make([]*string, len(*in))
+		for i := range *in {
+			if (*in)[i] != nil {
+				in, out := &(*in)[i], &(*out)[i]
+				*out = new(string)
+				**out = **in
+			}
+		}
 	}
 	if in.Tags != nil {
 		in, out := &in.Tags, &out.Tags

@@ -166,6 +166,9 @@ spec:
                           type: string
                       type: object
                     type: array
+                  syncToHa:
+                    description: Whether to sync the policies to the HA gateway.
+                    type: boolean
                 required:
                 - dnatPolicy
                 type: object

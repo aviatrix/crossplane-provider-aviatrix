@@ -80,6 +80,7 @@ spec:
                 required:
                 - attachmentName
                 - networkDomainName
+                - transitGatewayName
                 type: object
               providerConfigRef:
                 default:

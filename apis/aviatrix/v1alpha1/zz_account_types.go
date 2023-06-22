@@ -305,16 +305,6 @@ type AccountParameters struct {
 	// +kubebuilder:validation:Required
 	CloudType *float64 `json:"cloudType" tf:"cloud_type,omitempty"`
 
-	// Edge CSP password. Required when creating an Edge CSP account.
-	// Edge CSP password.
-	// +kubebuilder:validation:Optional
-	EdgeCspPasswordSecretRef *v1.SecretKeySelector `json:"edgeCspPasswordSecretRef,omitempty" tf:"-"`
-
-	// Edge CSP username. Required when creating an Edge CSP account.
-	// Edge CSP username.
-	// +kubebuilder:validation:Optional
-	EdgeCspUsername *string `json:"edgeCspUsername,omitempty" tf:"edge_csp_username,omitempty"`
-
 	// GCloud Project Credentials [local filepath].json. Required when creating an account for GCP.
 	// GCloud Project credentials local file path.
 	// +kubebuilder:validation:Optional

@@ -15,15 +15,9 @@ import (
 
 type GatewayObservation struct {
 
-	// List of available BGP LAN interface IPs for spoke external device connection creation. Only supports 8 (Azure), 32 (AzureGov) or AzureChina (2048). Available as of provider version R3.0.2+.
-	BGPLanIPList []*string `json:"bgpLanIpList,omitempty" tf:"bgp_lan_ip_list,omitempty"`
-
 	// Cloud instance ID of the spoke gateway.
 	// Cloud instance ID.
 	CloudInstanceID *string `json:"cloudInstanceId,omitempty" tf:"cloud_instance_id,omitempty"`
-
-	// List of available BGP LAN interface IPs for spoke external device HA connection creation. Only supports 8 (Azure), 32 (AzureGov) or AzureChina (2048). Available as of provider version R3.0.2+.
-	HaBGPLanIPList []*string `json:"haBgpLanIpList,omitempty" tf:"ha_bgp_lan_ip_list,omitempty"`
 
 	// Cloud instance ID of the HA spoke gateway.
 	// Cloud instance ID of HA spoke gateway.
@@ -105,10 +99,6 @@ type GatewayParameters struct {
 	// +kubebuilder:validation:Optional
 	BGPHoldTime *float64 `json:"bgpHoldTime,omitempty" tf:"bgp_hold_time,omitempty"`
 
-	// Number of interfaces that will be created for BGP over LAN enabled Azure spoke. Only valid for 8 (Azure), 32 (AzureGov) or AzureChina (2048). Default value: 1. Available as of provider version R3.0.2+.
-	// +kubebuilder:validation:Optional
-	BGPLanInterfacesCount *float64 `json:"bgpLanInterfacesCount,omitempty" tf:"bgp_lan_interfaces_count,omitempty"`
-
 	// BGP route polling time. Unit is in seconds. Valid values are between 10 and 50. Default value: "50".
 	// BGP route polling time for BGP Spoke Gateway. Unit is in seconds. Valid values are between 10 and 50.
 	// +kubebuilder:validation:Optional
@@ -159,22 +149,10 @@ type GatewayParameters struct {
 	// +kubebuilder:validation:Optional
 	EnableBGP *bool `json:"enableBgp,omitempty" tf:"enable_bgp,omitempty"`
 
-	// Pre-allocate a network interface(eth4) for "BGP over LAN" functionality. Only valid for 8 (Azure), 32 (AzureGov) or AzureChina (2048). Valid values: true or false. Default value: false. Available as of provider version R3.0.2+.
-	// +kubebuilder:validation:Optional
-	EnableBGPOverLan *bool `json:"enableBgpOverLan,omitempty" tf:"enable_bgp_over_lan,omitempty"`
-
 	// Enable EBS volume encryption for Gateway. Only supports AWS, AWSGov, AWSChina, AWS Top Secret and AWS Secret providers. Valid values: true, false. Default value: false.
 	// Enable encrypt gateway EBS volume. Only supported for AWS provider. Valid values: true, false. Default value: false.
 	// +kubebuilder:validation:Optional
 	EnableEncryptVolume *bool `json:"enableEncryptVolume,omitempty" tf:"enable_encrypt_volume,omitempty"`
-
-	// Set to true to enable global VPC. Only supported for GCP.
-	// +kubebuilder:validation:Optional
-	EnableGlobalVPC *bool `json:"enableGlobalVpc,omitempty" tf:"enable_global_vpc,omitempty"`
-
-	// Specify whether to disable GRO/GSO or not.
-	// +kubebuilder:validation:Optional
-	EnableGroGso *bool `json:"enableGroGso,omitempty" tf:"enable_gro_gso,omitempty"`
 
 	// Enable jumbo frames for this spoke gateway. Default value is true.
 	// Enable jumbo frame support for spoke gateway. Valid values: true or false. Default value: true.
@@ -326,10 +304,10 @@ type GatewayParameters struct {
 	// +kubebuilder:validation:Optional
 	LocalAsNumber *string `json:"localAsNumber,omitempty" tf:"local_as_number,omitempty"`
 
-	// Enable to manage Aviatrix spoke HA gateway using the aviatrix_spoke_gateway resource. If this is set to false, spoke HA gateways must be managed using the aviatrix_spoke_ha_gateway resource. Valid values: true, false. Default value: true. Available in provider R3.0+.
-	// This parameter is a switch used to determine whether or not to manage spoke ha gateway using the aviatrix_spoke_gateway resource. If this is set to false, managing spoke ha gateway must be done using the aviatrix_spoke_ha_gateway resource. Valid values: true, false. Default value: true.
+	// Enable to manage spoke-to-Aviatrix transit gateway attachments using the aviatrix_spoke_gateway resource with the below transit_gw attribute. If this is set to false, attaching this spoke to transit gateways must be done using the aviatrix_spoke_transit_attachment resource. Valid values: true, false. Default value: true. Available in provider R2.17+.
+	// This parameter is a switch used to determine whether or not to manage attaching this spoke gateway to transit gateways using the aviatrix_spoke_gateway resource. If this is set to false, attaching this spoke gateway to transit gateways must be done using the aviatrix_spoke_transit_attachment resource. Valid values: true, false. Default value: true.
 	// +kubebuilder:validation:Optional
-	ManageHaGateway *bool `json:"manageHaGateway,omitempty" tf:"manage_ha_gateway,omitempty"`
+	ManageTransitGatewayAttachment *bool `json:"manageTransitGatewayAttachment,omitempty" tf:"manage_transit_gateway_attachment,omitempty"`
 
 	// Set of monitored instance ids. Only valid when 'enable_monitor_gateway_subnets' = true. Available in provider version R2.18+.
 	// A set of monitored instance ids. Only valid when 'enable_monitor_gateway_subnets' = true.
@@ -362,7 +340,7 @@ type GatewayParameters struct {
 	PrivateModeSubnetZone *string `json:"privateModeSubnetZone,omitempty" tf:"private_mode_subnet_zone,omitempty"`
 
 	// Gateway ethernet interface RX queue size. Applies on HA as well if enabled. Once set, can't be deleted or disabled. Available for AWS as of provider version R2.22+.
-	// Gateway ethernet interface RX queue size. Supported for AWS related clouds only. Applies on HA as well if enabled.
+	// Gateway ethernet interface RX queue size. Supported for AWS related clouds only.
 	// +kubebuilder:validation:Optional
 	RxQueueSize *string `json:"rxQueueSize,omitempty" tf:"rx_queue_size,omitempty"`
 
@@ -391,10 +369,20 @@ type GatewayParameters struct {
 	// +kubebuilder:validation:Required
 	Subnet *string `json:"subnet" tf:"subnet,omitempty"`
 
+	// Instance tag of cloud provider. Only supported for AWS, Azure, AzureGov, AWSGov, AWSChina and AzureChina. Example: ["key1:value1", "key2:value2"].
+	// Instance tag of cloud provider.
+	// +kubebuilder:validation:Optional
+	TagList []*string `json:"tagList,omitempty" tf:"tag_list,omitempty"`
+
 	// Map of tags to assign to the gateway. Only available for AWS, Azure, AzureGov, AWSGov, AWSChina, AzureChina, AWS Top Secret and AWS Secret gateways. Allowed characters vary by cloud type but always include: letters, spaces, and numbers. AWS, AWSGov, AWSChina, AWS Top Secret and AWS Secret allow the use of any character. Azure, AzureGov and AzureChina allows the following special characters: + - = . _ : @. Example: {"key1" = "value1", "key2" = "value2"}.
 	// A map of tags to assign to the spoke gateway.
 	// +kubebuilder:validation:Optional
 	Tags map[string]*string `json:"tags,omitempty" tf:"tags,omitempty"`
+
+	// Specify the Aviatrix transit gateways to attach this spoke gateway to. Format is a comma separated list of transit gateway names. For example: "transit-gw1,transit-gw2".
+	// Specify the transit Gateways to attach to this spoke. Format is a comma-separated list of transit gateway names. For example, 'transit-gw1,transit-gw2'.
+	// +kubebuilder:validation:Optional
+	TransitGw *string `json:"transitGw,omitempty" tf:"transit_gw,omitempty"`
 
 	// The IPsec tunnel down detection time for the Spoke Gateway in seconds. Must be a number in the range [20-600]. The default value is set by the controller (60 seconds if nothing has been changed). NOTE: The controller UI has an option to set the tunnel detection time for all gateways. Available in provider R2.19+.
 	// The IPSec tunnel down detection time for the Spoke Gateway.
@@ -412,7 +400,7 @@ type GatewayParameters struct {
 	VPCReg *string `json:"vpcReg" tf:"vpc_reg,omitempty"`
 
 	// Availability Zone. Only available for Azure (8), Azure GOV (32) and Azure CHINA (2048). Must be in the form 'az-n', for example, 'az-2'. Available in provider version R2.17+.
-	// Availability Zone. Only available for Azure (8), Azure GOV (32) and Azure CHINA (2048). Must be in the form 'az-n', for example, 'az-2'.
+	// Availability Zone. Only available for cloud_type = 8 (Azure). Must be in the form 'az-n', for example, 'az-2'.
 	// +kubebuilder:validation:Optional
 	Zone *string `json:"zone,omitempty" tf:"zone,omitempty"`
 }
