@@ -69,8 +69,9 @@ make test
 
 Run tests against kind cluster and live controller:
 ```console
-make e2e
+UPTEST_EXAMPLE_LIST=$(find examples/*.yaml -type f| tr '\n' ',') make e2e
 ```
+This will run the e2e suite against all examples.
 
 ## Report a Bug
 
