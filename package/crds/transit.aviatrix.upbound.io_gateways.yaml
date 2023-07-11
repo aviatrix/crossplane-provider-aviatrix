@@ -135,11 +135,12 @@ spec:
                     type: array
                   bgpLanInterfacesCount:
                     description: 'Number of interfaces that will be created for BGP
-                      over LAN enabled Azure transit. Valid value: 1~5 for FireNet
-                      case, 1~7 for Non-FireNet case. Default value: 1. Available
-                      as of provider version R2.22+. Number of interfaces that will
-                      be created for BGP over LAN enabled Azure transit. Applies on
-                      HA Transit as well if enabled. Updatable as of provider version
+                      over LAN enabled Azure transit. Applies on HA Transit as well
+                      if enabled. Valid value: 1~5 for FireNet case, 1~7 for Non-FireNet
+                      case. Available as of provider version R2.22+. Updatable as
+                      of provider version 3.0.3+. Number of interfaces that will be
+                      created for BGP over LAN enabled Azure transit. Applies on HA
+                      Transit as well if enabled. Updatable as of provider version
                       3.0.3+.'
                     type: number
                   bgpManualSpokeAdvertiseCidrs:
@@ -246,11 +247,12 @@ spec:
                       LAN aviatrix_transit_external_device_conn resource with this
                       Transit Gateway. Only valid for GCP (4), Azure (8), AzureGov
                       (32) or AzureChina (2048). Valid values: true or false. Default
-                      value: false. Available as of provider version R2.18+. Pre-allocate
-                      a network interface(eth4) for "BGP over LAN" functionality.
-                      Only valid for cloud_type = 4 (GCP) and 8 (Azure). Valid values:
-                      true or false. Default value: false. Available as of provider
-                      version R2.18+. Updatable as of provider version 3.0.3+.'
+                      value: false. Available as of provider version R2.18+. Updatable
+                      as of provider version 3.0.3+. Pre-allocate a network interface(eth4)
+                      for "BGP over LAN" functionality. Only valid for cloud_type
+                      = 4 (GCP) and 8 (Azure). Valid values: true or false. Default
+                      value: false. Available as of provider version R2.18+. Updatable
+                      as of provider version 3.0.3+.'
                     type: boolean
                   enableEgressTransitFirenet:
                     description: 'Enable Egress Transit FireNet. Valid values: true,
@@ -286,7 +288,9 @@ spec:
                       us-east-1. Valid values: true or false. Default value: false.'
                     type: boolean
                   enableGroGso:
-                    description: Specify whether to disable GRO/GSO or not.
+                    description: Enable GRO/GSO for this transit gateway. Default
+                      value is true. Available in provider R3.1.0+. Specify whether
+                      to disable GRO/GSO or not.
                     type: boolean
                   enableHybridConnection:
                     description: 'Sign of readiness for AWS TGW connection. Only supported
@@ -322,8 +326,8 @@ spec:
                   enablePreserveAsPath:
                     description: 'Enable preserve as_path when advertising manual
                       summary cidrs on transit gateway. Valid values: true, false.
-                      Default value: false. Available as of provider version R.2.22.1+
-                      }, Enable preserve as_path when advertising manual summary cidrs
+                      Default value: false. Available as of provider version R.2.22.1+.
+                      Enable preserve as_path when advertising manual summary cidrs
                       on transit gateway.'
                     type: boolean
                   enablePrivateOob:
