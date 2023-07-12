@@ -112,9 +112,11 @@ spec:
                     type: number
                   bgpLanInterfacesCount:
                     description: 'Number of interfaces that will be created for BGP
-                      over LAN enabled Azure spoke. Only valid for 8 (Azure), 32 (AzureGov)
-                      or AzureChina (2048). Default value: 1. Available as of provider
-                      version R3.0.2+.'
+                      over LAN enabled Azure spoke. Applies on HA Transit as well
+                      if enabled. Available as of provider version R3.0.2+. Number
+                      of interfaces that will be created for BGP over LAN enabled
+                      Azure spoke. Only valid for 8 (Azure), 32 (AzureGov) or AzureChina
+                      (2048). Default value: 1. Available as of provider version R3.0.2+.'
                     type: number
                   bgpPollingTime:
                     description: 'BGP route polling time. Unit is in seconds. Valid
@@ -197,9 +199,14 @@ spec:
                     type: boolean
                   enableBgpOverLan:
                     description: 'Pre-allocate a network interface(eth4) for "BGP
-                      over LAN" functionality. Only valid for 8 (Azure), 32 (AzureGov)
-                      or AzureChina (2048). Valid values: true or false. Default value:
-                      false. Available as of provider version R3.0.2+.'
+                      over LAN" functionality. Must be enabled to create a BGP over
+                      LAN aviatrix_spoke_external_device_conn resource with this Spoke
+                      Gateway. Only valid for 8 (Azure), 32 (AzureGov) or AzureChina
+                      (2048). Valid values: true or false. Default value: false. Available
+                      as of provider version R3.0.2+. Pre-allocate a network interface(eth4)
+                      for "BGP over LAN" functionality. Only valid for 8 (Azure),
+                      32 (AzureGov) or AzureChina (2048). Valid values: true or false.
+                      Default value: false. Available as of provider version R3.0.2+.'
                     type: boolean
                   enableEncryptVolume:
                     description: 'Enable EBS volume encryption for Gateway. Only supports
@@ -213,7 +220,9 @@ spec:
                       for GCP.
                     type: boolean
                   enableGroGso:
-                    description: Specify whether to disable GRO/GSO or not.
+                    description: Enable GRO/GSO for this transit gateway. Default
+                      value is true. Available in provider R3.1.0+. Specify whether
+                      to disable GRO/GSO or not.
                     type: boolean
                   enableJumboFrame:
                     description: 'Enable jumbo frames for this spoke gateway. Default
@@ -733,6 +742,9 @@ spec:
                     description: List of available BGP LAN interface IPs for spoke
                       external device connection creation. Only supports 8 (Azure),
                       32 (AzureGov) or AzureChina (2048). Available as of provider
+                      version R3.0.2+. List of available BGP LAN interface IPs for
+                      spoke external device connection creation. Only supports 8 (Azure),
+                      32 (AzureGov) or AzureChina (2048). Available as of provider
                       version R3.0.2+.
                     items:
                       type: string
@@ -745,7 +757,10 @@ spec:
                     description: List of available BGP LAN interface IPs for spoke
                       external device HA connection creation. Only supports 8 (Azure),
                       32 (AzureGov) or AzureChina (2048). Available as of provider
-                      version R3.0.2+.
+                      version R3.0.2+. List of available BGP LAN interface IPs for
+                      spoke external device HA connection creation. Only supports
+                      8 (Azure), 32 (AzureGov) or AzureChina (2048). Available as
+                      of provider version R3.0.2+.
                     items:
                       type: string
                     type: array

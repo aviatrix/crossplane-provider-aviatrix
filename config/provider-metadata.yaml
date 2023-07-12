@@ -872,6 +872,8 @@ resources:
                   "cloudn_lan_interface_neighbor_ip": "10.210.38.100",
                   "connection_name": "cloudn-transit-attachment-test",
                   "device_name": "${aviatrix_device_registration.test_device.name}",
+                  "enable_dead_peer_detection": true,
+                  "enable_jumbo_frame": true,
                   "enable_over_private_network": false,
                   "transit_gateway_bgp_asn": "65000",
                   "transit_gateway_name": "${aviatrix_transit_gateway.aws_transit.gw_name}"
@@ -880,14 +882,17 @@ resources:
                 device_name: aviatrix_device_registration.test_device.name
                 transit_gateway_name: aviatrix_transit_gateway.aws_transit.gw_name
         argumentDocs:
+            approved_cidrs: '- (Optional/Computed) Set of approved CIDRs. Requires enable_learned_cidrs_approval to be true. Type: Set(String). Available as of provider version R2.21.0+.'
             cloudn_bgp_asn: '- (Required) CloudN BGP AS Number. Type: String.'
             cloudn_lan_interface_neighbor_bgp_asn: '- (Required) CloudN LAN Interface Neighbor''s AS Number. Type: String.'
             cloudn_lan_interface_neighbor_ip: '- (Required) CloudN LAN Interface Neighbor''s IP Address. Type: String.'
             connection_name: '- (Required) Connection Name. Type: String.'
             device_name: '- (Required) CloudN device name. Type: String.'
+            enable_dead_peer_detection: '- (Optional) Enable Dead Peer Detection. Type: Boolean. Default: true.'
             enable_jumbo_frame: '- (Optional) Enable Jumbo Frame support for the connection. Type: Boolean. Default: false.'
+            enable_learned_cidrs_approval: '- (Optional) Enable learned CIDRs approval. Type: Boolean. Default: false. Available as of provider version R2.21.0+.'
             enable_over_private_network: '- (Optional) Enable connection over private network. Type: Boolean. Default: true.'
-            prepend_as_path: '- (Optional) Connection AS Path Prepend customized by specifying AS PATH for a BGP connection. Requires transit_gateway_bgp_asn to be set. Type: List. Available as of provider version R2.21.0+.'
+            prepend_as_path: '- (Optional)  Connection AS Path Prepend customized by specifying AS PATH for a BGP connection. Requires transit_gateway_bgp_asn to be set. Type: List. Available as of provider version R2.21.0+.'
             transit_gateway_bgp_asn: '- (Required) Transit Gateway BGP AS Number. Type: String.'
             transit_gateway_name: '- (Required) Transit Gateway Name. Type: String.'
         importStatements: []
@@ -913,6 +918,32 @@ resources:
             log_group_name: (Optional) Log group name. "AVIATRIX-CLOUDWATCH-LOG" by default.
             region: (Required) Name of AWS region.
             status: '- The status of cloudwatch agent.'
+        importStatements: []
+    aviatrix_controller_access_allow_list_config:
+        subCategory: Settings
+        description: Creates and manages an Aviatrix Controller's Access Allow List Config
+        name: aviatrix_controller_access_allow_list_config
+        title: aviatrix_controller_access_allow_list_config
+        examples:
+            - name: test
+              manifest: |-
+                {
+                  "allow_list": [
+                    {
+                      "description": "allowed IP address 1",
+                      "ip_address": "\u003c\u003c allowed IP address 1 \u003e\u003e"
+                    },
+                    {
+                      "description": "allowed IP address 2",
+                      "ip_address": "\u003c\u003c allowed IP address 2 \u003e\u003e"
+                    }
+                  ]
+                }
+        argumentDocs:
+            allow_list: '- (Required) Set of IPs allowed access to the Controller.'
+            description: '- (Optional) Description of the IP address.'
+            enable_enforce: '- (Optional) Set to true to enable enforcement of the allow_list {}''s IPs. Valid values: true, false. Default: false.'
+            ip_address: '- (Required) IP address allowed access to the Controller.'
         importStatements: []
     aviatrix_controller_bgp_max_as_limit_config:
         subCategory: Settings
@@ -1092,7 +1123,6 @@ resources:
         argumentDocs:
             copilot_instance_id: '- (Optional) Instance ID of a copilot instance to associate with an Aviatrix Controller in Private Mode. The copilot instance must be in the same VPC as the Aviatrix Controller.'
             enable_private_mode: '- (Required) Whether to enable Private Mode on an Aviatrix Controller.'
-            proxies: '- (Optional) Set of Controller proxies for Private Mode.'
         importStatements: []
     aviatrix_controller_private_oob:
         subCategory: Settings
@@ -1188,7 +1218,7 @@ resources:
             api_key: (Required) API key.
             excluded_gateways: '(Optional) List of gateways to be excluded from logging. e.g.: ["gateway01", "gateway02", "gateway01-hagw"].'
             metrics_only: (Optional) Only export metrics without exporting logs. False by default.
-            site: (Optional) Site preference ("datadoghq.com" or" datadoghq.eu"). "datadoghq.com" by default.
+            site: '(Optional) Site preference. Valid values: "datadoghq.com", "datadoghq.eu" or "ddog-gov.com". Default value: "datadoghq.com".'
             status: '- The status of datadog agent.'
         importStatements: []
     aviatrix_device_interface_config:
@@ -1295,9 +1325,60 @@ resources:
                     }
                   ]
                 }
+            - name: test
+              manifest: |-
+                {
+                  "policies": [
+                    {
+                      "action": "PERMIT",
+                      "dst_smart_groups": [
+                        "f05b0ad7-d2d7-4d16-b2f6-48492319414c"
+                      ],
+                      "name": "df-policy",
+                      "port_ranges": [
+                        {
+                          "hi": 50000,
+                          "lo": 49000
+                        }
+                      ],
+                      "priority": 0,
+                      "protocol": "TCP",
+                      "src_smart_groups": [
+                        "7e7d1573-7a7a-4a53-bcb5-1ad5041961e0"
+                      ]
+                    },
+                    {
+                      "TLS_REQUIRED": "DECRYPT_ALLOWED",
+                      "action": "DEEP_PACKET_INSPECTION_PERMIT",
+                      "dst_smart_groups": [
+                        "82e50c85-82bf-4b3b-b9da-aaed34a3aa53"
+                      ],
+                      "flow_app_requirement": "TLS_REQUIRED",
+                      "logging": false,
+                      "name": "df-policy-1",
+                      "port_ranges": [
+                        {
+                          "hi": 50000,
+                          "lo": 49000
+                        }
+                      ],
+                      "priority": 1,
+                      "protocol": "ICMP",
+                      "src_smart_groups": [
+                        "f15c9890-c8c4-4c1a-a2b5-ef0ab34d2e30"
+                      ],
+                      "watch": false,
+                      "web_groups": [
+                        "6bff3e91-3707-4582-9ea6-70e37b08760b"
+                      ]
+                    }
+                  ]
+                }
         argumentDocs:
             action: '- (Required) Action for the policy. Must be one of PERMIT or DENY.'
+            decrypt_policy: '- (Optional) Decryption options for the policy. Available as of provider version 3.1.0+.'
             dst_smart_groups: '- (Required) List of Smart Group UUIDs for the destination for the policy.'
+            flow_app_requirement: '- (Optional) Flow application requirement for the policy. Available as of provider version 3.1.0+.'
             hi: '- (Optional) Upper bound for the range of ports. When not set, lo is the only port that matches the policy.'
             lo: '- (Required) Lower bound for the range of ports.'
             logging: '- (Optional) Whether to enable logging for packets that match the policy. Type: Boolean.'
@@ -1309,6 +1390,7 @@ resources:
             src_smart_groups: '- (Required) List of Smart Group UUIDs for the source for the policy.'
             uuid: '- (Computed) UUID for the Policy.'
             watch: '- (Optional) Whether to enforce the policy or only watch packets. If "true" packets are only watched. This allows you to observe if the traffic impacted by this rule causes any inadvertent issues (such as traffic being dropped). Type: Boolean.'
+            web_groups: '- (Optional) List of Web Group UUIDs for the policy. Available as of provider version 3.1.0+.'
         importStatements: []
     aviatrix_edge_csp:
         subCategory: Multi-Cloud Transit
@@ -1321,43 +1403,44 @@ resources:
                 {
                   "account_name": "edge_csp_account",
                   "gw_name": "edge-test",
-                  "lan_interface_ip_prefix": "10.60.0.0/24",
+                  "interfaces": [
+                    {
+                      "gateway_ip": "10.230.5.100",
+                      "ip_address": "10.230.5.32/24",
+                      "name": "eth0",
+                      "type": "WAN",
+                      "wan_public_ip": "64.71.24.221"
+                    },
+                    {
+                      "ip_address": "10.230.3.32/24",
+                      "name": "eth1",
+                      "type": "LAN"
+                    },
+                    {
+                      "enable_dhcp": false,
+                      "gateway_ip": "172.16.0.1",
+                      "ip_address": "172.16.15.162/20",
+                      "name": "eth2",
+                      "type": "MANAGEMENT"
+                    }
+                  ],
                   "local_as_number": "65000",
-                  "management_interface_config": "DHCP",
                   "prepend_as_path": [
                     "65000",
                     "65000"
                   ],
-                  "site_id": "site-123",
-                  "wan_default_gateway_ip": "10.60.0.0",
-                  "wan_interface_ip_prefix": "10.60.0.0/24"
-                }
-            - name: test
-              manifest: |-
-                {
-                  "dns_server_ip": "10.60.0.0",
-                  "gw_name": "edge-test",
-                  "lan_interface_ip_prefix": "10.60.0.0/24",
-                  "local_as_number": "65000",
-                  "management_default_gateway_ip": "10.60.0.0",
-                  "management_interface_config": "Static",
-                  "management_interface_ip_prefix": "10.60.0.0/24",
-                  "prepend_as_path": [
-                    "65000",
-                    "65000"
-                  ],
-                  "secondary_dns_server_ip": "10.60.0.0",
-                  "site_id": "site-123",
-                  "wan_default_gateway_ip": "10.60.0.0",
-                  "wan_interface_ip_prefix": "10.60.0.0/24"
+                  "site_id": "site-123"
                 }
         argumentDocs:
             account_name: '- (Required) Edge CSP account name.'
             approved_learned_cidrs: '- (Optional) Set of approved learned CIDRs. Valid only when enable_learned_cidrs_approval is set to true. Example: ["10.1.0.0/116", "10.2.0.0/16"].'
+            bandwidth: '- (Optional) The rate of data can be moved through the interface, requires an integer value. Unit is in Mb/s.'
             bgp_hold_time: '- (Optional) BGP hold time. Unit is in seconds. Valid values are between 12 and 360. Default value: 180.'
             bgp_polling_time: '- (Optional) BGP route polling time. Unit is in seconds. Valid values are between 10 and 50. Default value: 50.'
             compute_node_uuid: '- (Required) Edge CSP compute node UUID.'
-            dns_server_ip: '- (Optional) DNS server IP. Required and valid when management_interface_config is "Static".'
+            dns_server_ip: '- (Optional) Primary DNS server IP.'
+            enable_auto_advertise_lan_cidrs: '- (Optional) Enable auto advertise LAN CIDRs. Valid values: true, false. Default value: true.'
+            enable_dhcp: '- (Optional) Enable DHCP. Valid values: true, false. Default value: false.'
             enable_edge_active_standby: '- (Optional) Switch to enable Edge Active-Standby mode. Valid values: true, false. Default value: false.'
             enable_edge_active_standby_preemptive: '- (Optional) Switch to enable Preemptive Mode for Edge Active-Standby. Valid values: true, false. Default value: false.'
             enable_edge_transitive_routing: '- (Optional) Switch to enable Edge transitive routing. Valid values: true, false. Default value: false.'
@@ -1365,29 +1448,393 @@ resources:
             enable_learned_cidrs_approval: '- (Optional) Switch to enable learned CIDR approval. Valid values: true, false. Default value: false.'
             enable_management_over_private_network: '- (Optional) Switch to enable management over the private network. Valid values: true, false. Default value: false.'
             enable_preserve_as_path: '- (Optional) Switch to enable preserve as_path when advertising manual summary CIDRs. Valid values: true, false. Default value: false.'
+            enable_single_ip_snat: '- (Optional) Enable Single IP SNAT. Valid values: true, false. Default value: false.'
+            enable_vrrp: '- (Optional) Enable VRRP. Valid values: true, false. Default value: false.'
+            gateway_ip: '- (Optional) Gateway IP.'
             gw_name: '- (Required) Edge CSP name.'
-            lan_interface_ip_prefix: '- (Required) LAN interface IP and subnet prefix.'
-            lan_interface_name: '- (Optional) LAN interface name. Default value: "eth1".'
+            interfaces: '- (Required) WAN/LAN/MANAGEMENT interfaces.'
+            ip_address: '- (Optional) Interface static IP address.'
+            lan_interface_names: '- (Optional) List of LAN interface names.'
             latitude: '- (Optional) Latitude of Edge CSP. Valid values are between -90 and 90. Example: "47.7511".'
             local_as_number: '- (Optional) BGP AS Number to assign to Edge CSP.'
             longitude: '- (Optional) Longitude of Edge CSP. Valid values are between -180 and 180. Example: "120.7401".'
-            management_default_gateway_ip: '- (Optional) Management default gateway IP. Required and valid when management_interface_config is "Static".'
-            management_egress_ip_prefix: '- (Optional) Management egress gateway IP and subnet prefix.'
-            management_interface_config: '- (Required) Management interface configuration. Valid values: "DHCP", "Static".'
-            management_interface_ip_prefix: '- (Optional) Management interface IP and subnet prefix. Required and valid when management_interface_config is "Static".'
-            management_interface_name: '- (Optional) Management interface name. Default value: "eth2".'
+            management_egress_ip_prefix_list: '- (Optional) Set of management egress gateway IP and subnet prefix. Example: ["67.207.104.16/29", "64.71.12.144/29"].'
+            management_interface_names: '- (Optional) List of management interface names.'
+            name: '- (Required) Interface name.'
+            parent_interface_name: '- (Required) Parent interface name.'
+            peer_gateway_ip: '- (Optional) LAN sub-interface gateway IP on HA gateway.'
+            peer_ip_address: '- (Optional) LAN sub-interface IP address on HA gateway.'
             prepend_as_path: '- (Optional) List of AS numbers to prepend gateway BGP AS_Path field. Valid only when local_as_number is set. Example: ["65023", "65023"].'
             project_uuid: '- (Required) Edge CSP project UUID.'
             rx_queue_size: '- (Optional) Ethernet interface RX queue size. Once set, can''t be deleted or disabled. Valid values: "1K", "2K", "4K".'
-            secondary_dns_server_ip: '- (Optional) Secondary DNS server IP. Required and valid when management_interface_config is "Static".'
+            secondary_dns_server_ip: '- (Optional) Secondary DNS server IP.'
             site_id: '- (Required) Site ID.'
             spoke_bgp_manual_advertise_cidrs: '- (Optional) Set of intended CIDRs to be advertised to external BGP router. Example: ["10.1.0.0/116", "10.2.0.0/16"].'
             state: '- State of Edge CSP.'
+            tag: '- (Optional) Tag.'
             template_uuid: '- (Required) Edge CSP template UUID.'
-            wan_default_gateway_ip: '- (Required) WAN default gateway IP.'
-            wan_interface_ip_prefix: '- (Required) WAN interface IP and subnet prefix.'
-            wan_interface_name: '- (Optional) WAN interface name. Default value: "eth0".'
-            wan_public_ip: '- (Optional) WAN public IP. Required for attaching connections over the Internet.'
+            type: '- (Required) Type. Valid values: WAN, LAN, or MANAGEMENT.'
+            vlan: '- (Required) VLAN configuration.'
+            vlan_id: '- (Required) VLAN ID.'
+            vrrp_virtual_ip: '- (Optional) VRRP virtual IP.'
+            wan_interface_names: '- (Optional) List of WAN interface names.'
+            wan_public_ip: '- (Optional) WAN public IP.'
+        importStatements: []
+    aviatrix_edge_csp_ha:
+        subCategory: Multi-Cloud Transit
+        description: Creates Aviatrix Edge CSP HA
+        name: aviatrix_edge_csp_ha
+        title: aviatrix_edge_csp_ha
+        examples:
+            - name: test
+              manifest: |-
+                {
+                  "compute_node_uuid": "abcde12345",
+                  "interfaces": [
+                    {
+                      "gateway_ip": "10.220.11.1",
+                      "ip_address": "10.220.11.20/24",
+                      "name": "eth1",
+                      "type": "LAN"
+                    },
+                    {
+                      "enable_dhcp": true,
+                      "name": "eth2",
+                      "type": "MANAGEMENT"
+                    }
+                  ],
+                  "primary_gw_name": "primary_edge_csp"
+                }
+        argumentDocs:
+            account_name: '- Edge CSP account name.'
+            bandwidth: '- (Optional) The rate of data can be moved through the interface, requires an integer value. Unit is in Mb/s.'
+            compute_node_uuid: '- (Required) Edge CSP compute node UUID.'
+            dns_server_ip: '- (Optional) Primary DNS server IP.'
+            enable_dhcp: '- (Optional) Enable DHCP. Valid values: true, false. Default value: false.'
+            gateway_ip: '- (Optional) Gateway IP.'
+            interfaces: '- (Required) WAN/LAN/MANAGEMENT interfaces.'
+            ip_address: '- (Optional) Interface static IP address.'
+            management_egress_ip_prefix_list: '- (Optional) Set of management egress gateway IP and subnet prefix. Example: ["67.207.104.16/29", "64.71.12.144/29"].'
+            name: '- (Required) Interface name.'
+            primary_gw_name: '- (Required) Primary Edge CSP name.'
+            secondary_dns_server_ip: '- (Optional) Secondary DNS server IP.'
+            tag: '- (Optional) Tag.'
+            type: '- (Required) Type.'
+            wan_public_ip: '- (Optional) WAN public IP.'
+        importStatements: []
+    aviatrix_edge_equinix:
+        subCategory: Multi-Cloud Transit
+        description: Creates Aviatrix Edge Equinix
+        name: aviatrix_edge_equinix
+        title: aviatrix_edge_equinix
+        examples:
+            - name: test
+              manifest: |-
+                {
+                  "account_name": "edge_equinix-account",
+                  "gw_name": "equinix-test",
+                  "interfaces": [
+                    {
+                      "gateway_ip": "10.230.5.100",
+                      "ip_address": "10.230.5.32/24",
+                      "name": "eth0",
+                      "type": "WAN",
+                      "wan_public_ip": "64.71.24.221"
+                    },
+                    {
+                      "ip_address": "10.230.3.32/24",
+                      "name": "eth1",
+                      "type": "LAN"
+                    },
+                    {
+                      "enable_dhcp": false,
+                      "gateway_ip": "172.16.0.1",
+                      "ip_address": "172.16.15.162/20",
+                      "name": "eth2",
+                      "type": "MANAGEMENT"
+                    }
+                  ],
+                  "site_id": "site-123",
+                  "ztp_file_download_path": "/ztp/file/download/path"
+                }
+        argumentDocs:
+            account_name: '- (Required) Edge Equinix account name.'
+            approved_learned_cidrs: '- (Optional) Set of approved learned CIDRs. Valid only when enable_learned_cidrs_approval is set to true. Example: ["10.1.0.0/116", "10.2.0.0/16"].'
+            bandwidth: '- (Optional) The rate of data can be moved through the interface, requires an integer value. Unit is in Mb/s.'
+            bgp_hold_time: '- (Optional) BGP hold time in seconds. Valid values are between 12 and 360. Default value: 180.'
+            bgp_polling_time: '- (Optional) BGP route polling time in seconds. Valid values are between 10 and 50. Default value: 50.'
+            dns_server_ip: '- (Optional) Primary DNS server IP.'
+            enable_auto_advertise_lan_cidrs: '- (Optional) Enable auto advertise LAN CIDRs. Valid values: true, false. Default value: true.'
+            enable_dhcp: '- (Optional) Enable DHCP. Valid values: true, false. Default value: false.'
+            enable_edge_active_standby: '- (Optional) Switch to enable Edge Active-Standby mode. Valid values: true, false. Default value: false.'
+            enable_edge_active_standby_preemptive: '- (Optional) Switch to enable Preemptive Mode for Edge Active-Standby. Valid values: true, false. Default value: false.'
+            enable_edge_transitive_routing: '- (Optional) Switch to enable Edge transitive routing. Valid values: true, false. Default value: false.'
+            enable_jumbo_frame: '- (Optional) Switch to enable jumbo frame. Valid values: true, false. Default value: false.'
+            enable_learned_cidrs_approval: '- (Optional) Switch to enable learned CIDR approval. Valid values: true, false. Default value: false.'
+            enable_management_over_private_network: '- (Optional) Switch to enable management over the private network. Valid values: true, false. Default value: false.'
+            enable_preserve_as_path: '- (Optional) Switch to enable preserve as_path when advertising manual summary CIDRs. Valid values: true, false. Default value: false.'
+            enable_single_ip_snat: '- (Optional) Enable Single IP SNAT. Valid values: true, false. Default value: false.'
+            enable_vrrp: '- (Optional) Enable VRRP. Valid values: true, false. Default value: false.'
+            gateway_ip: '- (Optional) Gateway IP.'
+            gw_name: '- (Required) Edge Equinix name.'
+            interfaces: '- (Required) WAN/LAN/MANAGEMENT interfaces.'
+            ip_address: '- (Optional) Interface static IP address.'
+            latitude: '- (Optional) Latitude of Edge Equinix. Valid values are between -90 and 90. Example: "47.7511".'
+            local_as_number: '- (Optional) BGP AS Number to assign to Edge Equinix.'
+            longitude: '- (Optional) Longitude of Edge Equinix. Valid values are between -180 and 180. Example: "120.7401".'
+            management_egress_ip_prefix_list: '- (Optional) Set of management egress gateway IP and subnet prefix. Example: ["67.207.104.16/29", "64.71.12.144/29"].'
+            name: '- (Required) Interface name.'
+            parent_interface_name: '- (Required) Parent interface name.'
+            peer_gateway_ip: '- (Optional) LAN sub-interface gateway IP on HA gateway.'
+            peer_ip_address: '- (Optional) LAN sub-interface IP address on HA gateway.'
+            prepend_as_path: '- (Optional) List of AS numbers to prepend gateway BGP AS_Path field. Valid only when local_as_number is set. Example: ["65023", "65023"].'
+            rx_queue_size: '- (Optional) Ethernet interface RX queue size. Once set, can''t be deleted or disabled. Valid values: "1K", "2K", "4K".'
+            secondary_dns_server_ip: '- (Optional) Secondary DNS server IP.'
+            site_id: '- (Required) Site ID.'
+            spoke_bgp_manual_advertise_cidrs: '- (Optional) Set of intended CIDRs to be advertised to external BGP router. Example: ["10.1.0.0/116", "10.2.0.0/16"].'
+            state: '- State of Edge Equinix.'
+            tag: '- (Optional) Tag.'
+            type: '- (Required) Type. Valid values: WAN, LAN, or MANAGEMENT.'
+            vlan: '- (Required) VLAN configuration.'
+            vlan_id: '- (Required) VLAN ID.'
+            vrrp_virtual_ip: '- (Optional) VRRP virtual IP.'
+            wan_public_ip: '- (Optional) WAN public IP.'
+            ztp_file_download_path: '- (Required) The folder path where the ZTP file will be downloaded.'
+        importStatements: []
+    aviatrix_edge_equinix_ha:
+        subCategory: Multi-Cloud Transit
+        description: Creates an Aviatrix Edge Equinix HA
+        name: aviatrix_edge_equinix_ha
+        title: aviatrix_edge_equinix_ha
+        examples:
+            - name: test
+              manifest: |-
+                {
+                  "interfaces": [
+                    {
+                      "gateway_ip": "10.230.5.100",
+                      "ip_address": "10.230.5.32/24",
+                      "name": "eth0",
+                      "type": "WAN",
+                      "wan_public_ip": "64.71.24.221"
+                    },
+                    {
+                      "ip_address": "10.230.3.32/24",
+                      "name": "eth1",
+                      "type": "LAN"
+                    },
+                    {
+                      "enable_dhcp": false,
+                      "gateway_ip": "172.16.0.1",
+                      "ip_address": "172.16.15.162/20",
+                      "name": "eth2",
+                      "type": "MANAGEMENT"
+                    }
+                  ],
+                  "primary_gw_name": "primary_edge_equinix",
+                  "ztp_file_download_path": "/ztp/file/download/path"
+                }
+        argumentDocs:
+            account_name: '- Edge Equinix account name.'
+            bandwidth: '- (Optional) The rate of data can be moved through the interface, requires an integer value. Unit is in Mb/s.'
+            dns_server_ip: '- (Optional) Primary DNS server IP.'
+            enable_dhcp: '- (Optional) Enable DHCP. Valid values: true, false. Default value: false.'
+            gateway_ip: '- (Optional) Gateway IP.'
+            interfaces: '- (Required) WAN/LAN/MANAGEMENT interfaces.'
+            ip_address: '- (Optional) Interface static IP address.'
+            management_egress_ip_prefix_list: '- (Optional) Set of management egress gateway IP and subnet prefix. Example: ["67.207.104.16/29", "64.71.12.144/29"].'
+            name: '- (Required) Interface name.'
+            primary_gw_name: '- (Required) Primary Edge Equinix name.'
+            secondary_dns_server_ip: '- (Optional) Secondary DNS server IP.'
+            tag: '- (Optional) Tag.'
+            type: '- (Required) Type.'
+            wan_public_ip: '- (Optional) WAN public IP.'
+            ztp_file_download_path: '- (Required) The folder path where the ZTP file will be downloaded.'
+        importStatements: []
+    aviatrix_edge_neo:
+        subCategory: Multi-Cloud Transit
+        description: Creates Aviatrix Edge NEO
+        name: aviatrix_edge_neo
+        title: aviatrix_edge_neo
+        examples:
+            - name: test
+              manifest: |-
+                {
+                  "account_name": "edge_neo-account",
+                  "device_id": "abcd123",
+                  "gw_name": "neo-test",
+                  "gw_size": "small",
+                  "interfaces": [
+                    {
+                      "gateway_ip": "10.230.5.100",
+                      "ip_address": "10.230.5.32/24",
+                      "name": "eth0",
+                      "type": "WAN",
+                      "wan_public_ip": "64.71.24.221"
+                    },
+                    {
+                      "ip_address": "10.230.3.32/24",
+                      "name": "eth1",
+                      "type": "LAN"
+                    },
+                    {
+                      "enable_dhcp": false,
+                      "gateway_ip": "172.16.0.1",
+                      "ip_address": "172.16.15.162/20",
+                      "name": "eth2",
+                      "type": "MANAGEMENT"
+                    }
+                  ],
+                  "lan_interface_names": [
+                    "eth1"
+                  ],
+                  "management_interface_names": [
+                    "eth2"
+                  ],
+                  "site_id": "site-123",
+                  "wan_interface_names": [
+                    "eth0"
+                  ]
+                }
+        argumentDocs:
+            account_name: '- (Required) Edge NEO account name.'
+            approved_learned_cidrs: '- (Optional) Set of approved learned CIDRs. Valid only when enable_learned_cidrs_approval is set to true. Example: ["10.1.0.0/116", "10.2.0.0/16"].'
+            bandwidth: '- (Optional) The rate of data can be moved through the interface, requires an integer value. Unit is in Mb/s.'
+            bgp_hold_time: '- (Optional) BGP hold time in seconds. Valid values are between 12 and 360. Default value: 180.'
+            bgp_polling_time: '- (Optional) BGP route polling time in seconds. Valid values are between 10 and 50. Default value: 50.'
+            device_id: '- (Required) Device ID.'
+            dns_server_ip: '- (Optional) Primary DNS server IP.'
+            enable_auto_advertise_lan_cidrs: '- (Optional) Enable auto advertise LAN CIDRs. Valid values: true, false. Default value: true.'
+            enable_dhcp: '- (Optional) Enable DHCP. Valid values: true, false. Default value: false.'
+            enable_edge_active_standby: '- (Optional) Switch to enable Edge Active-Standby mode. Valid values: true, false. Default value: false.'
+            enable_edge_active_standby_preemptive: '- (Optional) Switch to enable Preemptive Mode for Edge Active-Standby. Valid values: true, false. Default value: false.'
+            enable_edge_transitive_routing: '- (Optional) Switch to enable Edge transitive routing. Valid values: true, false. Default value: false.'
+            enable_jumbo_frame: '- (Optional) Switch to enable jumbo frame. Valid values: true, false. Default value: false.'
+            enable_learned_cidrs_approval: '- (Optional) Switch to enable learned CIDR approval. Valid values: true, false. Default value: false.'
+            enable_management_over_private_network: '- (Optional) Switch to enable management over the private network. Valid values: true, false. Default value: false.'
+            enable_preserve_as_path: '- (Optional) Switch to enable preserve as_path when advertising manual summary CIDRs. Valid values: true, false. Default value: false.'
+            enable_single_ip_snat: '- (Optional) Enable Single IP SNAT. Valid values: true, false. Default value: false.'
+            enable_vrrp: '- (Optional) Enable VRRP. Valid values: true, false. Default value: false.'
+            gateway_ip: '- (Optional) Gateway IP.'
+            gw_name: '- (Required) Edge NEO name.'
+            gw_size: '- (Required) Gateway size. Valid values: "small", "medium", "large", "x-large".'
+            interfaces: '- (Required) WAN/LAN/MANAGEMENT interfaces.'
+            ip_address: '- (Optional) Interface static IP address.'
+            lan_interface_names: '- (Required) List of LAN interface names. Default value: ["eth1"].'
+            latitude: '- (Optional) Latitude of Edge NEO. Valid values are between -90 and 90. Example: "47.7511".'
+            local_as_number: '- (Optional) BGP AS Number to assign to Edge NEO.'
+            longitude: '- (Optional) Longitude of Edge Neo. Valid values are between -180 and 180. Example: "120.7401".'
+            management_egress_ip_prefix_list: '- (Optional) Set of management egress gateway IP and subnet prefix. Example: ["67.207.104.16/29", "64.71.12.144/29"].'
+            management_interface_names: '- (Required) List of management interface names. Default value: ["eth2"].'
+            name: '- (Required) Interface name.'
+            parent_interface_name: '- (Required) Parent interface name.'
+            peer_gateway_ip: '- (Optional) LAN sub-interface gateway IP on HA gateway.'
+            peer_ip_address: '- (Optional) LAN sub-interface IP address on HA gateway.'
+            prepend_as_path: '- (Optional) List of AS numbers to prepend gateway BGP AS_Path field. Valid only when local_as_number is set. Example: ["65023", "65023"].'
+            rx_queue_size: '- (Optional) Ethernet interface RX queue size. Once set, can''t be deleted or disabled. Valid values: "1K", "2K", "4K".'
+            secondary_dns_server_ip: '- (Optional) Secondary DNS server IP.'
+            site_id: '- (Required) Site ID.'
+            spoke_bgp_manual_advertise_cidrs: '- (Optional) Set of intended CIDRs to be advertised to external BGP router. Example: ["10.1.0.0/116", "10.2.0.0/16"].'
+            state: '- State of Edge NEO.'
+            tag: '- (Optional) Tag.'
+            type: '- (Required) Type. Valid values: WAN, LAN, or MANAGEMENT.'
+            vlan: '- (Required) VLAN configuration.'
+            vlan_id: '- (Required) VLAN ID.'
+            vrrp_virtual_ip: '- (Optional) VRRP virtual IP.'
+            wan_interface_names: '- (Required) List of WAN interface names. Default value: ["eth0"].'
+            wan_public_ip: '- (Optional) WAN public IP.'
+        importStatements: []
+    aviatrix_edge_neo_device_onboarding:
+        subCategory: Multi-Cloud Transit
+        description: Onboards an Edge NEO device
+        name: aviatrix_edge_neo_device_onboarding
+        title: aviatrix_edge_neo_device_onboarding
+        examples:
+            - name: test
+              manifest: |-
+                {
+                  "account_name": "edge-neo-acc",
+                  "device_name": "device0",
+                  "hardware_model": "model-456",
+                  "network": [
+                    {
+                      "dns_server_ips": [
+                        "172.16.0.1"
+                      ],
+                      "enable_dhcp": false,
+                      "gateway_ip": "172.16.0.1",
+                      "interface_name": "eth5",
+                      "ipv4_cidr": "172.16.15.162/20"
+                    }
+                  ],
+                  "serial_number": "serial-123"
+                }
+        argumentDocs:
+            account_name: '- (Required) Edge NEO account name.'
+            config_file_download_path: '- (Optional) The location where the config file will be stored.'
+            device_id: '- Edge NEO device ID.'
+            device_name: '- (Required) Edge NEO device name.'
+            dns_server_ips: '- (Optional) Set of DNS server IPs.'
+            download_config_file: '- (Optional) Set to true to download the Edge NEO static config file. Valid values: true, false. Default value: false.'
+            enable_dhcp: '- (Optional) Set to true to enable DHCP. Valid values: true, false. Default value: false.'
+            gateway_ip: '- (Optional) Gateway IP.'
+            hardware_model: '- (Required) Device hardware model.'
+            interface_name: '- (Required) Interface name.'
+            ipv4_cidr: '- (Optional) Interface IPV4 CIDR.'
+            management_egress_ip_prefix_list: '- (Optional) Set of management egress gateway IP and subnet prefix. Example: ["67.207.104.16/29", "64.71.12.144/29"].'
+            network: '- (Optional) Network configurations.'
+            proxy_server_ip: '- (Optional) Proxy server IP.'
+            serial_number: '- (Required) Device serial number.'
+        importStatements: []
+    aviatrix_edge_neo_ha:
+        subCategory: Multi-Cloud Transit
+        description: Creates an Aviatrix Edge NEO HA
+        name: aviatrix_edge_neo_ha
+        title: aviatrix_edge_neo_ha
+        examples:
+            - name: test
+              manifest: |-
+                {
+                  "device_id": "device5678",
+                  "interfaces": [
+                    {
+                      "gateway_ip": "10.230.5.100",
+                      "ip_address": "10.230.5.32/24",
+                      "name": "eth0",
+                      "type": "WAN",
+                      "wan_public_ip": "64.71.24.221"
+                    },
+                    {
+                      "ip_address": "10.230.3.32/24",
+                      "name": "eth1",
+                      "type": "LAN"
+                    },
+                    {
+                      "enable_dhcp": false,
+                      "gateway_ip": "172.16.0.1",
+                      "ip_address": "172.16.15.162/20",
+                      "name": "eth2",
+                      "type": "MANAGEMENT"
+                    }
+                  ],
+                  "primary_gw_name": "primary_edge_neo"
+                }
+        argumentDocs:
+            account_name: '- Edge NEO account name.'
+            bandwidth: '- (Optional) The rate of data can be moved through the interface, requires an integer value. Unit is in Mb/s.'
+            device_id: '- (Required) Device ID.'
+            dns_server_ip: '- (Optional) Primary DNS server IP.'
+            enable_dhcp: '- (Optional) Enable DHCP. Valid values: true, false. Default value: false.'
+            gateway_ip: '- (Optional) Gateway IP.'
+            interfaces: '- (Required) WAN/LAN/MANAGEMENT interfaces.'
+            ip_address: '- (Optional) Interface static IP address.'
+            management_egress_ip_prefix_list: '- (Optional) Set of management egress gateway IP and subnet prefix. Example: ["67.207.104.16/29", "64.71.12.144/29"].'
+            name: '- (Required) Interface name.'
+            primary_gw_name: '- (Required) Primary Edge NEO name.'
+            secondary_dns_server_ip: '- (Optional) Secondary DNS server IP.'
+            tag: '- (Optional) Tag.'
+            type: '- (Required) Type.'
+            wan_public_ip: '- (Optional) WAN public IP.'
         importStatements: []
     aviatrix_edge_spoke:
         subCategory: Multi-Cloud Transit
@@ -1399,37 +1846,33 @@ resources:
               manifest: |-
                 {
                   "gw_name": "edge-test",
-                  "lan_interface_ip_prefix": "10.60.0.0/24",
+                  "interfaces": [
+                    {
+                      "gateway_ip": "10.230.5.100",
+                      "ip_address": "10.230.5.32/24",
+                      "name": "eth0",
+                      "type": "WAN",
+                      "wan_public_ip": "64.71.24.221"
+                    },
+                    {
+                      "ip_address": "10.230.3.32/24",
+                      "name": "eth1",
+                      "type": "LAN"
+                    },
+                    {
+                      "enable_dhcp": false,
+                      "gateway_ip": "172.16.0.1",
+                      "ip_address": "172.16.15.162/20",
+                      "name": "eth2",
+                      "type": "MANAGEMENT"
+                    }
+                  ],
                   "local_as_number": "65000",
-                  "management_interface_config": "DHCP",
                   "prepend_as_path": [
                     "65000",
                     "65000"
                   ],
                   "site_id": "site-123",
-                  "wan_default_gateway_ip": "10.60.0.0",
-                  "wan_interface_ip_prefix": "10.60.0.0/24",
-                  "ztp_file_download_path": "/ztp/download/path",
-                  "ztp_file_type": "iso"
-                }
-            - name: test
-              manifest: |-
-                {
-                  "dns_server_ip": "10.60.0.0",
-                  "gw_name": "edge-test",
-                  "lan_interface_ip_prefix": "10.60.0.0/24",
-                  "local_as_number": "65000",
-                  "management_default_gateway_ip": "10.60.0.0",
-                  "management_interface_config": "Static",
-                  "management_interface_ip_prefix": "10.60.0.0/24",
-                  "prepend_as_path": [
-                    "65000",
-                    "65000"
-                  ],
-                  "secondary_dns_server_ip": "10.60.0.0",
-                  "site_id": "site-123",
-                  "wan_default_gateway_ip": "10.60.0.0",
-                  "wan_interface_ip_prefix": "10.60.0.0/24",
                   "ztp_file_download_path": "/ztp/download/path",
                   "ztp_file_type": "iso"
                 }
@@ -1438,6 +1881,7 @@ resources:
             bgp_hold_time: '- (Optional) BGP hold time. Unit is in seconds. Valid values are between 12 and 360. Default value: 180.'
             bgp_polling_time: '- (Optional) BGP route polling time. Unit is in seconds. Valid values are between 10 and 50. Default value: 50.'
             dns_server_ip: '- (Optional) DNS server IP. Required and valid when management_interface_config is "Static".'
+            enable_dhcp: '- (Optional) Enable DHCP. Valid values: true, false. Default value: false.'
             enable_edge_active_standby: '- (Optional) Switch to enable Edge Active-Standby mode. Valid values: true, false. Default value: false.'
             enable_edge_active_standby_preemptive: '- (Optional) Switch to enable Preemptive Mode for Edge Active-Standby. Valid values: true, false. Default value: false.'
             enable_edge_transitive_routing: '- (Optional) Switch to enable Edge transitive routing. Valid values: true, false. Default value: false.'
@@ -1445,24 +1889,23 @@ resources:
             enable_learned_cidrs_approval: '- (Optional) Switch to enable learned CIDR approval. Valid values: true, false. Default value: false.'
             enable_management_over_private_network: '- (Optional) Switch to enable management over the private network. Valid values: true, false. Default value: false.'
             enable_preserve_as_path: '- (Optional) Switch to enable preserve as_path when advertising manual summary CIDRs. Valid values: true, false. Default value: false.'
+            gateway_ip: '- (Optional) Gateway IP.'
             gw_name: '- (Required) Edge as a Spoke name.'
-            lan_interface_ip_prefix: '- (Required) LAN interface IP and subnet prefix.'
+            interfaces: '- (Required) WAN/LAN/MANAGEMENT interfaces.'
+            ip_address: '- (Optional) Interface static IP address.'
             latitude: '- (Optional) Latitude of Edge as a Spoke. Valid values are between -90 and 90. Example: "47.7511".'
             local_as_number: '- (Optional) BGP AS Number to assign to Edge as a Spoke.'
             longitude: '- (Optional) Longitude of Edge as a Spoke. Valid values are between -180 and 180. Example: "120.7401".'
-            management_default_gateway_ip: '- (Optional) Management default gateway IP. Required and valid when management_interface_config is "Static".'
-            management_egress_ip_prefix: '- (Optional) Management egress gateway IP and subnet prefix.'
-            management_interface_config: '- (Required) Management interface configuration. Valid values: "DHCP", "Static".'
-            management_interface_ip_prefix: '- (Optional) Management interface IP and subnet prefix. Required and valid when management_interface_config is "Static".'
+            management_egress_ip_prefix_list: '- (Optional) Set of management egress gateway IP and subnet prefix.'
+            name: '- (Required) Interface name.'
             prepend_as_path: '- (Optional) List of AS numbers to prepend gateway BGP AS_Path field. Valid only when local_as_number is set. Example: ["65023", "65023"].'
             rx_queue_size: '- (Optional) Ethernet interface RX queue size. Once set, can''t be deleted or disabled. Valid values: "1K", "2K", "4K".'
             secondary_dns_server_ip: '- (Optional) Secondary DNS server IP. Required and valid when management_interface_config is "Static".'
             site_id: '- (Required) Site ID.'
             spoke_bgp_manual_advertise_cidrs: '- (Optional) Set of intended CIDRs to be advertised to external BGP router. Example: ["10.1.0.0/116", "10.2.0.0/16"].'
             state: '- State of Edge as a Spoke.'
-            wan_default_gateway_ip: '- (Required) WAN default gateway IP.'
-            wan_interface_ip_prefix: '- (Required) WAN interface IP and subnet prefix.'
-            wan_public_ip: '- (Optional) WAN public IP. Required for attaching connections over the Internet.'
+            type: '- (Required) Type. Valid values: WAN, LAN, or MANAGEMENT.'
+            wan_public_ip: '- (Optional) WAN public IP.'
             ztp_file_download_path: '- (Required) The folder path where the ZTP file will be downloaded.'
             ztp_file_type: '- (Required) ZTP file type. Valid values: "iso", "cloud-init".'
         importStatements: []
@@ -1484,13 +1927,20 @@ resources:
                   "site_id": "site-abcd1234"
                 }
         argumentDocs:
+            backup_bgp_remote_as_num: '- (Optional) Backup BGP remote ASN (Autonomous System Number). Integer between 1-4294967294. Required if HA enabled for ''bgp'' connection.'
+            backup_local_lan_ip: '- (Optional) Backup Local LAN IP. Required for HA BGP over LAN connection.'
+            backup_remote_lan_ip: '- (Optional) Backup Remote LAN IP. Required for HA BGP over LAN connection.'
             bgp_local_as_num: '- (Required) BGP local AS number.'
             bgp_remote_as_num: '- (Required) BGP remote AS number.'
-            connection_name: '- (Required) Connection name.'
+            connection_name: '- (Optional) Connection name.'
             connection_type: '- (Optional) Connection type. Valid value: ''bgp''. Default value: ''bgp''.'
+            enable_edge_underlay: '- (Optional) Enable BGP over WAN underlay. Valid values: true, false. Default value: false.'
             gw_name: '- (Required) Edge as a Spoke name.'
+            ha_enabled: '- (Optional) Set as true if there are two external devices.'
             local_lan_ip: '- (Required) Local LAN IP.'
             number_of_retries: '- (Optional) Number of retries. Default value: 0.'
+            prepend_as_path: '- (Optional) Connection AS Path Prepend customized by specifying AS PATH for a BGP connection.'
+            remote_cloud_type: '- (Optional) Remote cloud type. Valid values: "AWS", "AZURE".'
             remote_lan_ip: '- (Required) Remote LAN IP.'
             retry_interval: '- (Optional) Retry interval in seconds. Default value: 300.'
             site_id: '- (Required) Edge as a Spoke site iD.'
@@ -1512,7 +1962,7 @@ resources:
             enable_insane_mode: '- (Optional) Switch to enable insane mode. Valid values: true, false. Default: false.'
             enable_jumbo_frame: '- (Optional) Switch to enable jumbo frame. Valid values: true, false. Default: false.'
             enable_over_private_network: '- (Optional) Switch to enable over the private network. Valid values: true, false. Default: true.'
-            insane_mode_tunnel_number: '- (Optional) Insane mode tunnel number. Default: 0.'
+            insane_mode_tunnel_number: '- (Optional) Insane mode tunnel number, requires an integer value. Valid Range: 2-4.'
             number_of_retries: '- (Optional) Number of retries. Default value: 0.'
             retry_interval: '- (Optional) Retry interval in seconds. Default value: 300.'
             spoke_gw_name: '- (Required) Name of the Edge as a Spoke to attach to transit network.'
@@ -1731,7 +2181,7 @@ resources:
             file_share_folder: '- (Optional) Advanced option. File share folder. Applicable to Azure or AzureGov and Palo Alto Networks VM-Series deployment only. Available as of provider version R2.17.1+.'
             firenet_gw_name: '- (Optional) Name of the primary FireNet gateway. Required for all FireNet deployments that do not utilize the TGW-Integrated FireNet with AWS Native GWLB VPC.'
             firewall_image: '- (Required) One of the AWS/Azure/GCP AMIs from various vendors such as Palo Alto Networks.'
-            firewall_image_id: '- (Optional) Firewall image ID. Applicable to AWS and Azure only. For AWS, please use AMI ID. For Azure, the format is “Publisher:Offer:Plan:Version”. Available as of provider version R2.19+.'
+            firewall_image_id: '- (Optional) Firewall image ID. Only applicable to AWS. Please use AMI ID. Available as of provider version R2.19+.'
             firewall_image_version: '- (Optional) Version of firewall image. If not specified, Controller will automatically select the latest version available.'
             firewall_name: '- (Required) Name of the firewall instance to be created.'
             firewall_size: '- (Required) Instance size of the firewall. Example: "m5.xlarge".'
@@ -2309,6 +2759,7 @@ resources:
             enable_designated_gateway: '- (Optional) Enable Designated Gateway feature for Gateway. Only supported for AWS, AWSGov, AWSChina, AWS Top Secret and AWS Secret gateways. Valid values: true, false. Default value: false. Please view documentation here for more information on this feature.'
             enable_elb: '- (Optional) Specify whether to enable ELB or not. Not supported for OCI gateways. Valid values: true, false.'
             enable_encrypt_volume: '- (Optional) Enable EBS volume encryption for the gateway. Only supported for AWS, AWSGov, AWSChina, AWS Top Secret and AWS Secret gateways. Valid values: true, false. Default value: false.'
+            enable_gro_gso: '- (Optional) Enable GRO/GSO for this transit gateway. Default value is true. Available in provider R3.1.0+.'
             enable_jumbo_frame: '- (Optional) Enable jumbo frames for this gateway. Default value is true.'
             enable_ldap: '- (Optional) Enable/disable LDAP. Valid values: true, false. Default value: false.'
             enable_monitor_gateway_subnets: '- (Optional) If set to true, the Monitor Gateway Subnets feature is enabled. Default value is false. Available in provider version R2.17.1+.'
@@ -2518,6 +2969,41 @@ resources:
             elb_dns_names: '- (Required) List of ELB names to attach to this Geo VPN name.'
             service_name: '- (Required) The hostname that users will connect to. A DNS record will be created for this name in the specified domain name.'
         importStatements: []
+    aviatrix_global_vpc_excluded_instance:
+        subCategory: Multi-Cloud Transit
+        description: Manages the instance to be excluded for Aviatrix global VPC tagging
+        name: aviatrix_global_vpc_excluded_instance
+        title: aviatrix_global_vpc_excluded_instance
+        examples:
+            - name: test
+              manifest: |-
+                {
+                  "account_name": "test-account",
+                  "instance_name": "test-instance",
+                  "region": "us-west1"
+                }
+        argumentDocs:
+            account_name: '- (Required) Aviatrix GCP access account name.'
+            instance_name: '- (Required) Name of the instance to be excluded for tagging.'
+            region: '- (Required) Region of the instance.'
+            uuid: '- UUID of the global VPC exclude list object.'
+        importStatements: []
+    aviatrix_global_vpc_tagging_settings:
+        subCategory: Multi-Cloud Transit
+        description: Manages how to tag newly found instances for global VPC.
+        name: aviatrix_global_vpc_tagging_settings
+        title: aviatrix_global_vpc_tagging_settings
+        examples:
+            - name: test
+              manifest: |-
+                {
+                  "enable_alert": false,
+                  "service_state": "automatic"
+                }
+        argumentDocs:
+            enable_alert: '- (Required) Set to true to enable alert. Valid values: true, false.'
+            service_state: '- (Required) Tagging service state. Valid values: "semi_automatic", "automatic", "disabled".'
+        importStatements: []
     aviatrix_netflow_agent:
         subCategory: Settings
         description: Enables and disables netflow_agent
@@ -2639,6 +3125,65 @@ resources:
             http_proxy: '- (Required) Http proxy URL.'
             https_proxy: '- (Required) Https proxy URL.'
             proxy_ca_certificate: '- (Optional) Server CA Certificate file. Use the file function to read from a file.'
+        importStatements: []
+    aviatrix_qos_class:
+        subCategory: Copilot
+        description: Creates Aviatrix QoS Class
+        name: aviatrix_qos_class
+        title: aviatrix_qos_class
+        examples:
+            - name: test
+              manifest: |-
+                {
+                  "name": "priority1",
+                  "priority": 1
+                }
+        argumentDocs:
+            name: '- (Required) Name of QoS class.'
+            priority: '- (Optional) Priority of QoS class, requires an integer value.'
+            uuid: '- UUID of QoS class.'
+        importStatements: []
+    aviatrix_qos_policy_list:
+        subCategory: Copilot
+        description: Creates Aviatrix QoS Policy List
+        name: aviatrix_qos_policy_list
+        title: aviatrix_qos_policy_list
+        examples:
+            - name: test
+              manifest: |-
+                {
+                  "policies": [
+                    {
+                      "dscp_values": [
+                        "1",
+                        "AF11"
+                      ],
+                      "name": "qos_policy_1",
+                      "qos_class_uuid": "${aviatrix_qos_class.test.uuid}"
+                    },
+                    {
+                      "dscp_values": [
+                        "AF22"
+                      ],
+                      "name": "qos_policy_2",
+                      "qos_class_uuid": "${aviatrix_qos_class.test.uuid}"
+                    }
+                  ]
+                }
+              references:
+                policies.qos_class_uuid: aviatrix_qos_class.test.uuid
+              dependencies:
+                aviatrix_qos_class.test: |-
+                    {
+                      "name": "test-qos-class",
+                      "priority": 3
+                    }
+        argumentDocs:
+            dscp_values: '- (Required) List of DSCP values.'
+            name: '- (Required) Name of QoS class.'
+            policies: '- (Required) List of QoS policies.'
+            qos_class_uuid: '- (Required) QoS class UUID.'
+            uuid: in policies - UUID of QoS policy.
         importStatements: []
     aviatrix_rbac_group:
         subCategory: Accounts
@@ -2913,8 +3458,8 @@ resources:
             backup_local_tunnel_ip: '- (Optional) Backup local tunnel IP address. Only valid when HA enabled route based connection. Available as of provider version R2.19+.'
             backup_pre_shared_key: '- (Optional) Backup Pre-Shared Key.'
             backup_remote_gateway_ip: '- (Optional) Backup Remote Gateway IP. NOTE: Please see notes'
-            backup_remote_gateway_latitude: '- (Optional) Latitude of backup remote gateway. Does not support refresh.'
-            backup_remote_gateway_longitude: '- (Optional) Longitude of backup remote gateway. Does not support refresh.'
+            backup_remote_gateway_latitude: '- (Optional) Latitude of backup remote gateway. Required when private_route_encryption is true.'
+            backup_remote_gateway_longitude: '- (Optional) Longitude of backup remote gateway. Required when private_route_encryption is true.'
             backup_remote_identifier: '- (Optional) Backup remote identifier. Required for Cert based authentication type with HA enabled. Example: "gw-10-10-0-116".'
             backup_remote_tunnel_ip: '- (Optional) Backup remote tunnel IP address. Only valid when HA enabled route based connection. Available as of provider version R2.19+.'
             ca_cert_tag_name: '- (Optional) Name of Remote CA Certificate Tag for creating Site2Cloud tunnels. Required for Cert based authentication type.'
@@ -2942,6 +3487,7 @@ resources:
             phase_2_authentication: '- (Optional) Phase two Authentication. Valid values: "NO-AUTH", "HMAC-SHA-1", "HMAC-SHA-256", "HMAC-SHA-384" and "HMAC-SHA-512". Default value: "HMAC-SHA-256".'
             phase_2_dh_groups: '- (Optional) Phase two DH Groups. Valid values: "1", "2", "5", "14", "15", "16", "17", "18", "19", "20" and "21". Default value: "14".'
             phase_2_encryption: '- (Optional) Phase two Encryption. Valid values: "3DES", "AES-128-CBC", "AES-192-CBC", "AES-256-CBC", "AES-128-GCM-64", "AES-128-GCM-96", "AES-128-GCM-128", "AES-256-GCM-64", "AES-256-GCM-96", "AES-256-GCM-128" and "NULL-ENCR". Default value: "AES-256-CBC".'
+            phase1_local_identifier: '- (Optional) Phase 1 local identifier. By default, gateway’s public IP is configured as the Local Identifier. Available as of provider version R3.1.0+.'
             phase1_remote_identifier: '- (Optional) List of phase 1 remote identifier of the IPsec tunnel. This can be configured as a list of any string, including empty string. Example: ["1.2.3.4"] when HA is disabled, ["1.2.3.4", "abcd"] when HA is enabled. Available as of provider version R2.19+.'
             pre_shared_key: '- (Optional) Pre-Shared Key.'
             primary_cloud_gateway_name: '- (Required) Primary cloud gateway name.'
@@ -2949,8 +3495,8 @@ resources:
             remote_destination_real_cidrs: '- (Optional) List of  Remote Initiated Traffic Destination Real CIDRs.'
             remote_destination_virtual_cidrs: '- (Optional) List of Remote Initiated Traffic Destination Virtual CIDRs.'
             remote_gateway_ip: '- (Required) Remote gateway IP.'
-            remote_gateway_latitude: '- (Optional) Latitude of remote gateway. Does not support refresh.'
-            remote_gateway_longitude: '- (Optional) Longitude of remote gateway. Does not support refresh.'
+            remote_gateway_latitude: '- (Optional) Latitude of remote gateway. Required when private_route_encryption is true.'
+            remote_gateway_longitude: '- (Optional) Longitude of remote gateway. Required when private_route_encryption is true.'
             remote_gateway_type: '- (Required) Remote gateway type. Valid Values: "generic", "avx", "aws", "azure", "sonicwall", "oracle".'
             remote_identifier: '- (Optional) Remote identifier. Required for Cert based authentication type. Example: "gw-10-10-0-115".'
             remote_source_real_cidrs: '- (Optional) List of Remote Initiated Traffic Source Real CIDRs.'
@@ -2958,7 +3504,7 @@ resources:
             remote_subnet_cidr: '- (Required) Remote subnet CIDR. Not required for custom_mapped connection.'
             remote_subnet_virtual: '- Remote subnet CIDR (Virtual). Required for connection type "mapped", except for'
             remote_tunnel_ip: '- (Optional) Remote tunnel IP address. Only valid for route based connection. Available as of provider version R2.19+.'
-            route_table_list: '- (Optional) Route tables to modify.'
+            route_table_list: '- (Optional) Route tables to modify. Required when private_route_encryption is true.'
             ssl_server_pool: '- (Optional) Specify ssl_server_pool. Default value: "192.168.44.0/24". NOTE: Please see notes'
             tunnel_type: '- (Required) Site2Cloud tunnel type. Valid Values: "policy", "route".'
             vpc_id: '- (Required) VPC ID of the cloud gateway.'
@@ -3028,6 +3574,12 @@ resources:
                         },
                         {
                           "cidr": "10.0.0.0/16"
+                        },
+                        {
+                          "fqdn": "www.aviatrix.com"
+                        },
+                        {
+                          "site": "site-test-0"
                         }
                       ]
                     }
@@ -3037,13 +3589,15 @@ resources:
             account_id: '- (Optional) - Account ID this expression matches.'
             account_name: '- (Optional) - Account name this expression matches.'
             cidr: '- (Optional) - CIDR block or IP Address this expression matches. cidr cannot be used with any other filters in the same match_expressions block.'
+            fqdn: '- (Optional) - FQDN address this expression matches. fqdn cannot be used with any other filters in the same match_expressions block.'
             match_expressions: '- (Required) List of match expressions. The Smart Group will be a union of all resources matched by each match_expressions.match_expressions blocks cannot be empty.'
             name: '- (Required) Name of the Smart Group.'
             region: '- (Optional) - Region this expression matches.'
             res_id: '- (Optional) - Resource ID this expression matches.'
             selector: '- (Required) Block containing match expressions to filter the Smart Group.'
+            site: '- (Optional) - Edge Site-ID this expression matches. site cannot be used with any other filters in the same match_expressions block.'
             tags: '- (Optional) - Map of tags this expression matches.'
-            type: '- (Optional) - Type of resource this expression matches. Must be one of "vm", "vpc" or "subnet". type is required when cidr is not used.'
+            type: '- (Optional) - Type of resource this expression matches. Must be one of "vm", "vpc" or "subnet". type is required when cidr, fqdn and site are all not used.'
             uuid: '- UUID of the Smart Group.'
             zone: '- (Optional) - Zone this expression matches.'
         importStatements: []
@@ -3116,14 +3670,54 @@ resources:
                   "remote_gateway_ip": "172.12.13.14",
                   "vpc_id": "vpc-abcd1234"
                 }
+            - name: ex-conn
+              manifest: |-
+                {
+                  "bgp_local_as_num": "123",
+                  "bgp_remote_as_num": "345",
+                  "connection_name": "my_conn",
+                  "connection_type": "bgp",
+                  "gw_name": "${aviatrix_spoke_gateway.spoke-gateway.gw_name}",
+                  "local_lan_ip": "172.12.13.15",
+                  "remote_lan_ip": "172.12.13.14",
+                  "remote_vpc_name": "vnet-name:resource-group-name:subscription-id",
+                  "tunnel_protocol": "LAN",
+                  "vpc_id": "${aviatrix_spoke_gateway.spoke-gateway.vpc_id}"
+                }
+              references:
+                gw_name: aviatrix_spoke_gateway.spoke-gateway.gw_name
+                vpc_id: aviatrix_spoke_gateway.spoke-gateway.vpc_id
+            - name: ex-conn
+              manifest: |-
+                {
+                  "backup_bgp_remote_as_num": "678",
+                  "backup_local_lan_ip": "172.12.13.17",
+                  "backup_remote_lan_ip": "172.12.13.16",
+                  "bgp_local_as_num": "123",
+                  "bgp_remote_as_num": "345",
+                  "connection_name": "my_conn",
+                  "connection_type": "bgp",
+                  "gw_name": "${aviatrix_spoke_gateway.spoke-gateway.gw_name}",
+                  "ha_enabled": true,
+                  "local_lan_ip": "172.12.13.15",
+                  "remote_lan_ip": "172.12.13.14",
+                  "remote_vpc_name": "vnet-name:resource-group-name:subscription-id",
+                  "tunnel_protocol": "LAN",
+                  "vpc_id": "${aviatrix_spoke_gateway.spoke-gateway.vpc_id}"
+                }
+              references:
+                gw_name: aviatrix_spoke_gateway.spoke-gateway.gw_name
+                vpc_id: aviatrix_spoke_gateway.spoke-gateway.vpc_id
         argumentDocs:
             approved_cidrs: '- (Optional/Computed) Set of approved CIDRs. Requires enable_learned_cidrs_approval to be true. Type: Set(String).'
             backup_bgp_md5_key: '- (Optional) Backup BGP MD5 Authentication Key. Valid with HA enabled for connection. Example: ''avx03,avx04''.'
             backup_bgp_remote_as_num: '- (Optional) Backup BGP remote ASN (Autonomous System Number). Integer between 1-4294967294. Required if HA enabled for ''bgp'' connection.'
             backup_direct_connect: '- (Optional) Backup direct connect for backup external device.'
+            backup_local_lan_ip: '- (Optional) Backup Local LAN IP. Required for GCP HA BGP over LAN connection.'
             backup_local_tunnel_cidr: '- (Optional) Source CIDR for the tunnel from the backup Aviatrix spoke gateway.'
             backup_pre_shared_key: '- (Optional) Backup Pre-Shared Key.'
             'backup_remote_gateway_ip ': '- (Optional) Backup remote gateway IP. Required if HA enabled.'
+            backup_remote_lan_ip: '- (Optional) Backup Remote LAN IP. Required for HA BGP over LAN connection.'
             backup_remote_tunnel_cidr: '- (Optional) Destination CIDR for the tunnel to the backup external device.'
             bgp_local_as_num: '- (Optional) BGP local ASN (Autonomous System Number). Integer between 1-4294967294. Required for ''bgp'' connection.'
             bgp_md5_key: '- (Optional) BGP MD5 Authentication Key. Example: ''avx01,avx02''.'
@@ -3132,11 +3726,14 @@ resources:
             connection_type: '- (Required) Connection type. Valid values: ''bgp'', ''static''. Default value: ''bgp''.'
             custom_algorithms: '- (Optional) Switch to enable custom/non-default algorithms for IPSec Authentication/Encryption. Valid values: true, false. NOTE: Please see notes'
             direct_connect: '- (Optional) Set true for private network infrastructure.'
+            enable_bgp_lan_activemesh: '- (Optional) Switch to enable BGP LAN ActiveMesh mode. Only valid for GCP and Azure with Remote Gateway HA enabled. Requires Azure Remote Gateway insane mode enabled. Valid values: true, false. Default: false. Available as of provider version R3.0.2+.'
             enable_event_triggered_ha: '- (Optional) Enable Event Triggered HA. Default value: false. Valid values: true or false.'
             enable_ikev2: '- (Optional) Set as true to enable IKEv2 protocol.'
+            enable_jumbo_frame: '- (Optional) Enable Jumbo Frame for the transit external device connection. Only valid with ''GRE'' tunnels under ''bgp'' connection. Requires spoke to be jumbo frame and insane mode enabled. Valid values: true, false. Default value: false. Available as of provider version R3.0.2+.'
             enable_learned_cidrs_approval: '- (Optional) Enable learned CIDRs approval for the connection. Only valid with connection_type = ''bgp''. Requires the spoke_gateway''s learned_cidrs_approval_mode attribute be set to ''connection''. Valid values: true, false. Default value: false.'
             gw_name: '- (Required) Aviatrix spoke gateway name.'
             ha_enabled: '- (Optional) Set as true if there are two external devices.'
+            local_lan_ip: '- (Optional) Local LAN IP. Required for GCP BGP over LAN connection.'
             local_tunnel_cidr: '- (Optional) Source CIDR for the tunnel from the Aviatrix spoke gateway.'
             manual_bgp_advertised_cidrs: '- (Optional) Configure manual BGP advertised CIDRs for this connection. Only valid with connection_type= ''bgp''.'
             phase_1_authentication: '- (Optional) Phase one Authentication. Valid values: ''SHA-1'', ''SHA-256'', ''SHA-384'' and ''SHA-512''. Default value: ''SHA-256''.'
@@ -3145,13 +3742,16 @@ resources:
             phase_2_authentication: '- (Optional) Phase two Authentication. Valid values: ''NO-AUTH'', ''HMAC-SHA-1'', ''HMAC-SHA-256'', ''HMAC-SHA-384'' and ''HMAC-SHA-512''. Default value: ''HMAC-SHA-256''.'
             phase_2_dh_groups: '- (Optional) Phase two DH Groups. Valid values: ''1'', ''2'', ''5'', ''14'', ''15'', ''16'', ''17'', ''18'', ''19'', ''20'' and ''21''. Default value: ''14''.'
             phase_2_encryption: '- (Optional) Phase two Encryption. Valid values: "3DES", "AES-128-CBC", "AES-192-CBC", "AES-256-CBC", "AES-128-GCM-64", "AES-128-GCM-96", "AES-128-GCM-128", "AES-256-GCM-64", "AES-256-GCM-96", "AES-256-GCM-128" and "NULL-ENCR". Default value: "AES-256-CBC".'
+            phase1_local_identifier: '- (Optional) Phase 1 local identifier. By default, gateway’s public IP is configured as the Local Identifier. Available as of provider version R3.1.0+.'
             phase1_remote_identifier: '- (Optional) List of phase 1 remote identifier of the IPsec tunnel. This can be configured as a list of any string, including emtpy string. Example: ["1.2.3.4"] when HA is disabled, ["1.2.3.4", "abcd"] when HA is enabled. Available as of provider version R2.19+.'
             pre_shared_key: '- (Optional) Pre-Shared Key.'
             prepend_as_path: '- (Optional) Connection AS Path Prepend customized by specifying AS PATH for a BGP connection.'
             remote_gateway_ip: '- (Optional) Remote gateway IP.'
+            remote_lan_ip: '- (Optional) Remote LAN IP. Required for BGP over LAN connection.'
             remote_subnet: '- (Optional) Remote CIDRs joined as a string with '',''. Required for a ''static'' type connection.'
             remote_tunnel_cidr: '- (Optional) Destination CIDR for the tunnel to the external device.'
-            tunnel_protocol: '- (Optional) Tunnel protocol, only valid with connection_type = ''bgp''. Valid values: ''IPsec''. Default value: ''IPsec''. Case insensitive.'
+            remote_vpc_name: '- (Optional) Name of the remote VPC for a LAN BGP connection with an Azure Spoke Gateway. Required when connection_type = ''bgp'' and tunnel_protocol = ''LAN'' with an Azure spoke gateway. Must be in the format "::". Available as of provider version R3.0.2+.'
+            tunnel_protocol: '- (Optional) Tunnel protocol, only valid with connection_type = ''bgp''. Valid values: ''IPsec'', ''GRE'' or ''LAN''. Default value: ''IPsec''. Case insensitive.'
             vpc_id: '- (Required) VPC ID of the Aviatrix spoke gateway.'
         importStatements: []
     aviatrix_spoke_gateway:
@@ -3360,7 +3960,7 @@ resources:
                   "vpc_id": "vpc-abcd123",
                   "vpc_reg": "us-isob-east-1"
                 }
-            - name: test
+            - name: test_spoke_gateway_azure
               manifest: |-
                 {
                   "account_name": "devops",
@@ -3374,6 +3974,22 @@ resources:
                   "vpc_id": "vpc-abcd1234",
                   "vpc_reg": "us-east-1"
                 }
+            - name: test_spoke_gateway_azure
+              manifest: |-
+                {
+                  "account_name": "devops_azure",
+                  "bgp_lan_interfaces_count": 2,
+                  "cloud_type": 8,
+                  "enable_bgp": true,
+                  "enable_bgp_over_lan": true,
+                  "gw_name": "transit",
+                  "gw_size": "Standard_B1ms",
+                  "ha_gw_size": "Standard_B1ms",
+                  "ha_subnet": "10.30.0.0/24",
+                  "subnet": "10.30.0.0/24",
+                  "vpc_id": "vnet_name:rg_name:resource_guid",
+                  "vpc_reg": "West US"
+                }
         argumentDocs:
             account_name: '- (Required) This parameter represents the name of a Cloud-Account in Aviatrix controller.'
             allocate_new_eip: '- (Optional) When value is false, reuse an idle address in Elastic IP pool for this gateway. Otherwise, allocate a new Elastic IP and use it for this gateway. Available in Controller 4.7+. Valid values: true, false. Default: true.'
@@ -3382,6 +3998,8 @@ resources:
             azure_eip_name_resource_group: '- (Optional) Name of public IP Address resource and its resource group in Azure to be assigned to the Spoke Gateway instance. Example: "IP_Name:Resource_Group_Name". Required if allocate_new_eip is false and cloud_type is Azure, AzureGov or AzureChina. Available as of provider version 2.20+.'
             bgp_ecmp: '- (Optional) Enable Equal Cost Multi Path (ECMP) routing for the next hop. Default value: false.'
             bgp_hold_time: '- (Optional) BGP hold time. Unit is in seconds. Valid values are between 12 and 360. Default value: 180.'
+            bgp_lan_interfaces_count: '- (Optional) Number of interfaces that will be created for BGP over LAN enabled Azure spoke. Applies on HA Transit as well if enabled. Available as of provider version R3.0.2+.'
+            bgp_lan_ip_list: '- List of available BGP LAN interface IPs for spoke external device connection creation. Only supports 8 (Azure), 32 (AzureGov) or AzureChina (2048). Available as of provider version R3.0.2+.'
             bgp_polling_time: '- (Optional) BGP route polling time. Unit is in seconds. Valid values are between 10 and 50. Default value: "50".'
             cloud_instance_id: '- Cloud instance ID of the spoke gateway.'
             cloud_type: '- (Required) Type of cloud service provider, requires an integer value. Currently, only AWS(1), GCP(4), Azure(8), OCI(16), AzureGov(32), AWSGov(256), AWSChina(1024), AzureChina(2048), Alibaba Cloud(8192), AWS Top Secret(16384) and AWS Secret (32768) are supported.'
@@ -3398,7 +4016,10 @@ resources:
             enable_active_standby_preemptive: '- (Optional) Enables Preemptive Mode for Active-Standby. Available only with BGP enabled, HA enabled and Active-Standby enabled. Valid values: true, false. Default value: false.'
             enable_auto_advertise_s2c_cidrs: '- (Optional) Auto Advertise Spoke Site2Cloud CIDRs. Default: false. Valid values: true or false. Available as of provider version R2.19+.'
             enable_bgp: '- (Optional) Enable BGP for this spoke gateway. Only available for AWS and Azure. Valid values: true, false. Default value: false. Available in provider R2.21.0+.'
+            enable_bgp_over_lan: '- (Optional) Pre-allocate a network interface(eth4) for "BGP over LAN" functionality. Must be enabled to create a BGP over LAN aviatrix_spoke_external_device_conn resource with this Spoke Gateway. Only valid for 8 (Azure), 32 (AzureGov) or AzureChina (2048). Valid values: true or false. Default value: false. Available as of provider version R3.0.2+.'
             enable_encrypt_volume: '- (Optional) Enable EBS volume encryption for Gateway. Only supports AWS, AWSGov, AWSChina, AWS Top Secret and AWS Secret providers. Valid values: true, false. Default value: false.'
+            enable_globla_vpc: '- (Optional) Enable global VPC. Only supported for GCP spoke gateways. Valid values: true, false. Default value: false.'
+            enable_gro_gso: '- (Optional) Enable GRO/GSO for this transit gateway. Default value is true. Available in provider R3.1.0+.'
             enable_jumbo_frame: '- (Optional) Enable jumbo frames for this spoke gateway. Default value is true.'
             enable_learned_cidrs_approval: '- (Optional) Switch to enable/disable learned CIDR approval for BGP Spoke Gateway. Valid values: true, false. Default value: false.'
             enable_monitor_gateway_subnets: '- (Optional) If set to true, the Monitor Gateway Subnets feature is enabled. Default value is false. Available in provider version R2.18+.'
@@ -3416,6 +4037,7 @@ resources:
             gw_size: '- (Required) Size of the gateway instance. Example: AWS/AWSGov/AWSChina: "t2.large", Azure/AzureGov/AzureChina: "Standard_B1s", OCI: "VM.Standard2.2", GCP: "n1-standard-1".'
             ha_availability_domain: '- (Optional) HA gateway availability domain. Required and valid only for OCI. Available as of provider version R2.19.3.'
             ha_azure_eip_name_resource_group: '- (Optional) Name of public IP Address resource and its resource group in Azure to be assigned to the HA Spoke Gateway instance. Example: "IP_Name:Resource_Group_Name". Required if ha_eip is set and cloud_type is Azure, AzureGov or AzureChina. Available as of provider version 2.20+.'
+            ha_bgp_lan_ip_list: '- List of available BGP LAN interface IPs for spoke external device HA connection creation. Only supports 8 (Azure), 32 (AzureGov) or AzureChina (2048). Available as of provider version R3.0.2+.'
             ha_cloud_instance_id: '- Cloud instance ID of the HA spoke gateway.'
             ha_eip: '- (Optional) Public IP address that you want to assign to the HA peering instance. If no value is given, a new EIP will automatically be allocated. Only available for AWS, GCP, Azure, OCI, AzureGov, AWSGov, AWSChina, AzureChina, AWS Top Secret and AWS Secret.'
             ha_fault_domain: '- (Optional) HA gateway fault domain. Required and valid only for OCI. Available as of provider version R2.19.3.'
@@ -3732,7 +4354,7 @@ resources:
             connection_type: '- (Required) Connection type. Valid values: ''bgp'', ''static''. Default value: ''bgp''.'
             custom_algorithms: '- (Optional) Switch to enable custom/non-default algorithms for IPSec Authentication/Encryption. Valid values: true, false. NOTE: Please see notes'
             direct_connect: '- (Optional) Set true for private network infrastructure.'
-            enable_bgp_lan_activemesh: '- (Optional) Switch to enable BGP LAN ActiveMesh mode. Only valid for GCP with Remote Gateway HA enabled. Default: false. Available as of provider version R2.21+.'
+            enable_bgp_lan_activemesh: '- (Optional) Switch to enable BGP LAN ActiveMesh mode. Only valid for GCP and Azure with Remote Gateway HA enabled. Requires Azure Remote Gateway insane mode enabled. Valid values: true, false. Default: false. Available as of provider version R2.21+.'
             enable_edge_segmentation: '- (Optional) Switch to allow this connection to communicate with a Network Domain via Connection Policy.'
             enable_event_triggered_ha: '- (Optional) Enable Event Triggered HA. Default value: false. Valid values: true or false. Available as of provider version R2.19+.'
             enable_ikev2: '- (Optional) Set as true to enable IKEv2 protocol.'
@@ -3749,6 +4371,7 @@ resources:
             phase_2_authentication: '- (Optional) Phase two Authentication. Valid values: ''NO-AUTH'', ''HMAC-SHA-1'', ''HMAC-SHA-256'', ''HMAC-SHA-384'' and ''HMAC-SHA-512''. Default value: ''HMAC-SHA-256''.'
             phase_2_dh_groups: '- (Optional) Phase two DH Groups. Valid values: ''1'', ''2'', ''5'', ''14'', ''15'', ''16'', ''17'', ''18'', ''19'', ''20'' and ''21''. Default value: ''14''.'
             phase_2_encryption: '- (Optional) Phase two Encryption. Valid values: "3DES", "AES-128-CBC", "AES-192-CBC", "AES-256-CBC", "AES-128-GCM-64", "AES-128-GCM-96", "AES-128-GCM-128", "AES-256-GCM-64", "AES-256-GCM-96", "AES-256-GCM-128" and "NULL-ENCR". Default value: "AES-256-CBC".'
+            phase1_local_identifier: '- (Optional) Phase 1 local identifier. By default, gateway’s public IP is configured as the Local Identifier. Available as of provider version R3.1.0+.'
             phase1_remote_identifier: '- (Optional) List of phase 1 remote identifier of the IPsec tunnel. This can be configured as a list of any string, including emtpy string. Example: ["1.2.3.4"] when HA is disabled, ["1.2.3.4", "abcd"] when HA is enabled. Available as of provider version R2.19+.'
             pre_shared_key: '- (Optional) Pre-Shared Key.'
             prepend_as_path: '- (Optional) Connection AS Path Prepend customized by specifying AS PATH for a BGP connection. Available as of provider version R2.19.2.'
@@ -4063,7 +4686,7 @@ resources:
             bgp_ecmp: '- (Optional) Enable Equal Cost Multi Path (ECMP) routing for the next hop. Default value: false.'
             bgp_hold_time: '- (Optional) BGP hold time. Unit is in seconds. Valid values are between 12 and 360. Default value: 180.'
             bgp_lan_interfaces: '- (Optional) Interfaces to run BGP protocol on top of the ethernet interface, to connect to the onprem/remote peer. Only available for GCP Transit. Each interface has the following attributes:'
-            bgp_lan_interfaces_count: '- (Optional) Number of interfaces that will be created for BGP over LAN enabled Azure transit. Valid value: 1~5 for FireNet case, 1~7 for Non-FireNet case. Default value: 1. Available as of provider version R2.22+.'
+            bgp_lan_interfaces_count: '- (Optional) Number of interfaces that will be created for BGP over LAN enabled Azure transit. Applies on HA Transit as well if enabled. Valid value: 1~5 for FireNet case, 1~7 for Non-FireNet case. Available as of provider version R2.22+. Updatable as of provider version 3.0.3+.'
             bgp_lan_ip_list: '- List of available BGP LAN interface IPs for transit external device connection creation. Only supports GCP and Azure. Available as of provider version R2.21.0+.'
             bgp_manual_spoke_advertise_cidrs: '- (Optional) Intended CIDR list to be advertised to external BGP router. Example: "10.2.0.0/16,10.4.0.0/16". Available as of R2.6. NOTE: If previously enabled through vgw_conn resource prior to provider version R2.6, please see notes'
             bgp_polling_time: '- (Optional) BGP route polling time. Unit is in seconds. Valid values are between 10 and 50. Default value: "50".'
@@ -4078,20 +4701,19 @@ resources:
             enable_active_standby: '- (Optional) Enables Active-Standby Mode. Available only with HA enabled. Valid values: true, false. Default value: false. Available in provider version R2.17.1+.'
             enable_active_standby_preemptive: '- (Optional) Enables Preemptive Mode for Active-Standby. Available only with BGP enabled, HA enabled and Active-Standby enabled. Valid values: true, false. Default value: false.'
             enable_advertise_transit_cidr: '- (Optional) Switch to enable/disable advertise transit VPC network CIDR for a VGW connection. Available as of R2.6. NOTE: If previously enabled through vgw_conn resource prior to provider version R2.6, please see notes'
-            enable_bgp_over_lan: '- (Optional) Pre-allocate a network interface(eth4) for "BGP over LAN" functionality. Must be enabled to create a BGP over LAN aviatrix_transit_external_device_conn resource with this Transit Gateway. Only valid for GCP (4), Azure (8), AzureGov (32) or AzureChina (2048). Valid values: true or false. Default value: false. Available as of provider version R2.18+.'
+            enable_bgp_over_lan: '- (Optional) Pre-allocate a network interface(eth4) for "BGP over LAN" functionality. Must be enabled to create a BGP over LAN aviatrix_transit_external_device_conn resource with this Transit Gateway. Only valid for GCP (4), Azure (8), AzureGov (32) or AzureChina (2048). Valid values: true or false. Default value: false. Available as of provider version R2.18+. Updatable as of provider version 3.0.3+.'
             enable_egress_transit_firenet: '- (Optional) Enable Egress Transit FireNet. Valid values: true, false. Default value: false. Available in provider version R2.16.3+.'
             enable_encrypt_volume: '- (Optional) Enable EBS volume encryption for Gateway. Only supports AWS, AWSGov, AWSChina, AWS Top Secret and AWS Secret. Valid values: true, false. Default value: false.'
             enable_firenet: '- (Optional) Set to true to use gateway for legacy AWS TGW-based FireNet connection. Valid values: true, false. Default value: false. NOTE: If previously using an older provider version R2.5 where attribute name was'
             enable_firenet_interfaces: ', please see notes here.'
             enable_gateway_load_balancer: '- (Optional) Enable FireNet interfaces with AWS Gateway Load Balancer. Only valid when enable_firenet or enable_transit_firenet are set to true and cloud_type = 1 (AWS). Currently, AWS Gateway Load Balancer is only supported in AWS regions: us-west-2, us-east-1, eu-west-1, ap-southeast-2 and sa-east-1. Valid values: true or false. Default value: false. Available as of provider version R2.18+.'
+            enable_gro_gso: '- (Optional) Enable GRO/GSO for this transit gateway. Default value is true. Available in provider R3.1.0+.'
             enable_hybrid_connection: '- (Optional) Sign of readiness for AWS TGW connection. Only supported for AWS, AWSGov, AWSChina, AWS Top Secret and AWS Secret. Example: false.'
             enable_jumbo_frame: '- (Optional) Enable jumbo frames for this transit gateway. Default value is true.'
             enable_learned_cidrs_approval: '- (Optional) Switch to enable/disable encrypted transit approval for transit gateway. Valid values: true, false. Default value: false.'
             enable_monitor_gateway_subnets: '- (Optional) If set to true, the Monitor Gateway Subnets feature is enabled. Default value is false. Available in provider version R2.18+.'
             enable_multi_tier_transit: '- (Optional) Enable Multi-tier Transit mode on transit gateway. When enabled, transit gateway will propagate routes it receives from its transit peering peer to other transit peering peers. local_as_number is required. Default value: false. Available as of provider version R2.19+.'
-            enable_preserve_as_path: |-
-                - (Optional) Enable preserve as_path when advertising manual summary cidrs on transit gateway. Valid values: true, false. Default value: false. Available as of provider version R.2.22.1+
-                },
+            enable_preserve_as_path: '- (Optional) Enable preserve as_path when advertising manual summary cidrs on transit gateway. Valid values: true, false. Default value: false. Available as of provider version R.2.22.1+.'
             enable_private_oob: '- (Optional) Enable Private OOB feature. Only available for AWS, AWSGov, AWSChina, AWS Top Secret and AWS Secret. Valid values: true, false. Default value: false.'
             enable_s2c_rx_balancing: '- (Optional) Enable S2C receive packet CPU re-balancing on transit gateway. Valid values: true, false. Default value: false. Available in provider version R2.21.2+.'
             enable_segmentation: '- (Optional) Enable transit gateway for segmentation. Valid values: true, false. Default: false.'
@@ -4501,4 +5123,46 @@ resources:
                 }
         argumentDocs:
             elb_name: '- (Required) Name of ELB to be added to VPN User Accelerator. Example: "Aviatrix-vpc-abcd2134".'
+        importStatements: []
+    aviatrix_web_group:
+        subCategory: Secured Networking
+        description: Creates and manages an Aviatrix Web Group
+        name: aviatrix_web_group
+        title: aviatrix_web_group
+        examples:
+            - name: test_web_group_ip
+              manifest: |-
+                {
+                  "name": "web-group",
+                  "selector": [
+                    {
+                      "match_expressions": [
+                        {
+                          "snifilter": "aviatrix.com"
+                        }
+                      ]
+                    }
+                  ]
+                }
+            - name: test_web_group_ip
+              manifest: |-
+                {
+                  "name": "web-group",
+                  "selector": [
+                    {
+                      "match_expressions": [
+                        {
+                          "urlfilter": "https://aviatrix.com/test"
+                        }
+                      ]
+                    }
+                  ]
+                }
+        argumentDocs:
+            match_expressions: '- (Required) List of match expressions. The Web Group will be a union of all resources matched by each match_expressions.match_expressions blocks cannot be empty.'
+            name: '- (Required) Name of the Web Group.'
+            selector: '- (Required) Block containing match expressions to filter the Web Group.'
+            snifilter: '- (Optional) - Server name indicator this expression matches. snifilter cannot be used with urlfilter filters in the same match_expressions block.'
+            urlfilter: '- (Optional) - URL address this expression matches. urlfilter cannot be used with snifilter filters in the same match_expressions block.'
+            uuid: '- UUID of the Web Group.'
         importStatements: []

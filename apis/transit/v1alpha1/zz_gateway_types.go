@@ -136,7 +136,7 @@ type GatewayParameters struct {
 	// +kubebuilder:validation:Optional
 	BGPLanInterfaces []BGPLanInterfacesParameters `json:"bgpLanInterfaces,omitempty" tf:"bgp_lan_interfaces,omitempty"`
 
-	// Number of interfaces that will be created for BGP over LAN enabled Azure transit. Valid value: 1~5 for FireNet case, 1~7 for Non-FireNet case. Default value: 1. Available as of provider version R2.22+.
+	// Number of interfaces that will be created for BGP over LAN enabled Azure transit. Applies on HA Transit as well if enabled. Valid value: 1~5 for FireNet case, 1~7 for Non-FireNet case. Available as of provider version R2.22+. Updatable as of provider version 3.0.3+.
 	// Number of interfaces that will be created for BGP over LAN enabled Azure transit. Applies on HA Transit as well if enabled. Updatable as of provider version 3.0.3+.
 	// +kubebuilder:validation:Optional
 	BGPLanInterfacesCount *float64 `json:"bgpLanInterfacesCount,omitempty" tf:"bgp_lan_interfaces_count,omitempty"`
@@ -196,7 +196,7 @@ type GatewayParameters struct {
 	// +kubebuilder:validation:Optional
 	EnableAdvertiseTransitCidr *bool `json:"enableAdvertiseTransitCidr,omitempty" tf:"enable_advertise_transit_cidr,omitempty"`
 
-	// Pre-allocate a network interface(eth4) for "BGP over LAN" functionality. Must be enabled to create a BGP over LAN aviatrix_transit_external_device_conn resource with this Transit Gateway. Only valid for GCP (4), Azure (8), AzureGov (32) or AzureChina (2048). Valid values: true or false. Default value: false. Available as of provider version R2.18+.
+	// Pre-allocate a network interface(eth4) for "BGP over LAN" functionality. Must be enabled to create a BGP over LAN aviatrix_transit_external_device_conn resource with this Transit Gateway. Only valid for GCP (4), Azure (8), AzureGov (32) or AzureChina (2048). Valid values: true or false. Default value: false. Available as of provider version R2.18+. Updatable as of provider version 3.0.3+.
 	// Pre-allocate a network interface(eth4) for "BGP over LAN" functionality. Only valid for cloud_type = 4 (GCP) and 8 (Azure). Valid values: true or false. Default value: false. Available as of provider version R2.18+. Updatable as of provider version 3.0.3+.
 	// +kubebuilder:validation:Optional
 	EnableBGPOverLan *bool `json:"enableBgpOverLan,omitempty" tf:"enable_bgp_over_lan,omitempty"`
@@ -221,6 +221,7 @@ type GatewayParameters struct {
 	// +kubebuilder:validation:Optional
 	EnableGatewayLoadBalancer *bool `json:"enableGatewayLoadBalancer,omitempty" tf:"enable_gateway_load_balancer,omitempty"`
 
+	// Enable GRO/GSO for this transit gateway. Default value is true. Available in provider R3.1.0+.
 	// Specify whether to disable GRO/GSO or not.
 	// +kubebuilder:validation:Optional
 	EnableGroGso *bool `json:"enableGroGso,omitempty" tf:"enable_gro_gso,omitempty"`
@@ -250,8 +251,7 @@ type GatewayParameters struct {
 	// +kubebuilder:validation:Optional
 	EnableMultiTierTransit *bool `json:"enableMultiTierTransit,omitempty" tf:"enable_multi_tier_transit,omitempty"`
 
-	// Enable preserve as_path when advertising manual summary cidrs on transit gateway. Valid values: true, false. Default value: false. Available as of provider version R.2.22.1+
-	// },
+	// Enable preserve as_path when advertising manual summary cidrs on transit gateway. Valid values: true, false. Default value: false. Available as of provider version R.2.22.1+.
 	// Enable preserve as_path when advertising manual summary cidrs on transit gateway.
 	// +kubebuilder:validation:Optional
 	EnablePreserveAsPath *bool `json:"enablePreserveAsPath,omitempty" tf:"enable_preserve_as_path,omitempty"`

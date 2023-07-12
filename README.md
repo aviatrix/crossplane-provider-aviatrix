@@ -61,6 +61,18 @@ Build binary:
 make build
 ```
 
+Run Unit/Integ Tests:
+```console
+make test
+```
+(see internal/README.md for explanation of tests)
+
+Run tests against kind cluster and live controller:
+```console
+make e2e
+```
+This will run the e2e suite against all examples.
+
 ## Report a Bug
 
 For filing bugs, suggesting improvements, or requesting new features, please

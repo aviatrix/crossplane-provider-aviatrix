@@ -2,7 +2,7 @@ package internal
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"os"
 	"testing"
 
 	"github.com/aviatrix/provider-aviatrix/apis"
@@ -23,7 +23,7 @@ func TestProviderGoldenFiles(t *testing.T) {
 		UniversalDecoder(myscheme.PreferredVersionAllGroups()...).Decode
 
 	type args struct {
-		tfJsonFile string
+		tfJSONFile string
 		yamlFile   string
 	}
 	tests := []struct {
@@ -34,84 +34,84 @@ func TestProviderGoldenFiles(t *testing.T) {
 		{
 			name: "vpc",
 			args: args{
-				tfJsonFile: "./test-data/vpc.tf.json",
+				tfJSONFile: "./test-data/vpc.tf.json",
 				yamlFile:   "../examples/vpc.yaml",
 			},
 		}, {
 			name: "transit",
 			args: args{
-				tfJsonFile: "./test-data/transit-gateway.tf.json",
+				tfJSONFile: "./test-data/transit-gateway.tf.json",
 				yamlFile:   "../examples/transit-gateway.yaml",
 			},
 		}, {
 			name: "spoke",
 			args: args{
-				tfJsonFile: "./test-data/spoke-gateway.tf.json",
+				tfJSONFile: "./test-data/spoke-gateway.tf.json",
 				yamlFile:   "../examples/spoke-gateway.yaml",
 			},
 		}, {
 			name: "attachment",
 			args: args{
-				tfJsonFile: "./test-data/transitattachment.tf.json",
+				tfJSONFile: "./test-data/transitattachment.tf.json",
 				yamlFile:   "../examples/transitattachment.yaml",
 			},
 		}, {
 			name: "domain",
 			args: args{
-				tfJsonFile: "./test-data/networkdomain.tf.json",
+				tfJSONFile: "./test-data/networkdomain.tf.json",
 				yamlFile:   "../examples/networkdomain.yaml",
 			},
 		}, {
 			name: "association",
 			args: args{
-				tfJsonFile: "./test-data/networkdomainassociation.tf.json",
+				tfJSONFile: "./test-data/networkdomainassociation.tf.json",
 				yamlFile:   "../examples/networkdomainassociation.yaml",
 			},
 		}, {
 			name: "policy",
 			args: args{
-				tfJsonFile: "./test-data/networkdomainconnectionpolicy.tf.json",
+				tfJSONFile: "./test-data/networkdomainconnectionpolicy.tf.json",
 				yamlFile:   "../examples/networkdomainconnectionpolicy.yaml",
 			},
 		}, {
 			name: "snat",
 			args: args{
-				tfJsonFile: "./test-data/snat.tf.json",
+				tfJSONFile: "./test-data/snat.tf.json",
 				yamlFile:   "../examples/snat.yaml",
 			},
 		}, {
 			name: "dnat",
 			args: args{
-				tfJsonFile: "./test-data/dnat.tf.json",
+				tfJSONFile: "./test-data/dnat.tf.json",
 				yamlFile:   "../examples/dnat.yaml",
 			},
 		}, {
 			name: "peering",
 			args: args{
-				tfJsonFile: "./test-data/gatewaypeering.tf.json",
+				tfJSONFile: "./test-data/gatewaypeering.tf.json",
 				yamlFile:   "../examples/gatewaypeering.yaml",
 			},
 		}, {
 			name: "account",
 			args: args{
-				tfJsonFile: "./test-data/partial/account.tf.json",
+				tfJSONFile: "./test-data/partial/account.tf.json",
 				yamlFile:   "../examples/account.yaml",
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			stream, err := ioutil.ReadFile(tt.args.yamlFile)
+			stream, err := os.ReadFile(tt.args.yamlFile)
 			g.Expect(err).NotTo(gomega.HaveOccurred())
 			obj, _, err := decode(stream, nil, nil)
 			g.Expect(err).NotTo(gomega.HaveOccurred())
 			res := obj.(resource.Terraformed)
 			resources := writeResourceBlock(res)
 
-			jstream, _ := ioutil.ReadFile(tt.args.tfJsonFile)
+			jstream, _ := os.ReadFile(tt.args.tfJSONFile)
 			x := map[string]any{}
 
-			json.Unmarshal([]byte(jstream), &x)
+			json.Unmarshal(jstream, &x)
 
 			g := gomega.NewGomegaWithT(t)
 
