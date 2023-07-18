@@ -2,3 +2,5 @@ apiVersion: meta.pkg.crossplane.io/v1alpha1
 kind: Provider
 metadata:
   name: provider-aviatrix
+  annotations: 
+   meta.crossplane.io/description: Upbound Partner Provider for configuring Aviatrix Secure Multi Cloud functionality
