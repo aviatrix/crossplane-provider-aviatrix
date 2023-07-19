@@ -57,6 +57,7 @@ UPTEST_VERSION = v0.2.1
 # ====================================================================================
 # Setup Images
 
+
 REGISTRY_ORGS ?= xpkg.upbound.io/aviatrix
 IMAGES = $(PROJECT_NAME)
 -include build/makelib/imagelight.mk
@@ -175,6 +176,7 @@ local-deploy: build controlplane.up local.xpkg.deploy.provider.$(PROJECT_NAME)
 	@$(KUBECTL) -n upbound-system wait --for=condition=Available deployment --all --timeout=5m
 	@$(OK) running locally built provider
 
+UPTEST_EXAMPLE_LIST?=$(find examples/*.yaml -type f| tr '\n' ',')
 e2e: local-deploy uptest
 
 .PHONY: cobertura submodules fallthrough run crds.clean
