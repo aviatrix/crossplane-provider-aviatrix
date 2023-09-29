@@ -35,6 +35,10 @@ type GatewayObservation struct {
 	// Aviatrix spoke gateway unique name of HA spoke gateway.
 	HaGwName *string `json:"haGwName,omitempty" tf:"ha_gw_name,omitempty"`
 
+	// The image version of the HA gateway. Use aviatrix_gateway_image data source to programmatically retrieve this value for the desired ha_software_version. If set, we will attempt to update the HA gateway to the specified version if current version is different. If left blank, the gateway upgrades can be managed with the aviatrix_controller_config resource. Type: String. Example: "hvm-cloudx-aws-022021". Available as of provider version R2.20.0.
+	// ha_image_version can be used to set the desired image version of the HA gateway. If set, we will attempt to update the gateway to the specified version.
+	HaImageVersion *string `json:"haImageVersion,omitempty" tf:"ha_image_version,omitempty"`
+
 	// Private IP address of HA spoke gateway.
 	// Private IP address of the spoke gateway created.
 	HaPrivateIP *string `json:"haPrivateIp,omitempty" tf:"ha_private_ip,omitempty"`
@@ -46,6 +50,10 @@ type GatewayObservation struct {
 	// HA security group used for the spoke gateway.
 	// HA security group used for the spoke gateway.
 	HaSecurityGroupID *string `json:"haSecurityGroupId,omitempty" tf:"ha_security_group_id,omitempty"`
+
+	// The software version of the HA gateway. If set, we will attempt to update the HA gateway to the specified version if current version is different. If left blank, the HA gateway upgrade can be managed with the aviatrix_controller_config resource. Type: String. Example: "6.5.821". Available as of provider version R2.20.0.
+	// ha_software_version can be used to set the desired software version of the HA gateway. If set, we will attempt to update the gateway to the specified version. If left blank, the gateway software version will continue to be managed through the aviatrix_controller_config resource.
+	HaSoftwareVersion *string `json:"haSoftwareVersion,omitempty" tf:"ha_software_version,omitempty"`
 
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
 
@@ -266,11 +274,6 @@ type GatewayParameters struct {
 	// +kubebuilder:validation:Optional
 	HaGwSize *string `json:"haGwSize,omitempty" tf:"ha_gw_size,omitempty"`
 
-	// The image version of the HA gateway. Use aviatrix_gateway_image data source to programmatically retrieve this value for the desired ha_software_version. If set, we will attempt to update the HA gateway to the specified version if current version is different. If left blank, the gateway upgrades can be managed with the aviatrix_controller_config resource. Type: String. Example: "hvm-cloudx-aws-022021". Available as of provider version R2.20.0.
-	// ha_image_version can be used to set the desired image version of the HA gateway. If set, we will attempt to update the gateway to the specified version.
-	// +kubebuilder:validation:Optional
-	HaImageVersion *string `json:"haImageVersion,omitempty" tf:"ha_image_version,omitempty"`
-
 	// west-1a".
 	// AZ of subnet being created for Insane Mode Spoke HA Gateway. Required for AWS if insane_mode is true and ha_subnet is set.
 	// +kubebuilder:validation:Optional
@@ -290,11 +293,6 @@ type GatewayParameters struct {
 	// Private Mode HA subnet availability zone.
 	// +kubebuilder:validation:Optional
 	HaPrivateModeSubnetZone *string `json:"haPrivateModeSubnetZone,omitempty" tf:"ha_private_mode_subnet_zone,omitempty"`
-
-	// The software version of the HA gateway. If set, we will attempt to update the HA gateway to the specified version if current version is different. If left blank, the HA gateway upgrade can be managed with the aviatrix_controller_config resource. Type: String. Example: "6.5.821". Available as of provider version R2.20.0.
-	// ha_software_version can be used to set the desired software version of the HA gateway. If set, we will attempt to update the gateway to the specified version. If left blank, the gateway software version will continue to be managed through the aviatrix_controller_config resource.
-	// +kubebuilder:validation:Optional
-	HaSoftwareVersion *string `json:"haSoftwareVersion,omitempty" tf:"ha_software_version,omitempty"`
 
 	// HA Subnet. Required if enabling HA for AWS, AWSGov, AWSChina, Azure, AzureGov, AzureChina, OCI, Alibaba Cloud, AWS Top Secret or AWS Secret gateways. Optional for GCP. Setting to empty/unsetting will disable HA. Setting to a valid subnet CIDR will create an HA gateway on the subnet. Example: "10.12.0.0/24"
 	// HA Subnet. Required if enabling HA for AWS/AWSGov/AWSChina/Azure/AzureChina/OCI/Alibaba Cloud. Optional if enabling HA for GCP.
