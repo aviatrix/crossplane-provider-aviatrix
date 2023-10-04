@@ -9,11 +9,13 @@ import (
 	ujconfig "github.com/upbound/upjet/pkg/config"
 )
 
-// Configure configures the null group
+// Configure configures the gateway group
 func Configure(p *ujconfig.Provider) {
 	moveVersionToStatus := func(r *config.Resource) {
 		config.MoveToStatus(r.TerraformResource, "software_version")
 		config.MoveToStatus(r.TerraformResource, "image_version")
+		config.MoveToStatus(r.TerraformResource, "ha_software_version")
+		config.MoveToStatus(r.TerraformResource, "ha_image_version")
 	}
 	p.AddResourceConfigurator("aviatrix_spoke_gateway", moveVersionToStatus)
 	p.AddResourceConfigurator("aviatrix_transit_gateway", moveVersionToStatus)

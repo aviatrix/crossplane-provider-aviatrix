@@ -300,7 +300,7 @@ type AccountParameters struct {
 	// +kubebuilder:validation:Optional
 	AzuregovSubscriptionID *string `json:"azuregovSubscriptionId,omitempty" tf:"azuregov_subscription_id,omitempty"`
 
-	// Type of cloud service provider. Only AWS, GCP, Azure, OCI, AzureGov, AWSGov, AWSChina, AzureChina, Alibaba Cloud and Edge CSP are supported currently. Enter 1 for AWS, 4 for GCP, 8 for Azure, 16 for OCI, 32 for AzureGov, 256 for AWSGov, 1024 for AWSChina or 2048 for AzureChina, 8192 for Alibaba Cloud, 65536 for Edge CSP.
+	// Type of cloud service provider. Only AWS, GCP, Azure, OCI, AzureGov, AWSGov, AWSChina, AzureChina and Alibaba Cloud are supported currently. Enter 1 for AWS, 4 for GCP, 8 for Azure, 16 for OCI, 32 for AzureGov, 256 for AWSGov, 1024 for AWSChina or 2048 for AzureChina, 8192 for Alibaba Cloud.
 	// Type of cloud service provider.
 	// +kubebuilder:validation:Required
 	CloudType *float64 `json:"cloudType" tf:"cloud_type,omitempty"`

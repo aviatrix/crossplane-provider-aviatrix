@@ -11,6 +11,7 @@ spec:
     accountName: my-aws
     cloudType: 1
     gwSize: t2.micro
+    manageTransitGatewayAttachment: false
     singleIpSnat: false
     subnet: 10.11.0.0/24
     tags:

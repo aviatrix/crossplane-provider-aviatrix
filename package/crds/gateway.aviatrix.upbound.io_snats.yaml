@@ -171,7 +171,9 @@ spec:
                       type: object
                     type: array
                   syncToHa:
-                    description: Whether to sync the policies to the HA gateway.
+                    description: 'Sync the policies to the HA gateway. Valid values:
+                      true, false. Default: false. Whether to sync the policies to
+                      the HA gateway.'
                     type: boolean
                 type: object
               providerConfigRef:
