@@ -457,18 +457,6 @@ spec:
                       "t2.micro". HA Gateway Size. Mandatory if HA is enabled (ha_subnet
                       is set).'
                     type: string
-                  haImageVersion:
-                    description: 'The image version of the HA gateway. Use aviatrix_gateway_image
-                      data source to programmatically retrieve this value for the
-                      desired ha_software_version. If set, we will attempt to update
-                      the HA gateway to the specified version if current version is
-                      different. If left blank, the gateway upgrades can be managed
-                      with the aviatrix_controller_config resource. Type: String.
-                      Example: "hvm-cloudx-aws-022021". Available as of provider version
-                      R2.20.0. ha_image_version can be used to set the desired image
-                      version of the HA gateway. If set, we will attempt to update
-                      the gateway to the specified version.'
-                    type: string
                   haInsaneModeAz:
                     description: 'AZ of subnet being created for Insane Mode Transit
                       HA Gateway. Required for AWS, AWSGov, AWSChina, AWS Top Secret
@@ -490,18 +478,6 @@ spec:
                       Private Mode is enabled on the Controller and cloud_type is
                       AWS or AWSGov with HA. Available in Provider version R2.23+.
                       Private Mode HA subnet availability zone.
-                    type: string
-                  haSoftwareVersion:
-                    description: 'The software version of the HA gateway. If set,
-                      we will attempt to update the HA gateway to the specified version
-                      if current version is different. If left blank, the HA gateway
-                      upgrade can be managed with the aviatrix_controller_config resource.
-                      Type: String. Example: "6.5.821". Available as of provider version
-                      R2.20.0. ha_software_version can be used to set the desired
-                      software version of the HA gateway. If set, we will attempt
-                      to update the gateway to the specified version. If left blank,
-                      the gateway software version will continue to be managed through
-                      the aviatrix_controller_config resource.'
                     type: string
                   haSubnet:
                     description: 'HA Subnet CIDR. Required only if enabling HA for
@@ -887,6 +863,18 @@ spec:
                       gateway. Aviatrix transit gateway unique name of HA transit
                       gateway.
                     type: string
+                  haImageVersion:
+                    description: 'The image version of the HA gateway. Use aviatrix_gateway_image
+                      data source to programmatically retrieve this value for the
+                      desired ha_software_version. If set, we will attempt to update
+                      the HA gateway to the specified version if current version is
+                      different. If left blank, the gateway upgrades can be managed
+                      with the aviatrix_controller_config resource. Type: String.
+                      Example: "hvm-cloudx-aws-022021". Available as of provider version
+                      R2.20.0. ha_image_version can be used to set the desired image
+                      version of the HA gateway. If set, we will attempt to update
+                      the gateway to the specified version.'
+                    type: string
                   haLanInterfaceCidr:
                     description: LAN interface CIDR of the HA transit gateway created
                       (will be used when enabling FQDN Firenet in Azure). Available
@@ -904,6 +892,18 @@ spec:
                   haSecurityGroupId:
                     description: HA security group used for the transit gateway. HA
                       security group used for the transit gateway.
+                    type: string
+                  haSoftwareVersion:
+                    description: 'The software version of the HA gateway. If set,
+                      we will attempt to update the HA gateway to the specified version
+                      if current version is different. If left blank, the HA gateway
+                      upgrade can be managed with the aviatrix_controller_config resource.
+                      Type: String. Example: "6.5.821". Available as of provider version
+                      R2.20.0. ha_software_version can be used to set the desired
+                      software version of the HA gateway. If set, we will attempt
+                      to update the gateway to the specified version. If left blank,
+                      the gateway software version will continue to be managed through
+                      the aviatrix_controller_config resource.'
                     type: string
                   id:
                     type: string
