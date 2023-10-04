@@ -51,6 +51,10 @@ type GatewayObservation struct {
 	// Aviatrix transit gateway unique name of HA transit gateway.
 	HaGwName *string `json:"haGwName,omitempty" tf:"ha_gw_name,omitempty"`
 
+	// The image version of the HA gateway. Use aviatrix_gateway_image data source to programmatically retrieve this value for the desired ha_software_version. If set, we will attempt to update the HA gateway to the specified version if current version is different. If left blank, the gateway upgrades can be managed with the aviatrix_controller_config resource. Type: String. Example: "hvm-cloudx-aws-022021". Available as of provider version R2.20.0.
+	// ha_image_version can be used to set the desired image version of the HA gateway. If set, we will attempt to update the gateway to the specified version.
+	HaImageVersion *string `json:"haImageVersion,omitempty" tf:"ha_image_version,omitempty"`
+
 	// LAN interface CIDR of the HA transit gateway created (will be used when enabling FQDN Firenet in Azure). Available in provider version R2.18+.
 	// Transit gateway lan interface cidr for the HA gateway.
 	HaLanInterfaceCidr *string `json:"haLanInterfaceCidr,omitempty" tf:"ha_lan_interface_cidr,omitempty"`
@@ -66,6 +70,10 @@ type GatewayObservation struct {
 	// HA security group used for the transit gateway.
 	// HA security group used for the transit gateway.
 	HaSecurityGroupID *string `json:"haSecurityGroupId,omitempty" tf:"ha_security_group_id,omitempty"`
+
+	// The software version of the HA gateway. If set, we will attempt to update the HA gateway to the specified version if current version is different. If left blank, the HA gateway upgrade can be managed with the aviatrix_controller_config resource. Type: String. Example: "6.5.821". Available as of provider version R2.20.0.
+	// ha_software_version can be used to set the desired software version of the HA gateway. If set, we will attempt to update the gateway to the specified version. If left blank, the gateway software version will continue to be managed through the aviatrix_controller_config resource.
+	HaSoftwareVersion *string `json:"haSoftwareVersion,omitempty" tf:"ha_software_version,omitempty"`
 
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
 
@@ -337,11 +345,6 @@ type GatewayParameters struct {
 	// +kubebuilder:validation:Optional
 	HaGwSize *string `json:"haGwSize,omitempty" tf:"ha_gw_size,omitempty"`
 
-	// The image version of the HA gateway. Use aviatrix_gateway_image data source to programmatically retrieve this value for the desired ha_software_version. If set, we will attempt to update the HA gateway to the specified version if current version is different. If left blank, the gateway upgrades can be managed with the aviatrix_controller_config resource. Type: String. Example: "hvm-cloudx-aws-022021". Available as of provider version R2.20.0.
-	// ha_image_version can be used to set the desired image version of the HA gateway. If set, we will attempt to update the gateway to the specified version.
-	// +kubebuilder:validation:Optional
-	HaImageVersion *string `json:"haImageVersion,omitempty" tf:"ha_image_version,omitempty"`
-
 	// AZ of subnet being created for Insane Mode Transit HA Gateway. Required for AWS, AWSGov, AWSChina, AWS Top Secret and AWS Secret if insane_mode is enabled and ha_subnet is set. Example: AWS: "us-west-1a".
 	// AZ of subnet being created for Insane Mode Transit HA Gateway. Required for AWS if insane_mode is enabled and ha_subnet is set.
 	// +kubebuilder:validation:Optional
@@ -361,11 +364,6 @@ type GatewayParameters struct {
 	// Private Mode HA subnet availability zone.
 	// +kubebuilder:validation:Optional
 	HaPrivateModeSubnetZone *string `json:"haPrivateModeSubnetZone,omitempty" tf:"ha_private_mode_subnet_zone,omitempty"`
-
-	// The software version of the HA gateway. If set, we will attempt to update the HA gateway to the specified version if current version is different. If left blank, the HA gateway upgrade can be managed with the aviatrix_controller_config resource. Type: String. Example: "6.5.821". Available as of provider version R2.20.0.
-	// ha_software_version can be used to set the desired software version of the HA gateway. If set, we will attempt to update the gateway to the specified version. If left blank, the gateway software version will continue to be managed through the aviatrix_controller_config resource.
-	// +kubebuilder:validation:Optional
-	HaSoftwareVersion *string `json:"haSoftwareVersion,omitempty" tf:"ha_software_version,omitempty"`
 
 	// HA Subnet CIDR. Required only if enabling HA for AWS, Azure, AzureGov, AWSGov, AWSChina, AzureChina, OCI, Alibaba Cloud, AWS Top Secret or AWS Secret gateways. Optional for GCP. Setting to empty/unsetting will disable HA. Setting to a valid subnet CIDR will create an HA gateway on the subnet. Example: "10.12.0.0/24".
 	// HA Subnet. Required for enabling HA for AWS/AWSGov/AWSChina/Azure/OCI/Alibaba Cloud. Optional for enabling HA for GCP gateway.
@@ -437,7 +435,7 @@ type GatewayParameters struct {
 	// +kubebuilder:validation:Optional
 	PrivateModeSubnetZone *string `json:"privateModeSubnetZone,omitempty" tf:"private_mode_subnet_zone,omitempty"`
 
-	// Gateway ethernet interface RX queue size. Applies on HA as well if enabled. Once set, can't be deleted or disabled. Available for AWS as of provider version R2.22+.
+	// Gateway ethernet interface RX queue size. Once set, can't be deleted or disabled. Available for AWS as of provider version R2.22+.
 	// Gateway ethernet interface RX queue size. Supported for AWS related clouds only.
 	// +kubebuilder:validation:Optional
 	RxQueueSize *string `json:"rxQueueSize,omitempty" tf:"rx_queue_size,omitempty"`
@@ -487,7 +485,7 @@ type GatewayParameters struct {
 	// +kubebuilder:validation:Required
 	VPCReg *string `json:"vpcReg" tf:"vpc_reg,omitempty"`
 
-	// Availability Zone. Only available Azure (8), Azure GOV (32) and Azure CHINA (2048). Must be in the form 'az-n', for example, 'az-2'. Available in provider version R2.17+.
+	// Availability Zone. Only available for cloud_type = 8 (Azure). Must be in the form 'az-n', for example, 'az-2'. Available in provider version R2.17+.
 	// Availability Zone. Only available for cloud_type = 8 (Azure). Must be in the form 'az-n', for example, 'az-2'.
 	// +kubebuilder:validation:Optional
 	Zone *string `json:"zone,omitempty" tf:"zone,omitempty"`

@@ -73,6 +73,7 @@ type DnatParameters struct {
 	// +kubebuilder:validation:Required
 	DnatPolicy []DnatPolicyParameters `json:"dnatPolicy" tf:"dnat_policy,omitempty"`
 
+	// Sync the policies to the HA gateway. Valid values: true, false. Default: true.
 	// Whether to sync the policies to the HA gateway.
 	// +kubebuilder:validation:Optional
 	SyncToHa *bool `json:"syncToHa,omitempty" tf:"sync_to_ha,omitempty"`

@@ -212,9 +212,7 @@ resources:
             azuregov_application_key: '- (Optional) AzureGov ARM Application key. Required when creating an account for AzureGov. Available as of provider version R2.19+.'
             azuregov_directory_id: '- (Optional) AzureGov ARM Directory ID. Required when creating an account for AzureGov. Available as of provider version R2.19+.'
             azuregov_subscription_id: '- (Optional) AzureGov ARM Subscription ID. Required when creating an account for AzureGov. Available as of provider version R2.19+.'
-            cloud_type: '- (Required) Type of cloud service provider. Only AWS, GCP, Azure, OCI, AzureGov, AWSGov, AWSChina, AzureChina, Alibaba Cloud and Edge CSP are supported currently. Enter 1 for AWS, 4 for GCP, 8 for Azure, 16 for OCI, 32 for AzureGov, 256 for AWSGov, 1024 for AWSChina or 2048 for AzureChina, 8192 for Alibaba Cloud, 65536 for Edge CSP.'
-            edge_csp_password: '- (Optional) Edge CSP password. Required when creating an Edge CSP account.'
-            edge_csp_username: '- (Optional) Edge CSP username. Required when creating an Edge CSP account.'
+            cloud_type: '- (Required) Type of cloud service provider. Only AWS, GCP, Azure, OCI, AzureGov, AWSGov, AWSChina, AzureChina and Alibaba Cloud are supported currently. Enter 1 for AWS, 4 for GCP, 8 for Azure, 16 for OCI, 32 for AzureGov, 256 for AWSGov, 1024 for AWSChina or 2048 for AzureChina, 8192 for Alibaba Cloud.'
             gcloud_project_credentials_filepath: '- (Optional) GCloud Project Credentials [local filepath].json. Required when creating an account for GCP.'
             gcloud_project_id: '- (Optional) GCloud Project ID.'
             oci_api_private_key_filepath: '- (Optional) Oracle OCI API Private Key local file path. Required when creating an account for OCI.'
@@ -241,6 +239,74 @@ resources:
             email: '- (Required) Email of address of account user to be created.'
             password: '- (Required) Login password for the account user to be created. If password is changed, current account will be destroyed and a new account will be created.'
             username: '- (Required) Name of account user to be created. It can only include alphanumeric characters(lower case only), hyphens, dots or underscores. 1 to 80 in length. No spaces are allowed.'
+        importStatements: []
+    aviatrix_app_domain:
+        subCategory: Multi-Cloud Transit
+        description: Creates and manages an Aviatrix App Domain
+        name: aviatrix_app_domain
+        title: aviatrix_app_domain
+        examples:
+            - name: test_app_domain_ip
+              manifest: |-
+                {
+                  "name": "app-domain",
+                  "selector": [
+                    {
+                      "match_expressions": [
+                        {
+                          "account_name": "devops",
+                          "region": "us-west-2",
+                          "tags": {
+                            "k3": "v3"
+                          },
+                          "type": "vm"
+                        },
+                        {
+                          "cidr": "10.0.0.0/16"
+                        }
+                      ]
+                    }
+                  ]
+                }
+        argumentDocs:
+            account_id: '- (Optional) - Account ID this expression matches.'
+            account_name: '- (Optional) - Account name this expression matches.'
+            cidr: '- (Optional) - CIDR block or IP Address this expression matches. cidr cannot be used with any other filters in the same match_expressions block.'
+            match_expressions: '- (Required) List of match expressions. The App Domain will be a union of all resources matched by each match_expressions.match_expressions blocks cannot be empty.'
+            name: '- (Required) Name of the App Domain.'
+            region: '- (Optional) - Region this expression matches.'
+            res_id: '- (Optional) - Resource ID this expression matches.'
+            selector: '- (Required) Block containing match expressions to filter the App Domain.'
+            tags: '- (Optional) - Map of tags this expression matches.'
+            type: '- (Optional) - Type of resource this expression matches. Must be one of "vm", "vpc" or "subnet". type is required when cidr is not used.'
+            uuid: '- UUID of the App Domain.'
+            zone: '- (Optional) - Zone this expression matches.'
+        importStatements: []
+    aviatrix_arm_peer:
+        subCategory: Deprecated
+        description: Creates and manages Aviatrix ARM peerings
+        name: aviatrix_arm_peer
+        title: aviatrix_arm_peer
+        examples:
+            - name: test_armpeer
+              manifest: |-
+                {
+                  "account_name1": "test1-account",
+                  "account_name2": "test2-account",
+                  "vnet_name_resource_group1": "vpc-abcd1234",
+                  "vnet_name_resource_group2": "vpc-rdef3333",
+                  "vnet_reg1": "us-east-1",
+                  "vnet_reg2": "us-west-1"
+                }
+        argumentDocs:
+            account_name1: '- (Required) This parameter represents the name of an Azure Cloud-Account in Aviatrix controller.'
+            account_name2: '- (Required) This parameter represents the name of an Azure Cloud-Account in Aviatrix controller.'
+            vnet_cidr1: '- List of VNet CIDR of vnet_name_resource_group1.'
+            vnet_cidr2: '- List of VNet CIDR of vnet_name_resource_group2.'
+            vnet_name_resource_group1: '- (Required) VNet-Name of Azure cloud. Example: "VNet_Name:Resource_Group_Name".'
+            vnet_name_resource_group2: '- (Required) VNet-Name of Azure cloud. Example: "VNet_Name:Resource_Group_Name".'
+            vnet_reg1: '- (Required) Region of Azure cloud. Example: "East US 2".'
+            vnet_reg2: '- (Required) Region of Azure cloud. Example: "East US 2".'
         importStatements: []
     aviatrix_aws_guard_duty:
         subCategory: Security
@@ -288,14 +354,16 @@ resources:
                   "vpc_reg2": "us-west-1"
                 }
         argumentDocs:
-            account_name1: '- (Required) Account name of AWS VPC1.'
-            account_name2: '- (Required) Account name of AWS VPC2.'
-            rtb_list1: '- (Optional) List of Route table IDs of VPC1. Example: ["rtb-abcd1234", "rtb-wxyz5678"].'
-            rtb_list2: '- (Optional) List of Route table IDs of VPC2. Example: ["rtb-abcd1234", "rtb-wxyz5678"].'
-            vpc_id1: '- (Required) VPC ID of AWS VPC1. Example: AWS: "vpc-abcd1234".'
-            vpc_id2: '- (Required) VPC ID of AWS VPC2. Example: AWS: "vpc-abcd1234".'
-            vpc_reg1: '- (Required) Region of AWS VPC1. Example: AWS: "us-east-1".'
-            vpc_reg2: '- (Required) Region of AWS VPC2. Example: AWS: "us-east-1".'
+            account_name1: '- (Required) This parameter represents the name of an AWS Cloud-Account in Aviatrix controller.'
+            account_name2: '- (Required) This parameter represents the name of an AWS Cloud-Account in Aviatrix controller.'
+            rtb_list1: '- (Optional) List of Route table ID. Valid Values: ["all"], ["rtb-abcd1234"] OR ["rtb-abcd1234,rtb-wxyz5678"].'
+            rtb_list1_output: '- List of route table ID of vpc_id1.'
+            rtb_list2: '- (Optional) List of Route table ID. Valid Values: ["all"], ["rtb-abcd1234"] OR ["rtb-abcd1234,rtb-wxyz5678"].'
+            rtb_list2_output: '- List of route table ID of vpc_id2.'
+            vpc_id1: '- (Required) VPC ID of AWS cloud. Example: AWS: "vpc-abcd1234".'
+            vpc_id2: '- (Required) VPC ID of AWS cloud. Example: AWS: "vpc-abcd1234".'
+            vpc_reg1: '- (Required) Region of AWS cloud. Example: AWS: "us-east-1".'
+            vpc_reg2: '- (Required) Region of AWS cloud. Example: AWS: "us-east-1".'
         importStatements: []
     aviatrix_aws_tgw:
         subCategory: TGW Orchestrator
@@ -308,7 +376,46 @@ resources:
                 {
                   "account_name": "devops",
                   "aws_side_as_number": "64512",
+                  "manage_transit_gateway_attachment": false,
+                  "manage_vpc_attachment": false,
                   "region": "us-east-1",
+                  "security_domains": [
+                    {
+                      "connected_domains": [
+                        "Default_Domain",
+                        "Shared_Service_Domain",
+                        "mysdn1"
+                      ],
+                      "security_domain_name": "Aviatrix_Edge_Domain"
+                    },
+                    {
+                      "connected_domains": [
+                        "Aviatrix_Edge_Domain",
+                        "Shared_Service_Domain"
+                      ],
+                      "security_domain_name": "Default_Domain"
+                    },
+                    {
+                      "connected_domains": [
+                        "Aviatrix_Edge_Domain",
+                        "Default_Domain"
+                      ],
+                      "security_domain_name": "Shared_Service_Domain"
+                    },
+                    {
+                      "connected_domains": [
+                        "Aviatrix_Edge_Domain"
+                      ],
+                      "security_domain_name": "SDN1"
+                    },
+                    {
+                      "security_domain_name": "mysdn2"
+                    },
+                    {
+                      "aviatrix_firewall": true,
+                      "security_domain_name": "firewall-domain"
+                    }
+                  ],
                   "tgw_name": "test-AWS-TGW"
                 }
             - name: test_aws_gov_tgw
@@ -317,13 +424,52 @@ resources:
                   "account_name": "devops",
                   "aws_side_as_number": "64512",
                   "cloud_type": 256,
+                  "manage_transit_gateway_attachment": false,
+                  "manage_vpc_attachment": false,
                   "region": "us-gov-east-1",
+                  "security_domains": [
+                    {
+                      "connected_domains": [
+                        "Default_Domain",
+                        "Shared_Service_Domain",
+                        "mysdn1"
+                      ],
+                      "security_domain_name": "Aviatrix_Edge_Domain"
+                    },
+                    {
+                      "connected_domains": [
+                        "Aviatrix_Edge_Domain",
+                        "Shared_Service_Domain"
+                      ],
+                      "security_domain_name": "Default_Domain"
+                    },
+                    {
+                      "connected_domains": [
+                        "Aviatrix_Edge_Domain",
+                        "Default_Domain"
+                      ],
+                      "security_domain_name": "Shared_Service_Domain"
+                    },
+                    {
+                      "connected_domains": [
+                        "Aviatrix_Edge_Domain"
+                      ],
+                      "security_domain_name": "SDN1"
+                    },
+                    {
+                      "security_domain_name": "mysdn2"
+                    },
+                    {
+                      "aviatrix_firewall": true,
+                      "security_domain_name": "firewall-domain"
+                    }
+                  ],
                   "tgw_name": "test-AWSGov-TGW"
                 }
         argumentDocs:
             account_name: '- (Required) Name of the cloud account in the Aviatrix controller.'
             attached_aviatrix_transit_gateway: '- (Optional) A list of names of Aviatrix Transit Gateway(s) (transit VPCs) to attach to the Aviatrix_Edge_Domain.'
-            attached_vpc: '- (Optional) A list of VPCs attached to the domain (name: security_domain_name) together with its creation. This list needs to be null for "Aviatrix_Edge_Domain".'
+            attached_vpc.attached_vpc: '- (Optional) A list of VPCs attached to the domain (name: security_domain_name) together with its creation. This list needs to be null for "Aviatrix_Edge_Domain".'
             aviatrix_firewall: '- (Optional) Set to true if the security domain is to be used as an Aviatrix Firewall Domain for the Aviatrix Firewall Network. Valid values: true, false. Default value: false.'
             aws_side_as_number: '- (Required) BGP Local ASN (Autonomous System Number). Integer between 1-4294967294. Example: "65001".'
             cidrs: '- (Optional) Set of TGW CIDRs. For example, cidrs = ["10.0.10.0/24", "10.1.10.0/24"]. Available as of provider version R2.18.1+.'
@@ -371,7 +517,7 @@ resources:
         argumentDocs:
             connect_attachment_id: '- Connect Attachment ID.'
             connection_name: '- (Required) Connection name.'
-            network_domain_name: '- (Required) Network Domain name.'
+            network_domain_name: '- (Optional) Network Domain name.'
             security_domain_name: '- (Optional) Security Domain name.'
             tgw_name: '- (Required) AWS TGW name.'
             transport_attachment_id: '- Transport Attachment ID.'
@@ -432,13 +578,13 @@ resources:
             directconnect_account_name: '- (Required) This parameter represents the name of an Account in Aviatrix controller.'
             dx_gateway_id: '- (Required) This parameter represents the name of a Direct Connect Gateway ID.'
             enable_learned_cidrs_approval: '- (Optional) Switch to enable/disable encrypted transit approval for AWS TGW DirectConnect. Valid values: true, false. Default value: false.'
-            network_domain_name: '- (Required) The name of a network domain, to which the direct connect gateway will be attached.'
+            network_domain_name: '- (Optional) The name of a network domain, to which the direct connect gateway will be attached.'
             security_domain_name: '- (Optional) The name of a security domain, to which the direct connect gateway will be attached.'
             tgw_name: '- (Required) This parameter represents the name of an AWS TGW.'
         importStatements: []
     aviatrix_aws_tgw_intra_domain_inspection:
         subCategory: TGW Orchestrator
-        description: Creates and manages the intra domain inspection of network domains in an AWS TGW
+        description: Creates and manages the intra domain inspection of security domains in an AWS TGW
         name: aviatrix_aws_tgw_intra_domain_inspection
         title: aviatrix_aws_tgw_intra_domain_inspection
         examples:
@@ -450,8 +596,8 @@ resources:
                   "tgw_name": "test-AWS-TGW"
                 }
         argumentDocs:
-            firewall_domain_name: '- (Required) The name of a firewall network domain.'
-            route_domain_name: '- (Required) The name of a network domain.'
+            firewall_domain_name: '- (Required) The name of a firewall security domain.'
+            route_domain_name: '- (Required) The name of a security domain.'
             tgw_name: '- (Required) The AWS TGW name.'
         importStatements: []
     aviatrix_aws_tgw_network_domain:
@@ -464,112 +610,112 @@ resources:
               manifest: |-
                 {
                   "name": "Default_Domain",
-                  "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.id}"
+                  "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.tgw_name}"
                 }
               references:
-                tgw_name: aviatrix_aws_tgw.test_aws_tgw.id
+                tgw_name: aviatrix_aws_tgw.test_aws_tgw.tgw_name
               dependencies:
                 aviatrix_aws_tgw.test_aws_tgw: |-
                     {
                       "account_name": "devops",
                       "aws_side_as_number": "64512",
+                      "manage_security_domain": false,
+                      "manage_transit_gateway_attachment": false,
+                      "manage_vpc_attachment": false,
                       "region": "us-east-1",
                       "tgw_name": "test-AWS-TGW"
                     }
-                aviatrix_aws_tgw_peering_domain_conn.default_sd_conn1: |-
+                aviatrix_aws_tgw_security_domain_connection.default_sd_conn1: |-
                     {
                       "domain_name1": "${aviatrix_aws_tgw_network_domain.Aviatrix_Edge_Domain.name}",
                       "domain_name2": "${aviatrix_aws_tgw_network_domain.Default_Domain.name}",
-                      "tgw_name1": "${aviatrix_aws_tgw.test_aws_tgw.id}",
-                      "tgw_name2": "${aviatrix_aws_tgw.test_aws_tgw.id}"
+                      "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.tgw_name}"
                     }
-                aviatrix_aws_tgw_peering_domain_conn.default_sd_conn2: |-
+                aviatrix_aws_tgw_security_domain_connection.default_sd_conn2: |-
                     {
                       "domain_name1": "${aviatrix_aws_tgw_network_domain.Aviatrix_Edge_Domain.name}",
                       "domain_name2": "${aviatrix_aws_tgw_network_domain.Shared_Service_Domain.name}",
-                      "tgw_name1": "${aviatrix_aws_tgw.test_aws_tgw.id}",
-                      "tgw_name2": "${aviatrix_aws_tgw.test_aws_tgw.id}"
+                      "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.tgw_name}"
                     }
-                aviatrix_aws_tgw_peering_domain_conn.default_sd_conn3: |-
+                aviatrix_aws_tgw_security_domain_connection.default_sd_conn3: |-
                     {
                       "domain_name1": "${aviatrix_aws_tgw_network_domain.Default_Domain.name}",
                       "domain_name2": "${aviatrix_aws_tgw_network_domain.Shared_Service_Domain.name}",
-                      "tgw_name1": "${aviatrix_aws_tgw.test_aws_tgw.id}",
-                      "tgw_name2": "${aviatrix_aws_tgw.test_aws_tgw.id}"
+                      "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.tgw_name}"
                     }
             - name: Shared_Service_Domain
               manifest: |-
                 {
                   "name": "Shared_Service_Domain",
-                  "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.id}"
+                  "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.tgw_name}"
                 }
               references:
-                tgw_name: aviatrix_aws_tgw.test_aws_tgw.id
+                tgw_name: aviatrix_aws_tgw.test_aws_tgw.tgw_name
               dependencies:
                 aviatrix_aws_tgw.test_aws_tgw: |-
                     {
                       "account_name": "devops",
                       "aws_side_as_number": "64512",
+                      "manage_security_domain": false,
+                      "manage_transit_gateway_attachment": false,
+                      "manage_vpc_attachment": false,
                       "region": "us-east-1",
                       "tgw_name": "test-AWS-TGW"
                     }
-                aviatrix_aws_tgw_peering_domain_conn.default_sd_conn1: |-
+                aviatrix_aws_tgw_security_domain_connection.default_sd_conn1: |-
                     {
                       "domain_name1": "${aviatrix_aws_tgw_network_domain.Aviatrix_Edge_Domain.name}",
                       "domain_name2": "${aviatrix_aws_tgw_network_domain.Default_Domain.name}",
-                      "tgw_name1": "${aviatrix_aws_tgw.test_aws_tgw.id}",
-                      "tgw_name2": "${aviatrix_aws_tgw.test_aws_tgw.id}"
+                      "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.tgw_name}"
                     }
-                aviatrix_aws_tgw_peering_domain_conn.default_sd_conn2: |-
+                aviatrix_aws_tgw_security_domain_connection.default_sd_conn2: |-
                     {
                       "domain_name1": "${aviatrix_aws_tgw_network_domain.Aviatrix_Edge_Domain.name}",
                       "domain_name2": "${aviatrix_aws_tgw_network_domain.Shared_Service_Domain.name}",
-                      "tgw_name1": "${aviatrix_aws_tgw.test_aws_tgw.id}",
-                      "tgw_name2": "${aviatrix_aws_tgw.test_aws_tgw.id}"
+                      "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.tgw_name}"
                     }
-                aviatrix_aws_tgw_peering_domain_conn.default_sd_conn3: |-
+                aviatrix_aws_tgw_security_domain_connection.default_sd_conn3: |-
                     {
                       "domain_name1": "${aviatrix_aws_tgw_network_domain.Default_Domain.name}",
                       "domain_name2": "${aviatrix_aws_tgw_network_domain.Shared_Service_Domain.name}",
-                      "tgw_name1": "${aviatrix_aws_tgw.test_aws_tgw.id}",
-                      "tgw_name2": "${aviatrix_aws_tgw.test_aws_tgw.id}"
+                      "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.tgw_name}"
                     }
             - name: Aviatrix_Edge_Domain
               manifest: |-
                 {
                   "name": "Aviatrix_Edge_Domain",
-                  "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.id}"
+                  "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.tgw_name}"
                 }
               references:
-                tgw_name: aviatrix_aws_tgw.test_aws_tgw.id
+                tgw_name: aviatrix_aws_tgw.test_aws_tgw.tgw_name
               dependencies:
                 aviatrix_aws_tgw.test_aws_tgw: |-
                     {
                       "account_name": "devops",
                       "aws_side_as_number": "64512",
+                      "manage_security_domain": false,
+                      "manage_transit_gateway_attachment": false,
+                      "manage_vpc_attachment": false,
                       "region": "us-east-1",
                       "tgw_name": "test-AWS-TGW"
                     }
-                aviatrix_aws_tgw_peering_domain_conn.default_sd_conn1: |-
+                aviatrix_aws_tgw_security_domain_connection.default_sd_conn1: |-
                     {
                       "domain_name1": "${aviatrix_aws_tgw_network_domain.Aviatrix_Edge_Domain.name}",
                       "domain_name2": "${aviatrix_aws_tgw_network_domain.Default_Domain.name}",
-                      "tgw_name1": "${aviatrix_aws_tgw.test_aws_tgw.id}",
-                      "tgw_name2": "${aviatrix_aws_tgw.test_aws_tgw.id}"
+                      "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.tgw_name}"
                     }
-                aviatrix_aws_tgw_peering_domain_conn.default_sd_conn2: |-
+                aviatrix_aws_tgw_security_domain_connection.default_sd_conn2: |-
                     {
                       "domain_name1": "${aviatrix_aws_tgw_network_domain.Aviatrix_Edge_Domain.name}",
                       "domain_name2": "${aviatrix_aws_tgw_network_domain.Shared_Service_Domain.name}",
-                      "tgw_name1": "${aviatrix_aws_tgw.test_aws_tgw.id}",
-                      "tgw_name2": "${aviatrix_aws_tgw.test_aws_tgw.id}"
+                      "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.tgw_name}"
                     }
-                aviatrix_aws_tgw_peering_domain_conn.default_sd_conn3: |-
+                aviatrix_aws_tgw_security_domain_connection.default_sd_conn3: |-
                     {
                       "domain_name1": "${aviatrix_aws_tgw_network_domain.Default_Domain.name}",
                       "domain_name2": "${aviatrix_aws_tgw_network_domain.Shared_Service_Domain.name}",
-                      "tgw_name1": "${aviatrix_aws_tgw.test_aws_tgw.id}",
-                      "tgw_name2": "${aviatrix_aws_tgw.test_aws_tgw.id}"
+                      "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.tgw_name}"
                     }
             - name: test
               manifest: |-
@@ -580,38 +726,38 @@ resources:
                     "${aviatrix_aws_tgw_network_domain.Aviatrix_Edge_Domain}"
                   ],
                   "name": "test_domain",
-                  "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.id}"
+                  "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.tgw_name}"
                 }
               references:
-                tgw_name: aviatrix_aws_tgw.test_aws_tgw.id
+                tgw_name: aviatrix_aws_tgw.test_aws_tgw.tgw_name
               dependencies:
                 aviatrix_aws_tgw.test_aws_tgw: |-
                     {
                       "account_name": "devops",
                       "aws_side_as_number": "64512",
+                      "manage_security_domain": false,
+                      "manage_transit_gateway_attachment": false,
+                      "manage_vpc_attachment": false,
                       "region": "us-east-1",
                       "tgw_name": "test-AWS-TGW"
                     }
-                aviatrix_aws_tgw_peering_domain_conn.default_sd_conn1: |-
+                aviatrix_aws_tgw_security_domain_connection.default_sd_conn1: |-
                     {
                       "domain_name1": "${aviatrix_aws_tgw_network_domain.Aviatrix_Edge_Domain.name}",
                       "domain_name2": "${aviatrix_aws_tgw_network_domain.Default_Domain.name}",
-                      "tgw_name1": "${aviatrix_aws_tgw.test_aws_tgw.id}",
-                      "tgw_name2": "${aviatrix_aws_tgw.test_aws_tgw.id}"
+                      "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.tgw_name}"
                     }
-                aviatrix_aws_tgw_peering_domain_conn.default_sd_conn2: |-
+                aviatrix_aws_tgw_security_domain_connection.default_sd_conn2: |-
                     {
                       "domain_name1": "${aviatrix_aws_tgw_network_domain.Aviatrix_Edge_Domain.name}",
                       "domain_name2": "${aviatrix_aws_tgw_network_domain.Shared_Service_Domain.name}",
-                      "tgw_name1": "${aviatrix_aws_tgw.test_aws_tgw.id}",
-                      "tgw_name2": "${aviatrix_aws_tgw.test_aws_tgw.id}"
+                      "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.tgw_name}"
                     }
-                aviatrix_aws_tgw_peering_domain_conn.default_sd_conn3: |-
+                aviatrix_aws_tgw_security_domain_connection.default_sd_conn3: |-
                     {
                       "domain_name1": "${aviatrix_aws_tgw_network_domain.Default_Domain.name}",
                       "domain_name2": "${aviatrix_aws_tgw_network_domain.Shared_Service_Domain.name}",
-                      "tgw_name1": "${aviatrix_aws_tgw.test_aws_tgw.id}",
-                      "tgw_name2": "${aviatrix_aws_tgw.test_aws_tgw.id}"
+                      "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.tgw_name}"
                     }
         argumentDocs:
             aviatrix_firewall: '- (Optional) Set to true if the network domain is to be used as an Aviatrix Firewall Domain for the Aviatrix Firewall Network. Valid values: true, false. Default value: false.'
@@ -656,6 +802,190 @@ resources:
             tgw_name1: '- (Required) The AWS TGW name of the source domain to make a connection.'
             tgw_name2: '- (Required) The AWS TGW name of the destination domain to make a connection.'
         importStatements: []
+    aviatrix_aws_tgw_security_domain:
+        subCategory: TGW Orchestrator
+        description: Creates and manages Aviatrix security domains
+        name: aviatrix_aws_tgw_security_domain
+        title: aviatrix_aws_tgw_security_domain
+        examples:
+            - name: Default_Domain
+              manifest: |-
+                {
+                  "name": "Default_Domain",
+                  "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.tgw_name}"
+                }
+              references:
+                tgw_name: aviatrix_aws_tgw.test_aws_tgw.tgw_name
+              dependencies:
+                aviatrix_aws_tgw.test_aws_tgw: |-
+                    {
+                      "account_name": "devops",
+                      "aws_side_as_number": "64512",
+                      "manage_security_domain": false,
+                      "manage_transit_gateway_attachment": false,
+                      "manage_vpc_attachment": false,
+                      "region": "us-east-1",
+                      "tgw_name": "test-AWS-TGW"
+                    }
+                aviatrix_aws_tgw_security_domain_connection.default_sd_conn1: |-
+                    {
+                      "domain_name1": "${aviatrix_aws_tgw_security_domain.Aviatrix_Edge_Domain.name}",
+                      "domain_name2": "${aviatrix_aws_tgw_security_domain.Default_Domain.name}",
+                      "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.tgw_name}"
+                    }
+                aviatrix_aws_tgw_security_domain_connection.default_sd_conn2: |-
+                    {
+                      "domain_name1": "${aviatrix_aws_tgw_security_domain.Aviatrix_Edge_Domain.name}",
+                      "domain_name2": "${aviatrix_aws_tgw_security_domain.Shared_Service_Domain.name}",
+                      "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.tgw_name}"
+                    }
+                aviatrix_aws_tgw_security_domain_connection.default_sd_conn3: |-
+                    {
+                      "domain_name1": "${aviatrix_aws_tgw_security_domain.Default_Domain.name}",
+                      "domain_name2": "${aviatrix_aws_tgw_security_domain.Shared_Service_Domain.name}",
+                      "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.tgw_name}"
+                    }
+            - name: Shared_Service_Domain
+              manifest: |-
+                {
+                  "name": "Shared_Service_Domain",
+                  "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.tgw_name}"
+                }
+              references:
+                tgw_name: aviatrix_aws_tgw.test_aws_tgw.tgw_name
+              dependencies:
+                aviatrix_aws_tgw.test_aws_tgw: |-
+                    {
+                      "account_name": "devops",
+                      "aws_side_as_number": "64512",
+                      "manage_security_domain": false,
+                      "manage_transit_gateway_attachment": false,
+                      "manage_vpc_attachment": false,
+                      "region": "us-east-1",
+                      "tgw_name": "test-AWS-TGW"
+                    }
+                aviatrix_aws_tgw_security_domain_connection.default_sd_conn1: |-
+                    {
+                      "domain_name1": "${aviatrix_aws_tgw_security_domain.Aviatrix_Edge_Domain.name}",
+                      "domain_name2": "${aviatrix_aws_tgw_security_domain.Default_Domain.name}",
+                      "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.tgw_name}"
+                    }
+                aviatrix_aws_tgw_security_domain_connection.default_sd_conn2: |-
+                    {
+                      "domain_name1": "${aviatrix_aws_tgw_security_domain.Aviatrix_Edge_Domain.name}",
+                      "domain_name2": "${aviatrix_aws_tgw_security_domain.Shared_Service_Domain.name}",
+                      "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.tgw_name}"
+                    }
+                aviatrix_aws_tgw_security_domain_connection.default_sd_conn3: |-
+                    {
+                      "domain_name1": "${aviatrix_aws_tgw_security_domain.Default_Domain.name}",
+                      "domain_name2": "${aviatrix_aws_tgw_security_domain.Shared_Service_Domain.name}",
+                      "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.tgw_name}"
+                    }
+            - name: Aviatrix_Edge_Domain
+              manifest: |-
+                {
+                  "name": "Aviatrix_Edge_Domain",
+                  "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.tgw_name}"
+                }
+              references:
+                tgw_name: aviatrix_aws_tgw.test_aws_tgw.tgw_name
+              dependencies:
+                aviatrix_aws_tgw.test_aws_tgw: |-
+                    {
+                      "account_name": "devops",
+                      "aws_side_as_number": "64512",
+                      "manage_security_domain": false,
+                      "manage_transit_gateway_attachment": false,
+                      "manage_vpc_attachment": false,
+                      "region": "us-east-1",
+                      "tgw_name": "test-AWS-TGW"
+                    }
+                aviatrix_aws_tgw_security_domain_connection.default_sd_conn1: |-
+                    {
+                      "domain_name1": "${aviatrix_aws_tgw_security_domain.Aviatrix_Edge_Domain.name}",
+                      "domain_name2": "${aviatrix_aws_tgw_security_domain.Default_Domain.name}",
+                      "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.tgw_name}"
+                    }
+                aviatrix_aws_tgw_security_domain_connection.default_sd_conn2: |-
+                    {
+                      "domain_name1": "${aviatrix_aws_tgw_security_domain.Aviatrix_Edge_Domain.name}",
+                      "domain_name2": "${aviatrix_aws_tgw_security_domain.Shared_Service_Domain.name}",
+                      "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.tgw_name}"
+                    }
+                aviatrix_aws_tgw_security_domain_connection.default_sd_conn3: |-
+                    {
+                      "domain_name1": "${aviatrix_aws_tgw_security_domain.Default_Domain.name}",
+                      "domain_name2": "${aviatrix_aws_tgw_security_domain.Shared_Service_Domain.name}",
+                      "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.tgw_name}"
+                    }
+            - name: test
+              manifest: |-
+                {
+                  "depends_on": [
+                    "${aviatrix_aws_tgw_security_domain.Default_Domain}",
+                    "${aviatrix_aws_tgw_security_domain.Shared_Service_Domain}",
+                    "${aviatrix_aws_tgw_security_domain.Aviatrix_Edge_Domain}"
+                  ],
+                  "name": "test_domain",
+                  "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.tgw_name}"
+                }
+              references:
+                tgw_name: aviatrix_aws_tgw.test_aws_tgw.tgw_name
+              dependencies:
+                aviatrix_aws_tgw.test_aws_tgw: |-
+                    {
+                      "account_name": "devops",
+                      "aws_side_as_number": "64512",
+                      "manage_security_domain": false,
+                      "manage_transit_gateway_attachment": false,
+                      "manage_vpc_attachment": false,
+                      "region": "us-east-1",
+                      "tgw_name": "test-AWS-TGW"
+                    }
+                aviatrix_aws_tgw_security_domain_connection.default_sd_conn1: |-
+                    {
+                      "domain_name1": "${aviatrix_aws_tgw_security_domain.Aviatrix_Edge_Domain.name}",
+                      "domain_name2": "${aviatrix_aws_tgw_security_domain.Default_Domain.name}",
+                      "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.tgw_name}"
+                    }
+                aviatrix_aws_tgw_security_domain_connection.default_sd_conn2: |-
+                    {
+                      "domain_name1": "${aviatrix_aws_tgw_security_domain.Aviatrix_Edge_Domain.name}",
+                      "domain_name2": "${aviatrix_aws_tgw_security_domain.Shared_Service_Domain.name}",
+                      "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.tgw_name}"
+                    }
+                aviatrix_aws_tgw_security_domain_connection.default_sd_conn3: |-
+                    {
+                      "domain_name1": "${aviatrix_aws_tgw_security_domain.Default_Domain.name}",
+                      "domain_name2": "${aviatrix_aws_tgw_security_domain.Shared_Service_Domain.name}",
+                      "tgw_name": "${aviatrix_aws_tgw.test_aws_tgw.tgw_name}"
+                    }
+        argumentDocs:
+            aviatrix_firewall: '- (Optional) Set to true if the security domain is to be used as an Aviatrix Firewall Domain for the Aviatrix Firewall Network. Valid values: true, false. Default value: false.'
+            name: '- (Required) The name of the security domain.'
+            native_egress: '- (Optional) Set to true if the security domain is to be used as a native egress domain (for non-Aviatrix Firewall Network-based central Internet bound traffic). Valid values: true, false. Default value: false.'
+            native_firewall: '- (Optional) Set to true if the security domain is to be used as a native firewall domain (for non-Aviatrix Firewall Network-based firewall traffic inspection). Valid values: true, false. Default value: false.'
+            tgw_name: '- (Required) The AWS TGW name of the security domain.'
+        importStatements: []
+    aviatrix_aws_tgw_security_domain_connection:
+        subCategory: TGW Orchestrator
+        description: Creates and manages the connections between security domains in an AWS TGW
+        name: aviatrix_aws_tgw_security_domain_connection
+        title: aviatrix_aws_tgw_security_domain_connection
+        examples:
+            - name: test
+              manifest: |-
+                {
+                  "domain_name1": "domain1",
+                  "domain_name2": "domain2",
+                  "tgw_name": "tgw"
+                }
+        argumentDocs:
+            domain_name1: '- (Required) The name of a security domain to make a connection.'
+            domain_name2: '- (Required) The name of another security domain to make a connection.'
+            tgw_name: '- (Required) The AWS TGW name.'
+        importStatements: []
     aviatrix_aws_tgw_transit_gateway_attachment:
         subCategory: TGW Orchestrator
         description: Manages attachment of transit gateways to the AWS TGW
@@ -696,16 +1026,16 @@ resources:
         argumentDocs:
             customized_route_advertisement: '- (Optional and ForceNew) Advanced option. Customized route(s) to be advertised to other VPCs that are connected to the same TGW. Example: "10.8.0.0/16,10.9.0.0/16,10.10.0.0/16".'
             customized_routes: '- (Optional) Advanced option. Customized Spoke VPC Routes. It allows the admin to enter non-RFC1918 routes in the VPC route table targeting the TGW. Example: "10.8.0.0/16,10.9.0.0/16,10.10.0.0/16".'
-            disable_local_route_propagation: '- (Optional and ForceNew) Advanced option. If set to true, it disables automatic route propagation of this VPC to other VPCs within the same network domain. Valid values: true, false. Default value: false.'
+            disable_local_route_propagation: '- (Optional and ForceNew) Advanced option. If set to true, it disables automatic route propagation of this VPC to other VPCs within the same security domain. Valid values: true, false. Default value: false.'
             edge_attachment: '- (Optional) Advanced option. To allow access to the private IP of the MGMT interface of the Firewalls, set this attribute to enable Management Access From Onprem. This feature advertises the Firewalls private MGMT subnet to your Edge domain. Example: "vpn-0068bb31917ff2289".'
-            network_domain_name: '- (Required) The name of the network domain, to which the VPC will be attached to. If changed, the VPC will be detached from the old domain, and attached to the new domain.'
+            network_domain_name: '- (optional) The name of the network domain, to which the VPC will be attached to. If changed, the VPC will be detached from the old domain, and attached to the new domain.'
             region: '- (Required) AWS Region of the TGW.'
             route_tables: '- (Optional and ForceNew) Advanced option. Route tables separated by '','' to participate in TGW Orchestrator, i.e., learned routes will be propagated to these route tables. Example: "rtb-212ff547,rtb-045397874c170c745".'
             security_domain_name: '- (optional) The name of the security domain, to which the VPC will be attached to. If changed, the VPC will be detached from the old domain, and attached to the new domain.'
             subnets: '- (Optional and ForceNew) Advanced option. VPC subnets separated by '','' to attach to the VPC. If omitted, the Aviatrix Controller automatically computes a subnet representing each AZ for the VPC attachment and Terraform will not manage this attribute. Example: "subnet-214f5646,subnet-085e8c81a89d70846".'
             tgw_name: '- (Required) Name of the AWS TGW.'
             vpc_account_name: '- (Required) The name of the cloud account in the Aviatrix controller, which is associated with the VPC.'
-            vpc_id: '- (Required) VPC ID of the VPC to be attached to the specified network_domain_name.'
+            vpc_id: '- (Required) VPC ID of the VPC to be attached to the specified security_domain_name.'
         importStatements: []
     aviatrix_aws_tgw_vpn_conn:
         subCategory: TGW Orchestrator
@@ -815,22 +1145,6 @@ resources:
             vng_name: '- Name of Azure VNG.'
             vpc_id: '- VPC ID.'
         importStatements: []
-    aviatrix_centralized_transit_firenet:
-        subCategory: Firewall Network
-        description: Creates and manages the centralized Transit FireNet
-        name: aviatrix_centralized_transit_firenet
-        title: aviatrix_centralized_transit_firenet
-        examples:
-            - name: test
-              manifest: |-
-                {
-                  "primary_firenet_gw_name": "primary-transit",
-                  "secondary_firenet_gw_name": "secondary-transit"
-                }
-        argumentDocs:
-            primary_firenet_gw_name: '- (Required) Primary FireNet gateway name.'
-            secondary_firenet_gw_name: '- (Required) Secondary FireNet gateway name.'
-        importStatements: []
     aviatrix_cloudn_registration:
         subCategory: CloudN
         description: Register and Deregister CloudN as a Gateway
@@ -872,6 +1186,8 @@ resources:
                   "cloudn_lan_interface_neighbor_ip": "10.210.38.100",
                   "connection_name": "cloudn-transit-attachment-test",
                   "device_name": "${aviatrix_device_registration.test_device.name}",
+                  "enable_dead_peer_detection": true,
+                  "enable_jumbo_frame": true,
                   "enable_over_private_network": false,
                   "transit_gateway_bgp_asn": "65000",
                   "transit_gateway_name": "${aviatrix_transit_gateway.aws_transit.gw_name}"
@@ -880,14 +1196,17 @@ resources:
                 device_name: aviatrix_device_registration.test_device.name
                 transit_gateway_name: aviatrix_transit_gateway.aws_transit.gw_name
         argumentDocs:
+            approved_cidrs: '- (Optional/Computed) Set of approved CIDRs. Requires enable_learned_cidrs_approval to be true. Type: Set(String). Available as of provider version R2.21.0+.'
             cloudn_bgp_asn: '- (Required) CloudN BGP AS Number. Type: String.'
             cloudn_lan_interface_neighbor_bgp_asn: '- (Required) CloudN LAN Interface Neighbor''s AS Number. Type: String.'
             cloudn_lan_interface_neighbor_ip: '- (Required) CloudN LAN Interface Neighbor''s IP Address. Type: String.'
             connection_name: '- (Required) Connection Name. Type: String.'
             device_name: '- (Required) CloudN device name. Type: String.'
+            enable_dead_peer_detection: '- (Optional) Enable Dead Peer Detection. Type: Boolean. Default: true.'
             enable_jumbo_frame: '- (Optional) Enable Jumbo Frame support for the connection. Type: Boolean. Default: false.'
+            enable_learned_cidrs_approval: '- (Optional) Enable learned CIDRs approval. Type: Boolean. Default: false. Available as of provider version R2.21.0+.'
             enable_over_private_network: '- (Optional) Enable connection over private network. Type: Boolean. Default: true.'
-            prepend_as_path: '- (Optional) Connection AS Path Prepend customized by specifying AS PATH for a BGP connection. Requires transit_gateway_bgp_asn to be set. Type: List. Available as of provider version R2.21.0+.'
+            prepend_as_path: '- (Optional)  Connection AS Path Prepend customized by specifying AS PATH for a BGP connection. Requires transit_gateway_bgp_asn to be set. Type: List. Available as of provider version R2.21.0+.'
             transit_gateway_bgp_asn: '- (Required) Transit Gateway BGP AS Number. Type: String.'
             transit_gateway_name: '- (Required) Transit Gateway Name. Type: String.'
         importStatements: []
@@ -1188,7 +1507,7 @@ resources:
             api_key: (Required) API key.
             excluded_gateways: '(Optional) List of gateways to be excluded from logging. e.g.: ["gateway01", "gateway02", "gateway01-hagw"].'
             metrics_only: (Optional) Only export metrics without exporting logs. False by default.
-            site: (Optional) Site preference ("datadoghq.com" or" datadoghq.eu"). "datadoghq.com" by default.
+            site: '(Optional) Site preference. Valid values: "datadoghq.com", "datadoghq.eu" or "ddog-gov.com". Default value: "datadoghq.com".'
             status: '- The status of datadog agent.'
         importStatements: []
     aviatrix_device_interface_config:
@@ -1209,185 +1528,65 @@ resources:
             wan_primary_interface: '- (Required) Name of the WAN primary interface.'
             wan_primary_interface_public_ip: '- (Required) The WAN Primary interface public IP.'
         importStatements: []
-    aviatrix_distributed_firewalling_config:
-        subCategory: Secured Networking
-        description: Creates and manages an Aviatrix Distributed-firewalling Config
-        name: aviatrix_distributed_firewalling_config
-        title: aviatrix_distributed_firewalling_config
+    aviatrix_edge_caag:
+        subCategory: CloudN
+        description: Creates Aviatrix Edge as a CaaG
+        name: aviatrix_edge_caag
+        title: aviatrix_edge_caag
         examples:
             - name: test
               manifest: |-
                 {
-                  "enable_distributed_firewalling": true
-                }
-        argumentDocs:
-            enable_distributed_firewalling: '- (Optional) Whether to enable Private Mode on an Aviatrix Controller. Valid values: true, false. Default value: false.'
-        importStatements: []
-    aviatrix_distributed_firewalling_intra_vpc:
-        subCategory: Secured Networking
-        description: Creates and manages an Aviatrix Distributed-firewalling Intra VPC List
-        name: aviatrix_distributed_firewalling_intra_vpc
-        title: aviatrix_distributed_firewalling_intra_vpc
-        examples:
-            - name: test
-              manifest: |-
-                {
-                  "vpcs": [
-                    {
-                      "account_name": "azure-account",
-                      "region": "Central US",
-                      "vpc_id": "azure-vpc-0:rg-av-azure-vpc-0-808200:8168668b-a646-45b9-b88b-d756e60cf130"
-                    },
-                    {
-                      "account_name": "azure-account",
-                      "region": "Central US",
-                      "vpc_id": "azure-vpc-1:rg-av-azure-vpc-1-562104:622a2277-5c57-4149-bcb9-c00d9284ee18"
-                    }
-                  ]
-                }
-        argumentDocs:
-            account_name: '- (Required) Account Name of the VPC.'
-            region: '- (Required) Region of the VPC..'
-            vpc_id: '- (Required) vpc_id of the VPC.'
-            vpcs: '- (Required) List of distributed-firewalling enabled intra VPCs.'
-        importStatements: []
-    aviatrix_distributed_firewalling_policy_list:
-        subCategory: Secured Networking
-        description: Creates and manages an Aviatrix Distributed-firewalling Policy List
-        name: aviatrix_distributed_firewalling_policy_list
-        title: aviatrix_distributed_firewalling_policy_list
-        examples:
-            - name: test
-              manifest: |-
-                {
-                  "policies": [
-                    {
-                      "action": "DENY",
-                      "dst_smart_groups": [
-                        "82e50c85-82bf-4b3b-b9da-aaed34a3aa53"
-                      ],
-                      "logging": false,
-                      "name": "df-policy-1",
-                      "priority": 1,
-                      "protocol": "ICMP",
-                      "src_smart_groups": [
-                        "f15c9890-c8c4-4c1a-a2b5-ef0ab34d2e30"
-                      ],
-                      "watch": false
-                    },
-                    {
-                      "action": "PERMIT",
-                      "dst_smart_groups": [
-                        "f05b0ad7-d2d7-4d16-b2f6-48492319414c"
-                      ],
-                      "name": "df-policy",
-                      "port_ranges": [
-                        {
-                          "hi": 50000,
-                          "lo": 49000
-                        }
-                      ],
-                      "priority": 0,
-                      "protocol": "TCP",
-                      "src_smart_groups": [
-                        "7e7d1573-7a7a-4a53-bcb5-1ad5041961e0"
-                      ]
-                    }
-                  ]
-                }
-        argumentDocs:
-            action: '- (Required) Action for the policy. Must be one of PERMIT or DENY.'
-            dst_smart_groups: '- (Required) List of Smart Group UUIDs for the destination for the policy.'
-            hi: '- (Optional) Upper bound for the range of ports. When not set, lo is the only port that matches the policy.'
-            lo: '- (Required) Lower bound for the range of ports.'
-            logging: '- (Optional) Whether to enable logging for packets that match the policy. Type: Boolean.'
-            name: '- (Required) Name of the policy.'
-            policies: '- (Required) List of policies.'
-            port_ranges: '- (Optional) List of port ranges for the policy. Cannot be used when protocol is "ICMP".'
-            priority: '- (Optional)  Priority for the policy. Default: 0. Type: Integer.'
-            protocol: '- (Required) Protocol for the policy. Must be one of TCP, UDP, ICMP or ANY.'
-            src_smart_groups: '- (Required) List of Smart Group UUIDs for the source for the policy.'
-            uuid: '- (Computed) UUID for the Policy.'
-            watch: '- (Optional) Whether to enforce the policy or only watch packets. If "true" packets are only watched. This allows you to observe if the traffic impacted by this rule causes any inadvertent issues (such as traffic being dropped). Type: Boolean.'
-        importStatements: []
-    aviatrix_edge_csp:
-        subCategory: Multi-Cloud Transit
-        description: Creates Aviatrix Edge CSP
-        name: aviatrix_edge_csp
-        title: aviatrix_edge_csp
-        examples:
-            - name: test
-              manifest: |-
-                {
-                  "account_name": "edge_csp_account",
-                  "gw_name": "edge-test",
                   "lan_interface_ip_prefix": "10.60.0.0/24",
                   "local_as_number": "65000",
                   "management_interface_config": "DHCP",
+                  "name": "edge-test",
                   "prepend_as_path": [
                     "65000",
                     "65000"
                   ],
-                  "site_id": "site-123",
                   "wan_default_gateway_ip": "10.60.0.0",
-                  "wan_interface_ip_prefix": "10.60.0.0/24"
+                  "wan_interface_ip_prefix": "10.60.0.0/24",
+                  "ztp_file_download_path": "/image/download/path",
+                  "ztp_file_type": "iso"
                 }
             - name: test
               manifest: |-
                 {
                   "dns_server_ip": "10.60.0.0",
-                  "gw_name": "edge-test",
                   "lan_interface_ip_prefix": "10.60.0.0/24",
                   "local_as_number": "65000",
                   "management_default_gateway_ip": "10.60.0.0",
                   "management_interface_config": "Static",
                   "management_interface_ip_prefix": "10.60.0.0/24",
+                  "name": "edge-test",
                   "prepend_as_path": [
                     "65000",
                     "65000"
                   ],
                   "secondary_dns_server_ip": "10.60.0.0",
-                  "site_id": "site-123",
                   "wan_default_gateway_ip": "10.60.0.0",
-                  "wan_interface_ip_prefix": "10.60.0.0/24"
+                  "wan_interface_ip_prefix": "10.60.0.0/24",
+                  "ztp_file_download_path": "/image/download/path",
+                  "ztp_file_type": "iso"
                 }
         argumentDocs:
-            account_name: '- (Required) Edge CSP account name.'
-            approved_learned_cidrs: '- (Optional) Set of approved learned CIDRs. Valid only when enable_learned_cidrs_approval is set to true. Example: ["10.1.0.0/116", "10.2.0.0/16"].'
-            bgp_hold_time: '- (Optional) BGP hold time. Unit is in seconds. Valid values are between 12 and 360. Default value: 180.'
-            bgp_polling_time: '- (Optional) BGP route polling time. Unit is in seconds. Valid values are between 10 and 50. Default value: 50.'
-            compute_node_uuid: '- (Required) Edge CSP compute node UUID.'
             dns_server_ip: '- (Optional) DNS server IP. Required and valid when management_interface_config is "Static".'
-            enable_edge_active_standby: '- (Optional) Switch to enable Edge Active-Standby mode. Valid values: true, false. Default value: false.'
-            enable_edge_active_standby_preemptive: '- (Optional) Switch to enable Preemptive Mode for Edge Active-Standby. Valid values: true, false. Default value: false.'
-            enable_edge_transitive_routing: '- (Optional) Switch to enable Edge transitive routing. Valid values: true, false. Default value: false.'
-            enable_jumbo_frame: '- (Optional) Switch to enable jumbo frame. Valid values: true, false. Default value: false.'
-            enable_learned_cidrs_approval: '- (Optional) Switch to enable learned CIDR approval. Valid values: true, false. Default value: false.'
-            enable_management_over_private_network: '- (Optional) Switch to enable management over the private network. Valid values: true, false. Default value: false.'
-            enable_preserve_as_path: '- (Optional) Switch to enable preserve as_path when advertising manual summary CIDRs. Valid values: true, false. Default value: false.'
-            gw_name: '- (Required) Edge CSP name.'
+            enable_over_private_network: '- (Optional) Indicates whether it is public or private connection between controller and gateway. Valid values: true, false. Default value: false.'
             lan_interface_ip_prefix: '- (Required) LAN interface IP and subnet prefix.'
-            lan_interface_name: '- (Optional) LAN interface name. Default value: "eth1".'
-            latitude: '- (Optional) Latitude of Edge CSP. Valid values are between -90 and 90. Example: "47.7511".'
-            local_as_number: '- (Optional) BGP AS Number to assign to Edge CSP.'
-            longitude: '- (Optional) Longitude of Edge CSP. Valid values are between -180 and 180. Example: "120.7401".'
+            local_as_number: '- (Optional) BGP AS Number to assign to Edge as a CaaG.'
             management_default_gateway_ip: '- (Optional) Management default gateway IP. Required and valid when management_interface_config is "Static".'
             management_egress_ip_prefix: '- (Optional) Management egress gateway IP and subnet prefix.'
             management_interface_config: '- (Required) Management interface configuration. Valid values: "DHCP", "Static".'
             management_interface_ip_prefix: '- (Optional) Management interface IP and subnet prefix. Required and valid when management_interface_config is "Static".'
-            management_interface_name: '- (Optional) Management interface name. Default value: "eth2".'
-            prepend_as_path: '- (Optional) List of AS numbers to prepend gateway BGP AS_Path field. Valid only when local_as_number is set. Example: ["65023", "65023"].'
-            project_uuid: '- (Required) Edge CSP project UUID.'
-            rx_queue_size: '- (Optional) Ethernet interface RX queue size. Once set, can''t be deleted or disabled. Valid values: "1K", "2K", "4K".'
+            name: '- (Required) Edge as a CaaG name.'
+            prepend_as_path: '- (Optional) Connection AS Path Prepend customized by specifying AS PATH for a BGP connection. Requires local_as_number to be set. Type: List.'
             secondary_dns_server_ip: '- (Optional) Secondary DNS server IP. Required and valid when management_interface_config is "Static".'
-            site_id: '- (Required) Site ID.'
-            spoke_bgp_manual_advertise_cidrs: '- (Optional) Set of intended CIDRs to be advertised to external BGP router. Example: ["10.1.0.0/116", "10.2.0.0/16"].'
-            state: '- State of Edge CSP.'
-            template_uuid: '- (Required) Edge CSP template UUID.'
+            state: '- State of Edge as a CaaG.'
             wan_default_gateway_ip: '- (Required) WAN default gateway IP.'
             wan_interface_ip_prefix: '- (Required) WAN interface IP and subnet prefix.'
-            wan_interface_name: '- (Optional) WAN interface name. Default value: "eth0".'
-            wan_public_ip: '- (Optional) WAN public IP. Required for attaching connections over the Internet.'
+            ztp_file_download_path: '- (Required) The folder path where the ZTP file will be downloaded.'
+            ztp_file_type: '- (Required) ZTP file type. Valid values: "iso", "cloud-init".'
         importStatements: []
     aviatrix_edge_spoke:
         subCategory: Multi-Cloud Transit
@@ -1490,9 +1689,7 @@ resources:
             connection_type: '- (Optional) Connection type. Valid value: ''bgp''. Default value: ''bgp''.'
             gw_name: '- (Required) Edge as a Spoke name.'
             local_lan_ip: '- (Required) Local LAN IP.'
-            number_of_retries: '- (Optional) Number of retries. Default value: 0.'
             remote_lan_ip: '- (Required) Remote LAN IP.'
-            retry_interval: '- (Optional) Retry interval in seconds. Default value: 300.'
             site_id: '- (Required) Edge as a Spoke site iD.'
             tunnel_protocol: '- (Optional) Tunnel protocol. Valid value: ''LAN''. Default value: ''LAN''. Case insensitive.'
         importStatements: []
@@ -1513,8 +1710,6 @@ resources:
             enable_jumbo_frame: '- (Optional) Switch to enable jumbo frame. Valid values: true, false. Default: false.'
             enable_over_private_network: '- (Optional) Switch to enable over the private network. Valid values: true, false. Default: true.'
             insane_mode_tunnel_number: '- (Optional) Insane mode tunnel number. Default: 0.'
-            number_of_retries: '- (Optional) Number of retries. Default value: 0.'
-            retry_interval: '- (Optional) Retry interval in seconds. Default value: 300.'
             spoke_gw_name: '- (Required) Name of the Edge as a Spoke to attach to transit network.'
             spoke_prepend_as_path: '- (Optional) Connection based AS Path Prepend. Can only use the gateway''s own local AS number, repeated up to 25 times. Applies on the Edge as a Spoke.'
             transit_gw_name: '- (Required) Name of the transit gateway to attach the Edge as a Spoke to.'
@@ -1561,6 +1756,7 @@ resources:
                   "egress_enabled": false,
                   "inspection_enabled": true,
                   "keep_alive_via_lan_interface_enabled": false,
+                  "manage_firewall_instance_association": false,
                   "vpc_id": "vpc-032005cc371"
                 }
             - name: gcp_firenet
@@ -1572,27 +1768,30 @@ resources:
                   "egress_enabled": true,
                   "inspection_enabled": true,
                   "keep_alive_via_lan_interface_enabled": false,
+                  "manage_firewall_instance_association": false,
                   "vpc_id": "${format(\"%s~-~%s\", aviatrix_transit_gateway.test_transit_gateway.vpc_id, aviatrix_account.gcp.gcloud_project_id)}"
                 }
         argumentDocs:
-            attached: '- (Optional) Switch to attach/detach firewall instance to/from FireNet. Valid values: true, false. Default value: false.'
             east_west_inspection_excluded_cidrs: '- (Optional) Network List Excluded From East-West Inspection. CIDRs to be excluded from inspection. Type: Set(String). Available as of provider version R2.19.5+.'
             egress_enabled: '- (Optional) Enable/disable egress through firewall. Valid values: true, false. Default value: false.'
-            egress_interface: '- (Optional) Egress interface ID. Required if it is a firewall instance.'
             egress_static_cidrs: '- (Optional) List of egress static CIDRs. Egress is required to be enabled. Example: ["1.171.15.184/32", "1.171.15.185/32"]. Available as of provider version R2.19+.'
             fail_close_enabled: '- Enable Fail Close. Removed as of provider version R2.23+.'
-            firenet_gw_name: '- (Required) Name of the primary FireNet gateway.'
             firewall_instance_association: '- (Optional) Dynamic block of firewall instance(s) to be associated with the FireNet.'
-            firewall_name: '- (Optional) Firewall instance name. Required if it is a firewall instance.'
+            firewall_instance_association.firenet_gw_name: '- (Required) Name of the primary FireNet gateway.'
+            firewall_instance_association.instance_id: '- (Required) ID of Firewall instance.'
+            gw_name: . For Azure FireNet, it is the firewall_name concatenated with a ":" and the Resource Group of the vpc_id set for that instance.
             hashing_algorithm: '- (Optional) Hashing algorithm to load balance traffic across the firewall. Valid values: "2-Tuple", "5-Tuple". Default value: "5-Tuple".'
             inspection_enabled: '- (Optional) Enable/disable traffic inspection. Valid values: true, false. Default value: true.'
-            instance_id: '- (Required) ID of Firewall instance.'
             keep_alive_via_lan_interface_enabled: '- (Optional) Enable Keep Alive via Firewall LAN Interface. Valid values: true or false. Default value: false. Available as of provider version R2.18.1+.'
-            lan_interface: '- (Optional) Lan interface ID. Required if it is a firewall instance or FQDN gateway in Azure.'
+            lan_interface: is required. The lan_interface can be obtained from the exported attribute fqdn_lan_interface in aviatrix_gateway resource block (Available in provider version R2.17.1+).
+            lan_interface.attached: '- (Optional) Switch to attach/detach firewall instance to/from FireNet. Valid values: true, false. Default value: false.'
+            lan_interface.egress_interface: '- (Optional) Egress interface ID. Required if it is a firewall instance.'
+            lan_interface.firewall_name: '- (Optional) Firewall instance name. Required if it is a firewall instance.'
+            lan_interface.lan_interface: '- (Optional) Lan interface ID. Required if it is a firewall instance or FQDN gateway in Azure.'
+            lan_interface.management_interface: '- (Optional) Management interface ID. Required if it is a firewall instance.'
+            lan_interface.vendor_type: '- (Optional) Type of firewall. Valid values: "Generic", "fqdn_gateway". Default value: "Generic". Value "fqdn_gateway" is required for FQDN gateway.'
             manage_firewall_instance_association: '- (Optional) Enable this attribute to manage firewall associations in-line. If set to true, in-line firewall_instance_association blocks can be used. If set to false, all firewall associations must be managed via standalone aviatrix_firewall_instance_association resources. Default value: true. Valid values: true or false. Available in provider version R2.17.1+.'
-            management_interface: '- (Optional) Management interface ID. Required if it is a firewall instance.'
             tgw_segmentation_for_egress_enabled: '- (Optional) Enable TGW segmentation for egress. Valid values: true or false. Default value: false. Available as of provider version R2.19+.'
-            vendor_type: '- (Optional) Type of firewall. Valid values: "Generic", "fqdn_gateway". Default value: "Generic". Value "fqdn_gateway" is required for FQDN gateway.'
             vpc_id: '- (Required) VPC ID of the Security VPC.'
         importStatements: []
     aviatrix_firewall:
@@ -1942,41 +2141,6 @@ resources:
             port: '- (Required) Port. Example "25".'
             proto: '- (Required) Protocol. Valid values: "all", "tcp", "udp", "icmp".'
             source_ip_list: '- (Optional) List of source IPs in the VPC qualified for a specific tag.'
-        importStatements: []
-    aviatrix_fqdn_global_config:
-        subCategory: Security
-        description: Manages Aviatrix FQDN Global Config
-        name: aviatrix_fqdn_global_config
-        title: aviatrix_fqdn_global_config
-        examples:
-            - name: test
-              manifest: |-
-                {
-                  "enable_caching": false,
-                  "enable_exact_match": true,
-                  "enable_exception_rule": false,
-                  "enable_private_network_filtering": true
-                }
-            - name: test
-              manifest: |-
-                {
-                  "configured_ips": [
-                    "172.16.0.0/12~~RFC-1918",
-                    "10.0.0.0/8~~RFC-1918",
-                    "168.16.0.0/32"
-                  ],
-                  "enable_caching": false,
-                  "enable_custom_network_filtering": true,
-                  "enable_exact_match": true,
-                  "enable_exception_rule": false
-                }
-        argumentDocs:
-            configured_ips: '- (Optional) Customized packet destination address ranges not to be filtered by FQDN. Can be selected from pre-defined RFC 1918 range, or own network range. Required with enable_custom_network_filtering enabled.'
-            enable_caching: '- (Optional) If enabled, it caches the resolved IP address from FQDN filter. Valid values: true, false. Default value: true.'
-            enable_custom_network_filtering: '- (Optional) If enabled, it customizes packet destination address ranges not to be filtered by FQDN. Valid values: true, false. Default value: false.'
-            enable_exact_match: '- (Optional) If enabled, the resolved IP address from FQDN filter is cached so that if subsequent TCP session matches the cached IP address list, FQDN domain name is not checked and the session is allowed to pass. Valid values: true, false. Default value: false.'
-            enable_exception_rule: '- (Optional) If enabled, it allows packets passing through the gateway without an SNI field. Only applies to whitelist. Valid values: true, false. Default value: true.'
-            enable_private_network_filtering: '- (Optional) If enabled, destination FQDN names that translate to private IP address range (RFC 1918) are subject to FQDN whitelist filtering function. Valid values: true, false. Default value: false.'
         importStatements: []
     aviatrix_fqdn_pass_through:
         subCategory: Security
@@ -2367,7 +2531,7 @@ resources:
             public_subnet_filtering_ha_route_tables: '- (Optional) Route tables whose associated public subnets are protected for the HA PSF gateway. Required when enable_public_subnet_filtering and peering_ha_subnet are set. Available as of provider version R2.18+.'
             public_subnet_filtering_route_tables: '- (Optional) Route tables whose associated public subnets are protected. Only valid when enable_public_subnet_filtering attribute is true. Available as of provider version R2.18+.'
             renegotiation_interval: '- (Optional) It sets the value (seconds) of the renegotiation interval. This renegotiation interval feature is enable only if this attribute is set, otherwise it is disabled. The entered value must be an integer number greater than 300. Available in provider version R2.17.1+.'
-            rx_queue_size: '- (Optional) Gateway ethernet interface RX queue size. Applies on HA as well if enabled. Once set, can''t be deleted or disabled. Available for AWS as of provider version R2.22+.'
+            rx_queue_size: '- (Optional) Gateway ethernet interface RX queue size. Once set, can''t be deleted or disabled. Available for AWS as of provider version R2.22+.'
             saml_enabled: '- (Optional) Enable/disable SAML. This field is available in Controller version 3.3 or later release. Valid values: true, false. Default value: false.'
             search_domains: '- (Optional) A list of domain names that will use the NameServer when a specific name is not in the destination when Split Tunnel Mode is enabled.'
             security_group_id: '- Security group used for the gateway.'
@@ -2388,7 +2552,7 @@ resources:
             vpn_access: '- (Optional) Enable user access through VPN to this gateway. Valid values: true, false.'
             vpn_cidr: '- (Optional) VPN CIDR block for the gateway. Required if vpn_access is true. Example: "192.168.43.0/24".'
             vpn_protocol: '- (Optional) Transport mode for VPN connection. All cloud_types support TCP with ELB, and UDP without ELB. AWS(1) additionally supports UDP with ELB. Valid values: "TCP", "UDP". If not specified, "TCP" will be used.'
-            zone: '- (Optional) Availability Zone. Only available for Azure (8), Azure GOV (32), Azure CHINA (2048) and Public Subnet Filtering gateway. Available for Azure as of provider version R2.17+.'
+            zone: '- (Optional) Availability Zone. Only available for Azure and Public Subnet Filtering gateway. Available for Azure as of provider version R2.17+.'
         importStatements: []
     aviatrix_gateway_certificate_config:
         subCategory: Settings
@@ -2447,6 +2611,7 @@ resources:
             protocol: '- (Optional) This is a qualifier condition that specifies a destination port protocol where the rule applies. When not specified, this field is not used.'
             src_cidr: '- (Optional) This is a qualifier condition that specifies a source IP address range where the rule applies. When not specified, this field is not used.'
             src_port: '- (Optional) This is a qualifier condition that specifies a source port that the rule applies. When not specified, this field is not used.'
+            sync_to_ha: '- (Optional) Sync the policies to the HA gateway. Valid values: true, false. Default: true.'
         importStatements: []
     aviatrix_gateway_snat:
         subCategory: Gateway
@@ -2492,6 +2657,7 @@ resources:
             snat_port: '- (Optional) This is a rule field that specifies the changed source port when all specified qualifier conditions meet. When not specified, this field is not used. One of the rule fields must be specified for this rule to take effect.'
             src_cidr: '- (Optional) This is a qualifier condition that specifies a source IP address range where the rule applies. When not specified, this field is not used.'
             src_port: '- (Optional) This is a qualifier condition that specifies a source port that the rule applies. When not specified, this field is not used.'
+            sync_to_ha: '- (Optional) Sync the policies to the HA gateway. Valid values: true, false. Default: false.'
         importStatements: []
     aviatrix_geo_vpn:
         subCategory: OpenVPN
@@ -2518,6 +2684,65 @@ resources:
             elb_dns_names: '- (Required) List of ELB names to attach to this Geo VPN name.'
             service_name: '- (Required) The hostname that users will connect to. A DNS record will be created for this name in the specified domain name.'
         importStatements: []
+    aviatrix_microseg_policy_list:
+        subCategory: Multi-Cloud Transit
+        description: Creates and manages an Aviatrix Micro-segmentation Policy List
+        name: aviatrix_microseg_policy_list
+        title: aviatrix_microseg_policy_list
+        examples:
+            - name: test
+              manifest: |-
+                {
+                  "policies": [
+                    {
+                      "action": "DENY",
+                      "dst_app_domains": [
+                        "82e50c85-82bf-4b3b-b9da-aaed34a3aa53"
+                      ],
+                      "logging": false,
+                      "name": "microseg-policy-1",
+                      "priority": 1,
+                      "protocol": "ICMP",
+                      "src_app_domains": [
+                        "f15c9890-c8c4-4c1a-a2b5-ef0ab34d2e30"
+                      ],
+                      "watch": false
+                    },
+                    {
+                      "action": "PERMIT",
+                      "dst_app_domains": [
+                        "f05b0ad7-d2d7-4d16-b2f6-48492319414c"
+                      ],
+                      "name": "microseg-policy",
+                      "port_ranges": [
+                        {
+                          "hi": 50000,
+                          "lo": 49000
+                        }
+                      ],
+                      "priority": 0,
+                      "protocol": "TCP",
+                      "src_app_domains": [
+                        "7e7d1573-7a7a-4a53-bcb5-1ad5041961e0"
+                      ]
+                    }
+                  ]
+                }
+        argumentDocs:
+            action: '- (Required) Action for the policy. Must be one of PERMIT or DENY.'
+            dst_app_domains: '- (Required) List of App Domain UUIDs for the destination for the policy.'
+            hi: '- (Optional) Upper bound for the range of ports. When not set, lo is the only port that matches the policy.'
+            lo: '- (Required) Lower bound for the range of ports.'
+            logging: '- (Optional) Whether to enable logging for packets that match the policy. Type: Boolean.'
+            name: '- (Required) Name of the policy.'
+            policies: '- (Required) List of policies.'
+            port_ranges: '- (Optional) List of port ranges for the policy. Cannot be used when protocol is "ICMP".'
+            priority: '- (Optional)  Priority for the policy. Default: 0. Type: Integer.'
+            protocol: '- (Required) Protocol for the policy. Must be one of TCP, UDP, ICMP or ANY.'
+            src_app_domains: '- (Required) List of App Domain UUIDs for the source for the policy.'
+            uuid: '- (Computed) UUID for the Policy.'
+            watch: '- (Optional) Whether to enforce the policy or only watch packets. If "true" packets are only watched. This allows you to observe if the traffic impacted by this rule causes any inadvertent issues (such as traffic being dropped). Type: Boolean.'
+        importStatements: []
     aviatrix_netflow_agent:
         subCategory: Settings
         description: Enables and disables netflow_agent
@@ -2536,12 +2761,11 @@ resources:
                   "version": 5
                 }
         argumentDocs:
-            enable_l7_mode: '(Optional) Enable L7 mode. Default value: false.'
             excluded_gateways: '(Optional) List of gateways to be excluded from logging. e.g.: ["gateway01", "gateway02", "gateway01-hagw"].'
             port: (Required) Netflow server port.
             server_ip: (Required) Netflow server IP address.
             status: '- The status of netflow agent.'
-            version: '(Optional) Netflow version (5 or 9). Default value: 5.'
+            version: (Optional) Netflow version (5 or 9). 5 by default.
         importStatements: []
     aviatrix_periodic_ping:
         subCategory: Gateway
@@ -2813,12 +3037,13 @@ resources:
               manifest: |-
                 {
                   "attachment_name": "attachment-name",
-                  "network_domain_name": "network-domain-name"
+                  "network_domain_name": "network-domain-name",
+                  "transit_gateway_name": "transit-gw-name"
                 }
         argumentDocs:
             attachment_name: '- (Required) Name of the transit gateway attachment, Spoke or Edge, to associate with the network domain.'
             network_domain_name: '- (Required) Name of the Segmentation Network Domain.'
-            transit_gateway_name: '- (Optional) Name of the Transit Gateway.'
+            transit_gateway_name: '- (Required) Name of the Transit Gateway.'
         importStatements: []
     aviatrix_segmentation_network_domain_connection_policy:
         subCategory: Multi-Cloud Transit
@@ -2835,6 +3060,54 @@ resources:
         argumentDocs:
             domain_name_1: '- (Required) Name of the Network Domain to connect to Domain 2.'
             domain_name_2: '- (Required) Name of the Network Domain to connect to Domain 1.'
+        importStatements: []
+    aviatrix_segmentation_security_domain:
+        subCategory: Multi-Cloud Transit
+        description: Creates and manages an Aviatrix Segmentation Security Domain
+        name: aviatrix_segmentation_security_domain
+        title: aviatrix_segmentation_security_domain
+        examples:
+            - name: test_segmentation_security_domain
+              manifest: |-
+                {
+                  "domain_name": "domain-a"
+                }
+        argumentDocs:
+            domain_name: '- (Required) Name of the Security Domain.'
+        importStatements: []
+    aviatrix_segmentation_security_domain_association:
+        subCategory: Multi-Cloud Transit
+        description: Creates and manages an Aviatrix Segmentation Security Domain Association
+        name: aviatrix_segmentation_security_domain_association
+        title: aviatrix_segmentation_security_domain_association
+        examples:
+            - name: test_segmentation_security_domain_association
+              manifest: |-
+                {
+                  "attachment_name": "attachment-name",
+                  "security_domain_name": "security-domain-name",
+                  "transit_gateway_name": "transit-gw-name"
+                }
+        argumentDocs:
+            attachment_name: '- (Required) Name of the transit gateway attachment, Spoke or Edge, to associate with the security domain.'
+            security_domain_name: '- (Required) Name of the Segmentation Security Domain.'
+            transit_gateway_name: '- (Required) Name of the Transit Gateway.'
+        importStatements: []
+    aviatrix_segmentation_security_domain_connection_policy:
+        subCategory: Multi-Cloud Transit
+        description: Creates and manages an Aviatrix Segmentation Security Domain Connection Policy
+        name: aviatrix_segmentation_security_domain_connection_policy
+        title: aviatrix_segmentation_security_domain_connection_policy
+        examples:
+            - name: test_segmentation_security_domain_connection_policy
+              manifest: |-
+                {
+                  "domain_name_1": "domain-a",
+                  "domain_name_2": "domain-b"
+                }
+        argumentDocs:
+            domain_name_1: '- (Required) Name of the Security Domain to connect to Domain 2.'
+            domain_name_2: '- (Required) Name of the Security Domain to connect to Domain 1.'
         importStatements: []
     aviatrix_site2cloud:
         subCategory: Site2Cloud
@@ -3005,48 +3278,6 @@ resources:
             tag_name: '- (Required) Site2Cloud ca cert tag name.'
             unique_serial: '- (Computed) Unique serial of created cert.'
         importStatements: []
-    aviatrix_smart_group:
-        subCategory: Secured Networking
-        description: Creates and manages an Aviatrix Smart Group
-        name: aviatrix_smart_group
-        title: aviatrix_smart_group
-        examples:
-            - name: test_smart_group_ip
-              manifest: |-
-                {
-                  "name": "smart-group",
-                  "selector": [
-                    {
-                      "match_expressions": [
-                        {
-                          "account_name": "devops",
-                          "region": "us-west-2",
-                          "tags": {
-                            "k3": "v3"
-                          },
-                          "type": "vm"
-                        },
-                        {
-                          "cidr": "10.0.0.0/16"
-                        }
-                      ]
-                    }
-                  ]
-                }
-        argumentDocs:
-            account_id: '- (Optional) - Account ID this expression matches.'
-            account_name: '- (Optional) - Account name this expression matches.'
-            cidr: '- (Optional) - CIDR block or IP Address this expression matches. cidr cannot be used with any other filters in the same match_expressions block.'
-            match_expressions: '- (Required) List of match expressions. The Smart Group will be a union of all resources matched by each match_expressions.match_expressions blocks cannot be empty.'
-            name: '- (Required) Name of the Smart Group.'
-            region: '- (Optional) - Region this expression matches.'
-            res_id: '- (Optional) - Resource ID this expression matches.'
-            selector: '- (Required) Block containing match expressions to filter the Smart Group.'
-            tags: '- (Optional) - Map of tags this expression matches.'
-            type: '- (Optional) - Type of resource this expression matches. Must be one of "vm", "vpc" or "subnet". type is required when cidr is not used.'
-            uuid: '- UUID of the Smart Group.'
-            zone: '- (Optional) - Zone this expression matches.'
-        importStatements: []
     aviatrix_splunk_logging:
         subCategory: Settings
         description: Enables and disables splunk logging
@@ -3167,7 +3398,7 @@ resources:
                   "cloud_type": 1,
                   "gw_name": "spoke-gw-aws",
                   "gw_size": "t2.micro",
-                  "manage_ha_gateway": false,
+                  "manage_transit_gateway_attachment": false,
                   "single_ip_snat": false,
                   "subnet": "10.11.0.0/24",
                   "tags": {
@@ -3184,7 +3415,7 @@ resources:
                   "enable_bgp": true,
                   "gw_name": "spoke-gw-aws",
                   "gw_size": "t2.micro",
-                  "manage_ha_gateway": false,
+                  "manage_transit_gateway_attachment": false,
                   "single_ip_snat": false,
                   "subnet": "10.11.0.0/24",
                   "tags": {
@@ -3200,7 +3431,7 @@ resources:
                   "cloud_type": 4,
                   "gw_name": "spoke-gw-gcp",
                   "gw_size": "n1-standard-1",
-                  "manage_ha_gateway": false,
+                  "manage_transit_gateway_attachment": false,
                   "single_ip_snat": false,
                   "subnet": "10.12.0.0/24",
                   "vpc_id": "gcp-spoke-vpc~-~project-id",
@@ -3213,7 +3444,7 @@ resources:
                   "cloud_type": 8,
                   "gw_name": "spoke-gw-01",
                   "gw_size": "Standard_B1ms",
-                  "manage_ha_gateway": false,
+                  "manage_transit_gateway_attachment": false,
                   "single_ip_snat": false,
                   "subnet": "10.13.0.0/24",
                   "vpc_id": "vnet_name:rg_name:resource_guid",
@@ -3229,7 +3460,7 @@ resources:
                   "fault_domain": "${aviatrix_vpc.oci_vpc.fault_domains[0]}",
                   "gw_name": "avtxgw-oracle",
                   "gw_size": "VM.Standard2.2",
-                  "manage_ha_gateway": false,
+                  "manage_transit_gateway_attachment": false,
                   "subnet": "10.7.0.0/16",
                   "vpc_id": "ocid1.vcn.oc1.iad.aaaaaaaaba3pv6wkcr4jqae5f44n2b2m2yt2j6rx32uzr4h25vqstifsfdsq",
                   "vpc_reg": "us-ashburn-1"
@@ -3244,7 +3475,7 @@ resources:
                   "cloud_type": 32,
                   "gw_name": "spoke-gw-01",
                   "gw_size": "Standard_B1ms",
-                  "manage_ha_gateway": false,
+                  "manage_transit_gateway_attachment": false,
                   "single_ip_snat": false,
                   "subnet": "10.13.0.0/24",
                   "vpc_id": "vnet_name:rg_name:resource_guid",
@@ -3257,7 +3488,7 @@ resources:
                   "cloud_type": 256,
                   "gw_name": "spoke-gw-awsgov",
                   "gw_size": "t2.micro",
-                  "manage_ha_gateway": false,
+                  "manage_transit_gateway_attachment": false,
                   "single_ip_snat": false,
                   "subnet": "10.11.0.0/24",
                   "vpc_id": "vpc-abcd123",
@@ -3270,7 +3501,7 @@ resources:
                   "cloud_type": 1024,
                   "gw_name": "spoke-gw-aws-china",
                   "gw_size": "t2.micro",
-                  "manage_ha_gateway": false,
+                  "manage_transit_gateway_attachment": false,
                   "single_ip_snat": false,
                   "subnet": "10.11.0.0/24",
                   "tags": {
@@ -3287,7 +3518,7 @@ resources:
                   "cloud_type": 2048,
                   "gw_name": "spoke-gw-01",
                   "gw_size": "Standard_A0",
-                  "manage_ha_gateway": false,
+                  "manage_transit_gateway_attachment": false,
                   "single_ip_snat": false,
                   "subnet": "10.13.0.0/24",
                   "vpc_id": "vnet_name:rg_name:resource_guid",
@@ -3305,7 +3536,6 @@ resources:
                   "ha_oob_availability_zone": "us-west-1b",
                   "ha_oob_management_subnet": "11.0.0.48/28",
                   "ha_subnet": "11.0.3.64/26",
-                  "manage_ha_gateway": true,
                   "oob_availability_zone": "us-west-1a",
                   "oob_management_subnet": "11.0.2.0/24",
                   "subnet": "11.0.0.128/26",
@@ -3321,7 +3551,7 @@ resources:
                   "gw_size": "ecs.g5ne.large",
                   "ha_gw_size": "ecs.g5ne.large",
                   "ha_subnet": "10.0.0.0/24",
-                  "manage_ha_gateway": true,
+                  "manage_transit_gateway_attachment": false,
                   "subnet": "10.0.0.0/24",
                   "vpc_id": "vpc-abcdef",
                   "vpc_reg": "acs-us-west-1 (Silicon Valley)"
@@ -3333,7 +3563,7 @@ resources:
                   "cloud_type": 16384,
                   "gw_name": "spoke-gw-aws-top-secret",
                   "gw_size": "t2.micro",
-                  "manage_ha_gateway": false,
+                  "manage_transit_gateway_attachment": false,
                   "single_ip_snat": false,
                   "subnet": "10.11.0.0/24",
                   "tags": {
@@ -3350,7 +3580,7 @@ resources:
                   "cloud_type": 16384,
                   "gw_name": "spoke-gw-aws-secret",
                   "gw_size": "t2.micro",
-                  "manage_ha_gateway": false,
+                  "manage_transit_gateway_attachment": false,
                   "single_ip_snat": false,
                   "subnet": "10.11.0.0/24",
                   "tags": {
@@ -3367,7 +3597,6 @@ resources:
                   "cloud_type": 1,
                   "gw_name": "spoke",
                   "gw_size": "t2.micro",
-                  "manage_ha_gateway": false,
                   "private_mode_lb_vpc_id": "vpc-abcdef",
                   "private_mode_subnet_zone": "us-east-1a",
                   "subnet": "10.190.224.0/20",
@@ -3439,7 +3668,6 @@ resources:
             interface: '- (Optional) An output interface where the policy rule applies.'
             learned_cidrs_approval_mode: '- (Optional) Learned CIDRs approval mode. Either "gateway" (approval on a per-gateway basis) or "connection" (approval on a per-connection basis). Only "gateway" is supported for BGP SPOKE Gateway. Default value: "gateway". Available as of provider version R2.21+.'
             local_as_number: '- (Optional) Changes the Aviatrix Spoke Gateway ASN number before you setup Aviatrix Spoke Gateway connection configurations.'
-            manage_ha_gateway: '- (Optional) Enable to manage Aviatrix spoke HA gateway using the aviatrix_spoke_gateway resource. If this is set to false, spoke HA gateways must be managed using the aviatrix_spoke_ha_gateway resource. Valid values: true, false. Default value: true. Available in provider R3.0+.'
             manage_transit_gateway_attachment: '- (Optional) Enable to manage spoke-to-Aviatrix transit gateway attachments using the aviatrix_spoke_gateway resource with the below transit_gw attribute. If this is set to false, attaching this spoke to transit gateways must be done using the aviatrix_spoke_transit_attachment resource. Valid values: true, false. Default value: true. Available in provider R2.17+.'
             mark: '- (Optional) A tag or mark of a TCP session where the policy rule applies.'
             monitor_exclude_list: '- (Optional) Set of monitored instance ids. Only valid when ''enable_monitor_gateway_subnets'' = true. Available in provider version R2.18+.'
@@ -3453,10 +3681,10 @@ resources:
             private_mode_subnet_zone: '- (Optional) Availability Zone of the subnet. Required when Private Mode is enabled on the Controller and cloud_type is AWS or AWSGov. Available in Provider version R2.23+.'
             protocol: '- (Optional) A destination port protocol where the policy rule applies.'
             public_ip: '- Public IP address of the Spoke Gateway created.'
-            rx_queue_size: '- (Optional) Gateway ethernet interface RX queue size. Applies on HA as well if enabled. Once set, can''t be deleted or disabled. Available for AWS as of provider version R2.22+.'
+            rx_queue_size: '- (Optional) Gateway ethernet interface RX queue size. Once set, can''t be deleted or disabled. Available for AWS as of provider version R2.22+.'
             security_group_id: '- Security group used for the spoke gateway.'
             single_az_ha: '(Optional) Set to true if this feature is desired. Valid values: true, false.'
-            single_ip_snat: '- (Optional) Specify whether to enable Source NAT feature in "single_ip" mode on the gateway or not. Please disable AWS NAT instance before enabling this feature. Currently, only supports AWS(1) and Azure(8). Valid values: true, false.'
+            single_ip_snat: '- (Optional) Specify whether to enable Source NAT feature in "single_ip" mode on the gateway or not. Please disable AWS NAT instance before enabling this feature. Currently only supports AWS(1) and Azure(8). Valid values: true, false.'
             snat_mode: '- (Optional) Valid values: "primary", "secondary" and "custom". Default value: "primary".'
             snat_policy: '- (Optional) Policy rule applied for "snat_mode" of "custom".'
             software_version: '- (Optional/Computed) The software version of the gateway. If set, we will attempt to update the gateway to the specified version if current version is different. If left blank, the gateway upgrade can be managed with the aviatrix_controller_config resource. Type: String. Example: "6.5.821". Available as of provider version R2.20.0.'
@@ -3472,7 +3700,7 @@ resources:
             tunnel_detection_time: '- (Optional) The IPsec tunnel down detection time for the Spoke Gateway in seconds. Must be a number in the range [20-600]. The default value is set by the controller (60 seconds if nothing has been changed). NOTE: The controller UI has an option to set the tunnel detection time for all gateways. To achieve the same functionality in Terraform, use the same TF_VAR to manage the tunnel detection time for all gateways. Available in provider R2.19+.'
             vpc_id: '- (Required) VPC-ID/VNet-Name of cloud provider. Example: AWS/AWSGov/AWSChina: "vpc-abcd1234", GCP: "vpc-gcp-test~-~project-id", Azure/AzureGov/AzureChina: "vnet_name:rg_name:resource_guid", OCI: "ocid1.vcn.oc1.iad.aaaaaaaaba3pv6wkcr4jqae5f44n2b2m2yt2j6rx32uzr4h25vqstifsfdsq".'
             vpc_reg: '- (Required) Region of cloud provider. Example: AWS: "us-east-1", GCP: "us-west2-a", Azure: "East US 2", OCI: "us-ashburn-1", AzureGov: "USGov Arizona", AWSGov: "us-gov-west-1, AWSChina: "cn-north-1", AzureChina: "China North", AWS Top Secret: "us-iso-east-1", AWS Secret: "us-isob-east-1".'
-            zone: '- (Optional) Availability Zone. Only available for Azure (8), Azure GOV (32) and Azure CHINA (2048). Must be in the form ''az-n'', for example, ''az-2''. Available in provider version R2.17+.'
+            zone: '- (Optional) Availability Zone. Only available for cloud_type = 8 (Azure). Must be in the form ''az-n'', for example, ''az-2''. Available in provider version R2.17+.'
         importStatements: []
     aviatrix_spoke_gateway_subnet_group:
         subCategory: Multi-Cloud Transit
@@ -3494,63 +3722,6 @@ resources:
             gw_name: '- (Required) Aviatrix spoke gateway name.'
             name: '- (Required) Name of spoke gateway subnet group.'
             subnets: '- (Optional) A set of subnets in the subnet group. The format of each subnet must be "CIDR~~subnet name". Example: ["10.2.48.0/20~~subnet1", "10.2.64.0/20~~subnet2"]'
-        importStatements: []
-    aviatrix_spoke_ha_gateway:
-        subCategory: Multi-Cloud Transit
-        description: Creates and manages Aviatrix spoke ha gateways
-        name: aviatrix_spoke_ha_gateway
-        title: aviatrix_spoke_ha_gateway
-        examples:
-            - name: test_spoke_ha_aws
-              manifest: |-
-                {
-                  "primary_gw_name": "${aviatrix_spoke_gateway.primary_spoke.id}",
-                  "subnet": "10.11.0.0/24"
-                }
-              references:
-                primary_gw_name: aviatrix_spoke_gateway.primary_spoke.id
-            - name: test_spoke_ha_gcp
-              manifest: |-
-                {
-                  "gw_name": "spoke-gw-gcp-ha",
-                  "gw_size": "n1-standard-1",
-                  "primary_gw_name": "${aviatrix_spoke_gateway.primary_spoke.id}",
-                  "subnet": "10.12.0.0/24",
-                  "zone": "us-west1-b"
-                }
-              references:
-                primary_gw_name: aviatrix_spoke_gateway.primary_spoke.id
-            - name: test_spoke_ha_azure
-              manifest: |-
-                {
-                  "gw_name": "spoke-gw-azure-ha",
-                  "gw_size": "Standard_B1ms",
-                  "primary_gw_name": "${aviatrix_spoke_gateway.primary_spoke.id}",
-                  "subnet": "10.13.0.0/24"
-                }
-              references:
-                primary_gw_name: aviatrix_spoke_gateway.primary_spoke.id
-        argumentDocs:
-            account_name: '- Name of a Cloud-Account in Aviatrix controller.'
-            availability_domain: '- (Optional) Availability domain. Required and valid only for OCI.'
-            azure_eip_name_resource_group: '- (Optional) Name of public IP Address resource and its resource group in Azure to be assigned to the Spoke Gateway instance. Example: "IP_Name:Resource_Group_Name". Required if eip is set and cloud_type is Azure, AzureGov or AzureChina. Available as of provider version 3.0+.'
-            cloud_instance_id: '- Cloud instance ID of the Spoke HA Gateway.'
-            cloud_type: '- Type of cloud service provider.'
-            eip: '- (Optional) If set, the set IP will be used for this gateway.'
-            fault_domain: '- (Optional) Fault domain. Required and valid only for OCI.'
-            gw_name: '- (Optional) Name of the Spoke HA Gateway which is going to be created. If not set, controller will auto generate a name for this gateway.'
-            gw_size: '- (Optional) Size of the Spoke HA Gateway instance. If not set, controller will use the same value as primary gateway''s. Example: AWS/AWSGov/AWSChina: "t2.large", Azure/AzureGov/AzureChina: "Standard_B1s", OCI: "VM.Standard2.2", GCP: "n1-standard-1".'
-            image_version: '- Image version of the gateway.'
-            insane_mode: ', please see notes here.'
-            insane_mode_az: '- (Optional) AZ of subnet being created for Insane Mode Spoke HA Gateway. Required for AWS, AWSGov, AWS China, AWS Top Secret or AWS Secret if insane_mode is enabled. Example: AWS: "us-west-1a".'
-            primary_gw_name: '- (Required) Name of the primary gateway which is already or will be created before this Spoke HA Gateway.'
-            private_ip: '- Private IP address of the Spoke HA Gateway created.'
-            public_ip: '- Public IP address of the Spoke HA Gateway created.'
-            security_group_id: '- Security group used for the Spoke HA Gateway.'
-            software_version: '- Software version of the gateway.'
-            subnet: '- (Required) A VPC Network address range selected from one of the available network ranges. Example: "172.31.0.0/20". NOTE: If using'
-            vpc_reg: '- Region in which the Spoke HA Gateway was created.'
-            zone: '- (Optional) Availability Zone. Required for GCP gateway, example: "us-west1-c". Optional for Azure gateway in the form "az-n", example: "az-2".'
         importStatements: []
     aviatrix_spoke_transit_attachment:
         subCategory: Multi-Cloud Transit
@@ -3576,6 +3747,70 @@ resources:
             spoke_prepend_as_path: '- (Optional) Connection based AS Path Prepend. Valid only for BGP connection. Can only use the gateway''s own local AS number, repeated up to 25 times. Applies on spoke_gateway_name. Available as of provider version R2.23+.'
             transit_gw_name: '- (Required) Name of the transit gateway to attach the spoke gateway to.'
             transit_prepend_as_path: '- (Optional) Connection based AS Path Prepend. Valid only for BGP connection. Can only use the gateway''s own local AS number, repeated up to 25 times. Applies on transit_gateway_name. Available as of provider version R2.23+.'
+        importStatements: []
+    aviatrix_spoke_vpc:
+        subCategory: Deprecated
+        description: Creates and Manages Aviatrix Spoke Gateways
+        name: aviatrix_spoke_vpc
+        title: aviatrix_spoke_vpc
+        examples:
+            - name: test_spoke_vpc_aws
+              manifest: |-
+                {
+                  "account_name": "my-aws",
+                  "cloud_type": 1,
+                  "dns_server": "8.8.8.8",
+                  "enable_nat": "no",
+                  "gw_name": "spoke-gw-aws",
+                  "subnet": "10.11.0.0/24~~us-west-1b~~spoke-vpc-01-pubsub",
+                  "tag_list": [
+                    "k1:v1",
+                    "k2:v2"
+                  ],
+                  "vpc_id": "vpc-abcd123~~spoke-vpc-01",
+                  "vpc_reg": "us-west-1",
+                  "vpc_size": "t2.micro"
+                }
+            - name: test_spoke_vpc_gcp
+              manifest: |-
+                {
+                  "account_name": "my-gcp",
+                  "cloud_type": 4,
+                  "enable_nat": "no",
+                  "gw_name": "spoke-gw-gcp",
+                  "subnet": "10.12.0.0/24",
+                  "vpc_id": "gcp-spoke-vpc",
+                  "vpc_reg": "us-west1-b",
+                  "vpc_size": "t2.micro"
+                }
+            - name: test_spoke_vpc_arm
+              manifest: |-
+                {
+                  "account_name": "my-arm",
+                  "cloud_type": 8,
+                  "enable_nat": "no",
+                  "gw_name": "spoke-gw-01",
+                  "subnet": "10.13.0.0/24",
+                  "vpc_id": "spoke:test-spoke-gw-123",
+                  "vpc_reg": "West US",
+                  "vpc_size": "t2.micro"
+                }
+        argumentDocs:
+            account_name: '- (Required) This parameter represents the name of a Cloud-Account in Aviatrix controller.'
+            cloud_type: '- (Required) Type of cloud service provider. AWS=1, GCP=4, ARM=8.'
+            dns_server: '- Specify the DNS IP, only required while using a custom private DNS for the VPC.'
+            enable_snat: '- (Optional) Enable Source NAT for this container. Supported values: true, false. Default value: false.'
+            gw_name: '- (Required) Name of the gateway which is going to be created.'
+            ha_gw_size: '- (Optional) HA Gateway Size. Mandatory if HA is enabled (ha_subnet is set). Example: "t2.micro".'
+            ha_subnet: '- (Optional) HA Subnet. Required for enabling HA for AWS/ARM gateways. Setting to empty/unset will disable HA. Setting to a valid subnet (Example: 10.12.0.0/24) will create an HA gateway on the subnet.'
+            ha_zone: '- (Optional) HA Zone. Required for enabling HA for GCP gateway. Setting to empty/unset will disable HA. Setting to a valid zone will create an HA gateway in the zone. Example: "us-west1-c".'
+            single_az_ha: '- (Optional) Set to "enabled" if this feature is desired.'
+            subnet: '- (Required) Public Subnet Info. Example: AWS: "CIDRZONESubnetName", etc...'
+            tag_list: '- (Optional) Instance tag of cloud provider. Example: key1:value1,key002:value002, etc... Only AWS (cloud_type is "1") is supported'
+            transit_gw: '- (Optional) Specify the transit Gateway.'
+            vpc_id: '- (Required) VPC-ID/VNet-Name of cloud provider. Required if cloud_type is "1" or "4". Example: AWS: "vpc-abcd1234", etc...'
+            vpc_reg: '- (Required) Region of cloud provider. Example: AWS: "us-east-1", GCP: "us-west1-b", ARM: "East US 2", etc...'
+            vpc_size: '- (Required) Size of the gateway instance. Example: AWS: "t2.large", GCP: "f1.micro", ARM: "StandardD2", etc...'
         importStatements: []
     aviatrix_sumologic_forwarder:
         subCategory: Settings
@@ -3614,6 +3849,63 @@ resources:
             nexthop: '- (Required) Name of nexthop gateway.'
             reachable_cidr: '- (Required) Destination CIDR.'
             source: '- (Required) Name of Source gateway.'
+        importStatements: []
+    aviatrix_transit_cloudn_conn:
+        subCategory: Multi-Cloud Transit
+        description: Creates and manages Aviatrix Transit Gateway to Aviatrix CloudN Connection
+        name: aviatrix_transit_cloudn_conn
+        title: aviatrix_transit_cloudn_conn
+        examples:
+            - name: test
+              manifest: |-
+                {
+                  "bgp_local_as_num": "123",
+                  "cloudn_as_num": "345",
+                  "cloudn_neighbor_as_num": "65005",
+                  "cloudn_neighbor_ip": "182.1.2.3",
+                  "cloudn_remote_ip": "172.12.13.14",
+                  "connection_name": "my_conn",
+                  "gw_name": "transitGw",
+                  "vpc_id": "vpc-abcd1234"
+                }
+            - name: test
+              manifest: |-
+                {
+                  "backup_cloudn_as_num": "123",
+                  "backup_cloudn_ip": "1.2.3.6",
+                  "backup_cloudn_neighbor_as_num": "345",
+                  "backup_cloudn_neighbor_ip": "1.2.3.7",
+                  "bgp_local_as_num": "123",
+                  "cloudn_as_num": "345",
+                  "cloudn_neighbor_as_num": "65005",
+                  "cloudn_neighbor_ip": "1.2.3.5",
+                  "cloudn_remote_ip": "1.2.3.4",
+                  "connection_name": "my_conn",
+                  "enable_ha": true,
+                  "gw_name": "transitGw",
+                  "vpc_id": "vpc-abcd1234"
+                }
+        argumentDocs:
+            approved_cidrs: '- (Optional/Computed) Set of approved CIDRs. Requires enable_learned_cidrs_approval to be true. Type: Set(String).'
+            backup_cloudn_as_num: '(Optional) BGP AS Number of HA CloudN. Type: String.'
+            backup_cloudn_ip: '- (Optional) IP Address of HA CloudN. Required when enable_ha is true. Type: String.'
+            backup_cloudn_neighbor_as_num: '- (Optional) BGP AS Number of HA CloudN Neighbor. Type: String.'
+            backup_cloudn_neighbor_ip: '- (Optional) IP Address of HA CloudN Neighbor. Type: String.'
+            backup_direct_connect: '- (Optional) Flag to enable direct connect over private network to HA CloudN. Type: Boolean.'
+            backup_insane_mode: '- (Optional) Flag to enable insane mode connection to HA CloudN. Type: Boolean.'
+            bgp_local_as_num: '- (Optional) BGP AS Number of the Transit Gateway. Type: String.'
+            cloudn_as_num: '- (Required) BGP AS Number of the Aviatrix CloudN. Type: String.'
+            cloudn_neighbor_as_num: '- (Required) BGP AS Number of the Aviatrix CloudN neighbor. Type: String.'
+            cloudn_neighbor_ip: '- (Required) IP Address of Aviatrix CloudN neighbor. Type: String.'
+            cloudn_remote_ip: '- (Required) IP Address of Aviatrix CloudN. Type: String.'
+            connection_name: '- (Required) Name of the Transit Gateway to CloudN Connection. Type: String.'
+            direct_connect: '- (Optional) Enable direct connect over private network. Type: Boolean. Default: true.'
+            enable_ha: '- (Optional) Enable connection to HA CloudN. Type: Boolean.'
+            enable_learned_cidrs_approval: '- (Optional) Enable encrypted transit approval for connection. Type: Boolean.'
+            enable_load_balancing: '- (Optional) Flag to enable load balancing between CloudN and HA CloudN. Type: Boolean.'
+            gw_name: '- (Required) Name of the Transit Gateway. Type: String.'
+            insane_mode: '- (Optional) Enable insane mode connection. Type: Boolean.'
+            vpc_id: '- (Required) VPC ID of the Aviatrix Transit Gateway. Type: String.'
         importStatements: []
     aviatrix_transit_external_device_conn:
         subCategory: Multi-Cloud Transit
@@ -4142,7 +4434,7 @@ resources:
             private_mode_lb_vpc_id: '- (Optional) VPC ID of Private Mode load balancer. Required when Private Mode is enabled on the Controller. Available in Provider version R2.23+.'
             private_mode_subnet_zone: '- (Optional) Availability Zone of the subnet. Required when Private Mode is enabled on the Controller and cloud_type is AWS or AWSGov. Available in Provider version R2.23+.'
             public_ip: '- Public IP address of the Transit Gateway created.'
-            rx_queue_size: '- (Optional) Gateway ethernet interface RX queue size. Applies on HA as well if enabled. Once set, can''t be deleted or disabled. Available for AWS as of provider version R2.22+.'
+            rx_queue_size: '- (Optional) Gateway ethernet interface RX queue size. Once set, can''t be deleted or disabled. Available for AWS as of provider version R2.22+.'
             security_group_id: '- Security group used for the transit gateway.'
             single_az_ha: '(Optional) Set to true if this feature is desired. Valid values: true, false.'
             single_ip_snat: '- (Optional) Enable "single_ip" mode Source NAT for this container. Valid values: true, false. NOTE: Please see notes'
@@ -4155,7 +4447,7 @@ resources:
             tunnel_detection_time: '- (Optional) The IPsec tunnel down detection time for the Transit Gateway in seconds. Must be a number in the range [20-600]. The default value is set by the controller (60 seconds if nothing has been changed). NOTE: The controller UI has an option to set the tunnel detection time for all gateways. To achieve the same functionality in Terraform, use the same TF_VAR to manage the tunnel detection time for all gateways. Available in provider R2.19+.'
             vpc_id: '- (Required) VPC-ID/VNet-Name of cloud provider. Example: AWS/AWSGov/AWSChina: "vpc-abcd1234", GCP: "vpc-gcp-test~-~project-id", Azure/AzureGov/AzureChina: "vnet_name:rg_name:resource_guid", OCI: "ocid1.vcn.oc1.iad.aaaaaaaaba3pv6wkcr4jqae5f44n2b2m2yt2j6rx32uzr4h25vqstifsfdsq".'
             vpc_reg: '- (Required) Region of cloud provider. Example: AWS: "us-east-1", GCP: "us-west2-a", Azure: "East US 2", OCI: "us-ashburn-1", AzureGov: "USGov Arizona", AWSGov: "us-gov-west-1", AWSChina: "cn-north-1", AzureChina: "China North", AWS Top Secret: "us-iso-east-1", AWS Secret: "us-isob-east-1".'
-            zone: '- (Optional) Availability Zone. Only available Azure (8), Azure GOV (32) and Azure CHINA (2048). Must be in the form ''az-n'', for example, ''az-2''. Available in provider version R2.17+.'
+            zone: '- (Optional) Availability Zone. Only available for cloud_type = 8 (Azure). Must be in the form ''az-n'', for example, ''az-2''. Available in provider version R2.17+.'
         importStatements: []
     aviatrix_transit_gateway_peering:
         subCategory: Multi-Cloud Transit
@@ -4205,6 +4497,67 @@ resources:
             transit_gateway_name1: '- (Required) The first transit gateway name to make a peer pair.'
             transit_gateway_name2: '- (Required) The second transit gateway name to make a peer pair.'
             tunnel_count: '- (Optional) Advanced option. Number of public tunnels. Required with enable_insane_mode_encryption_over_internet. Conflicts with enable_peering_over_private_network and enable_single_tunnel_mode. Type: Integer. Valid Range: 2-20. Available as of provider version R2.19+.'
+        importStatements: []
+    aviatrix_transit_vpc:
+        subCategory: Deprecated
+        description: Creates and Manages the Aviatrix Transit Network Gateways
+        name: aviatrix_transit_vpc
+        title: aviatrix_transit_vpc
+        examples:
+            - name: test_transit_gw_aws
+              manifest: |-
+                {
+                  "account_name": "devops_aws",
+                  "cloud_type": 1,
+                  "connected_transit": "yes",
+                  "enable_hybrid_connection": true,
+                  "gw_name": "transit",
+                  "ha_gw_size": "t2.micro",
+                  "ha_subnet": "10.1.0.0/24",
+                  "subnet": "10.1.0.0/24",
+                  "tag_list": [
+                    "name:value",
+                    "name1:value1",
+                    "name2:value2"
+                  ],
+                  "vpc_id": "vpc-abcd1234",
+                  "vpc_reg": "us-east-1",
+                  "vpc_size": "t2.micro"
+                }
+            - name: test_transit_gw_azure
+              manifest: |-
+                {
+                  "account_name": "devops_azure",
+                  "cloud_type": 8,
+                  "connected_transit": "yes",
+                  "gw_name": "transit",
+                  "ha_gw_size": "Standard_B1s",
+                  "ha_subnet": "10.30.0.0/24",
+                  "subnet": "10.30.0.0/24",
+                  "vpc_id": "vnet1:hello",
+                  "vpc_reg": "West US",
+                  "vpc_size": "Standard_B1s"
+                }
+        argumentDocs:
+            account_name: '- (Required) This parameter represents the name of a Cloud-Account in Aviatrix controller.'
+            cloud_type: '- (Required) Type of cloud service provider, requires an integer value. Use 1 for AWS.'
+            connected_transit: '- (Optional) Specify Connected Transit status. Supported values: true, false.'
+            dns_server: '- Specify the DNS IP, only required while using a custom private DNS for the VPC.'
+            enable_firenet_interfaces: '- (Optional) Sign of readiness for FireNet connection. Valid values: true and false. Default: false.'
+            enable_hybrid_connection: '- (Optional) Sign of readiness for TGW connection. Only supported for aws. Example: false.'
+            enable_snat: '- (Optional) Enable Source NAT for this container. Supported values: true, false. Default value: false.'
+            gw_name: '- (Required) Name of the gateway which is going to be created.'
+            ha_gw_size: '- (Optional) HA Gateway Size. Mandatory if HA is enabled (ha_subnet is set). Example: "t2.micro".'
+            ha_insane_mode_az: '- (Optional) AZ of subnet being created for Insane Mode Transit HA Gateway. Required if insane_mode is enabled and ha_subnet is set.'
+            ha_subnet: '- (Optional) HA Subnet CIDR. Example: "10.12.0.0/24".Setting to empty/unset will disable HA. Setting to a valid subnet CIDR will create an HA gateway on the subnet.'
+            insane_mode: '- (Optional) Specify Insane Mode high performance gateway. Insane Mode gateway size must be at least c5 size. If enabled, will look for spare /26 segment to create a new subnet. Only available for AWS. Supported values: true, false.'
+            insane_mode_az: '- (Optional) AZ of subnet being created for Insane Mode Transit Gateway. Required if insane_mode is enabled.'
+            subnet: '- (Required) Public Subnet CIDR. Example: AWS: "10.0.0.0/24". Copy/paste from AWS Console to get the right subnet CIDR.'
+            tag_list: '- (Optional) Instance tag of cloud provider. Only supported for aws. Example: ["key1:value1","key002:value002"]'
+            vnet_name_resource_group: '- (Optional) VPC-ID/VNet-Name of cloud provider. Required if for azure. ARM: "VNet_Name:Resource_Group_Name". It is replaced by "vpc_id".'
+            vpc_id: '- (Required) VPC-ID/VNet-Name of cloud provider. Required if for aws. Example: AWS: "vpc-abcd1234", GCP: "mygooglecloudvpcname", etc...'
+            vpc_reg: '- (Required) Region of cloud provider. Example: AWS: "us-east-1", ARM: "East US 2", etc...'
+            vpc_size: '- (Required) Size of the gateway instance. Example: AWS: "t2.large", etc...'
         importStatements: []
     aviatrix_tunnel:
         subCategory: Peering

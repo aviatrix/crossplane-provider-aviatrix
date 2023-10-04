@@ -120,6 +120,7 @@ type SnatParameters struct {
 	// +kubebuilder:validation:Optional
 	SnatPolicy []SnatPolicyParameters `json:"snatPolicy,omitempty" tf:"snat_policy,omitempty"`
 
+	// Sync the policies to the HA gateway. Valid values: true, false. Default: false.
 	// Whether to sync the policies to the HA gateway.
 	// +kubebuilder:validation:Optional
 	SyncToHa *bool `json:"syncToHa,omitempty" tf:"sync_to_ha,omitempty"`

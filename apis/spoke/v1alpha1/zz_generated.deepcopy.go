@@ -91,6 +91,11 @@ func (in *GatewayObservation) DeepCopyInto(out *GatewayObservation) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.HaImageVersion != nil {
+		in, out := &in.HaImageVersion, &out.HaImageVersion
+		*out = new(string)
+		**out = **in
+	}
 	if in.HaPrivateIP != nil {
 		in, out := &in.HaPrivateIP, &out.HaPrivateIP
 		*out = new(string)
@@ -103,6 +108,11 @@ func (in *GatewayObservation) DeepCopyInto(out *GatewayObservation) {
 	}
 	if in.HaSecurityGroupID != nil {
 		in, out := &in.HaSecurityGroupID, &out.HaSecurityGroupID
+		*out = new(string)
+		**out = **in
+	}
+	if in.HaSoftwareVersion != nil {
+		in, out := &in.HaSoftwareVersion, &out.HaSoftwareVersion
 		*out = new(string)
 		**out = **in
 	}
@@ -332,11 +342,6 @@ func (in *GatewayParameters) DeepCopyInto(out *GatewayParameters) {
 		*out = new(string)
 		**out = **in
 	}
-	if in.HaImageVersion != nil {
-		in, out := &in.HaImageVersion, &out.HaImageVersion
-		*out = new(string)
-		**out = **in
-	}
 	if in.HaInsaneModeAz != nil {
 		in, out := &in.HaInsaneModeAz, &out.HaInsaneModeAz
 		*out = new(string)
@@ -354,11 +359,6 @@ func (in *GatewayParameters) DeepCopyInto(out *GatewayParameters) {
 	}
 	if in.HaPrivateModeSubnetZone != nil {
 		in, out := &in.HaPrivateModeSubnetZone, &out.HaPrivateModeSubnetZone
-		*out = new(string)
-		**out = **in
-	}
-	if in.HaSoftwareVersion != nil {
-		in, out := &in.HaSoftwareVersion, &out.HaSoftwareVersion
 		*out = new(string)
 		**out = **in
 	}
